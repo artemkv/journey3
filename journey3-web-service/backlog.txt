@@ -1,0 +1,14 @@
+https://dynobase.dev/dynamodb-golang-query-examples/
+
+TODO:
+
+- fill updatedat when modifying user record
+- re-test the api, all edge cases
+
+- when implementing the read-only access for another user, don't allow edit those apps, don't share the account id
+
+- when user is signed in, but cannot access a certain app, is it OK to return unauthorized? How to distinguish from expired session?
+- check that email is verified
+- app deletion - what to do with data?
+- choose the correct threshold for slow requests
+- split stats for 400 and 401 requests?

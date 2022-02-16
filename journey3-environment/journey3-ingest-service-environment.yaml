@@ -1,0 +1,19 @@
+# journey3-ingest-service-environment
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an environment for the ingest service
+
+Resources:
+  # Create an SNS topic for incoming messages
+  IncomingMessageSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: 'Journey3 Incoming Message Topic'
+      TopicName: 'journey3-incoming'
+
+Outputs:
+  IncomingMessageSNSTopic:
+    Description: Incoming Message Topic ARN
+    Value: !Ref IncomingMessageSNSTopic
+    Export:
+      Name: Journey3IncomingMessageSNSTopic

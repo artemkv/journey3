@@ -1,0 +1,37 @@
+v 1.0 microservice chassis
+-----------------------------------------------
+
+- read port from config / env variable
+- proper ceremony for running server
+- graceful shutdown
+- /health
+- /liveness
+- /readiness
+- CORS
+- serve favicon
+- handle 4XX errors
+- handle 5XX errors
+- logging (successful and failed requests)
+- update rest stats
+    - countRequest
+    - countRequestByEndpoint
+    - updateResponseStats
+- /stats to get rest stats
+- support TLS with custom certificate
+
+v 1.0 business
+-----------------------------------------------
+
+- enqueue received message
+
+v 1.2
+-----------------------------------------------
+
+
+
+backlog
+-----------------------------------------------
+
+- define good treshold for slow requests
+- make sure make file works
+- migrate to sdk-go-v2 (https://aws.github.io/aws-sdk-go-v2/docs/migrating/)

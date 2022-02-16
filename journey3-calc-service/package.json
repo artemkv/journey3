@@ -1,0 +1,15 @@
+{
+    "name": "journey3.services.calc",
+    "version": "1.0.0",
+    "description": "Journey3 Calc Service",
+    "author": {
+        "name": "artemkv",
+        "email": "artemkv@gmail.com"
+    },
+    "dependencies": {
+        "@artemkv/datetimeutil": "^1.1.0",
+        "aws-sdk": "^2.978.0"
+    },
+    "devDependencies": {},
+    "scripts": {}
+}

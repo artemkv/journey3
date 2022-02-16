@@ -1,0 +1,14 @@
+DONE:
+- install local DynamoDB and try local invocation
+- function versioning - new version for every deploy. See here: https://www.serverless.com/framework/docs/providers/aws/guide/functions#versioning-deployed-functions
+- specify good bucket name - can do using "deploymentBucket", but then it needs to exist
+- refer to SQS from cloudformation
+- configure correct timeouts, batching etc.
+
+TODO:
+- seed the table with allowed apps
+- templating? Basically how to deploy the same function but with different config to run in different environment
+    https://www.serverless.com/framework/docs/providers/aws/guide/variables/
+
+- implement using testing guidelines: https://www.serverless.com/framework/docs/providers/aws/guide/testing/
+- unit-test

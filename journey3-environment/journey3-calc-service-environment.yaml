@@ -1,0 +1,233 @@
+# journey3-calc-service-environment
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Creates an environment for the calc service
+
+Parameters:
+  AlarmEMail:
+    Description: EMail address to notify if there are any operational issues
+    Type: String
+    AllowedPattern: >-
+      ([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)
+    ConstraintDescription: Must be a valid email address.
+    Default: 'artemkv@gmail.com'
+
+Resources:
+  # Create an SQS queue for messages
+  MessageQueue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: 'journey3-messages'
+      VisibilityTimeout: 120
+
+  # Allow SNS service to send messages to the message queue
+  MessageQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Id: MessageQueuePolicy
+        Version: '2012-10-17'
+        Statement:
+          - Sid: Allow-SendMessage
+            Effect: Allow
+            Principal:
+              AWS: '*'
+            Action:
+              - sqs:SendMessage
+            Resource: '*'
+            Condition:
+              ArnEquals:
+                'aws:SourceArn':
+                  Fn::ImportValue: Journey3IncomingMessageSNSTopic
+      Queues:
+        - !Ref MessageQueue
+
+  # Subscribe message queue to incoming message topic
+  MessageQueueSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      Endpoint: !GetAtt MessageQueue.Arn
+      RawMessageDelivery: true
+      TopicArn:
+        Fn::ImportValue: Journey3IncomingMessageSNSTopic
+
+  # Create a role for consuming events
+  CalcServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: 'journey3-calc-service-role'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+
+  # Allow the role to receive and delete messages from actions queue
+  ListenToMessageQueuePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ListenToMessageQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'sqs:DeleteMessage'
+              - 'sqs:ReceiveMessage'
+              - 'sqs:GetQueueAttributes'
+            Resource:
+              - !GetAtt
+                - MessageQueue
+                - Arn
+      Roles:
+        - !Ref CalcServiceRole
+
+  # Allow the role to write to CloudWatch
+  WriteToCloudWatchPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: WriteToCloudWatch
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource: arn:aws:logs:*:*:*
+      Roles:
+        - !Ref CalcServiceRole
+
+  # Create topic for alarms
+  MessageQueueAlarmTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      Subscription:
+        - Endpoint: !Ref AlarmEMail
+          Protocol: email
+
+  # Create cloud watch alarm
+  MessageQueueDepthAlarm:
+    Type: 'AWS::CloudWatch::Alarm'
+    Properties:
+      AlarmDescription: Alarm if queue depth grows beyond 1000 messages
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions:
+        - Name: QueueName
+          Value: !GetAtt
+            - MessageQueue
+            - QueueName
+      Statistic: Sum
+      Period: 600 # in seconds
+      EvaluationPeriods: 1
+      Threshold: 100
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref MessageQueueAlarmTopic
+
+  # DynamoDB table - stats
+  StatsDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'journey3stats'
+      AttributeDefinitions:
+        - AttributeName: 'Key'
+          AttributeType: 'S'
+        - AttributeName: 'SortKey'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'Key'
+          KeyType: 'HASH'
+        - AttributeName: 'SortKey'
+          KeyType: 'RANGE'
+      BillingMode: PAY_PER_REQUEST
+
+  # DynamoDB table - app
+  AppDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'journey3app'
+      AttributeDefinitions:
+        - AttributeName: 'Key'
+          AttributeType: 'S'
+        - AttributeName: 'SortKey'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'Key'
+          KeyType: 'HASH'
+        - AttributeName: 'SortKey'
+          KeyType: 'RANGE'
+      BillingMode: PAY_PER_REQUEST
+
+  # Allow the role to access DynamoDB
+  AccessDynamoDBStatsTablePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AccessDynamoDBStatsTable
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:GetItem'
+              - 'dynamodb:BatchGetItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:UpdateItem'
+            Resource:
+              - !GetAtt
+                - StatsDBTable
+                - Arn
+      Roles:
+        - !Ref CalcServiceRole
+
+  # Allow the role to access DynamoDB
+  AccessDynamoDBAppTablePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AccessDynamoDBAppTable
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:GetItem'
+              - 'dynamodb:BatchGetItem'
+              - 'dynamodb:Query'
+            Resource:
+              - !GetAtt
+                - AppDBTable
+                - Arn
+      Roles:
+        - !Ref CalcServiceRole
+
+Outputs:
+  MessageQueueURL:
+    Description: URL of SQS Queue for messages
+    Value: !Ref MessageQueue
+  MessageQueueARN:
+    Description: ARN of SQS Queue for messages
+    Value: !GetAtt
+      - MessageQueue
+      - Arn
+    Export:
+      Name: Journey3MessageQueueARN
+
+  CalcServiceRole:
+    Description: The role for consuming messages
+    Value: !Ref CalcServiceRole
+  CalcServiceRoleARN:
+    Description: ARN of the role for consuming messages
+    Value: !GetAtt
+      - CalcServiceRole
+      - Arn
+    Export:
+      Name: Journey2CalcServiceRoleARN

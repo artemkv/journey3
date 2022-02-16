@@ -1,0 +1,12 @@
+https://materializecss.com/
+
+- show the acc id
+
+- allow to choose period
+- based on the period, allow to choose date
+- copy paste link for app
+
+
+- stats page should be routable (period/appid)
+- when not logged in, show intro page
+- format Y-axis values nicely (should be int)

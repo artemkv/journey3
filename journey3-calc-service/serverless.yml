@@ -1,0 +1,20 @@
+service: journey3-calc
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-east-1
+  versionFunctions: false
+
+functions:
+  compute-stats:
+    role:
+      Fn::ImportValue: Journey2CalcServiceRoleARN
+    handler: handler.consume
+    timeout: 10 # seconds
+    events:
+      - sqs:
+          arn:
+            Fn::ImportValue: Journey3MessageQueueARN
+          batchSize: 10
+          maximumBatchingWindow: 60 # 1 minute

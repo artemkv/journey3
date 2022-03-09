@@ -47,7 +47,7 @@ POST /session
     "acc" : "f1a3671f-4740-4092-9e1a-21a97f867b5e",
     "aid" : "9735965b-e1cb-4d7f-adb9-a4adf457f61a"
     "version": "1.4.6",
-    "env": "DEV",
+    "mode": "Debug",
     "fst_launch": false,
     "has_error": false,
     "evts": {},

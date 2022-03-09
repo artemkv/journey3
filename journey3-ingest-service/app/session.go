@@ -12,8 +12,8 @@ type sessionIncomingData struct {
 	AccId         string         `json:"acc" binding:"required"`
 	AppId         string         `json:"aid" binding:"required"`
 	Version       string         `json:"version"`
-	Env           string         `json:"env"`
-	FisrtLaunch   bool           `json:"fst_launch"`
+	IsRelease     bool           `json:"is_release"`
+	FirstLaunch   bool           `json:"fst_launch"`
 	HasError      bool           `json:"has_error"`
 	EventCounts   map[string]int `json:"evts" binding:"required"`
 	EventSequence []string       `json:"evt_seq" binding:"required"`
@@ -25,7 +25,8 @@ type sessionOutgoingData struct {
 	AccId         string         `json:"acc"`
 	AppId         string         `json:"aid"`
 	Version       string         `json:"version"`
-	FisrtLaunch   bool           `json:"fst_launch"`
+	IsRelease     bool           `json:"is_release"`
+	FirstLaunch   bool           `json:"fst_launch"`
 	HasError      bool           `json:"has_error"`
 	EventCounts   map[string]int `json:"evts"`
 	EventSequence []string       `json:"evt_seq"`
@@ -62,7 +63,8 @@ func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 		AccId:         sessionIn.AccId,
 		AppId:         sessionIn.AppId,
 		Version:       sessionIn.Version,
-		FisrtLaunch:   sessionIn.FisrtLaunch,
+		IsRelease:     sessionIn.IsRelease,
+		FirstLaunch:   sessionIn.FirstLaunch,
 		HasError:      sessionIn.HasError,
 		EventCounts:   sessionIn.EventCounts,
 		EventSequence: sessionIn.EventSequence,

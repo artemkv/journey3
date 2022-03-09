@@ -22,16 +22,15 @@ v 1.0 microservice chassis
 v 1.0 business
 -----------------------------------------------
 
-- enqueue received message
-
-v 1.2
------------------------------------------------
+- enqueue received session
 
 
 
 backlog
 -----------------------------------------------
 
+- server time is not relevant, if session is sent upon restart
+- should API be /session instead of /message?
 - define good treshold for slow requests
 - make sure make file works
 - migrate to sdk-go-v2 (https://aws.github.io/aws-sdk-go-v2/docs/migrating/)

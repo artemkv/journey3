@@ -14,7 +14,7 @@ func InitSNSConnection(topicArn string) {
 	_topicArn = topicArn
 }
 
-func EnqueueMessage(message *messageOutgoingData) (string, error) {
+func EnqueueMessage(message interface{}) (string, error) {
 	// serialize message
 	bytes, err := json.Marshal(message)
 	if err != nil {

@@ -1,4 +1,4 @@
-const baseUrl = 'http://127.0.0.1:8700'; // TODO: where to configure it?
+const baseUrl = 'http://127.0.0.1:8070'; // TODO: where to configure it?
 
 class ApiError extends Error {
     constructor(statusCode, statusMessage, ...params) {

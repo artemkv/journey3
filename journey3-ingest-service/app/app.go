@@ -35,7 +35,7 @@ func SetupRouter(router *gin.Engine) {
 	router.GET("/stats", reststats.HandleEndpointWithStats(reststats.HandleGetStats))
 
 	// do business
-	router.POST("/message", reststats.HandleEndpointWithStats(handlePostAction))
+	router.POST("/session", reststats.HandleEndpointWithStats(handlePostSession))
 
 	// handle 404
 	router.NoRoute(reststats.HandleWithStats(notFoundHandler()))

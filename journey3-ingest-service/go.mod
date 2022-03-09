@@ -1,4 +1,4 @@
-module artemkv.net/journey2
+module artemkv.net/journey3
 
 go 1.16
 

@@ -7,8 +7,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"artemkv.net/journey2/health"
-	"artemkv.net/journey2/reststats"
+	"artemkv.net/journey3/health"
+	"artemkv.net/journey3/reststats"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )

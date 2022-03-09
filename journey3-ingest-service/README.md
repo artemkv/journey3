@@ -1,4 +1,4 @@
-# Journey2 Events Service
+# journey3 Events Service
 
 ## Build, run and test
 

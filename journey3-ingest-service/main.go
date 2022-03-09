@@ -5,10 +5,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"artemkv.net/journey2/app"
-	"artemkv.net/journey2/health"
-	"artemkv.net/journey2/reststats"
-	"artemkv.net/journey2/server"
+	"artemkv.net/journey3/app"
+	"artemkv.net/journey3/health"
+	"artemkv.net/journey3/reststats"
+	"artemkv.net/journey3/server"
 	"github.com/gin-gonic/gin"
 )
 

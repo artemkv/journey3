@@ -8,7 +8,8 @@ import (
 
 type sessionIncomingData struct {
 	Id            string         `json:"id" binding:"required"`
-	Ts            string         `json:"ts" binding:"required"`
+	Start         string         `json:"start" binding:"required"`
+	End           string         `json:"end" binding:"required"`
 	AccId         string         `json:"acc" binding:"required"`
 	AppId         string         `json:"aid" binding:"required"`
 	Version       string         `json:"version"`
@@ -21,7 +22,8 @@ type sessionIncomingData struct {
 
 type sessionOutgoingData struct {
 	Id            string         `json:"id"`
-	Ts            string         `json:"ts"`
+	Start         string         `json:"start"`
+	End           string         `json:"end"`
 	AccId         string         `json:"acc"`
 	AppId         string         `json:"aid"`
 	Version       string         `json:"version"`
@@ -59,7 +61,8 @@ func handlePostSession(c *gin.Context) {
 func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 	return &sessionOutgoingData{
 		Id:            sessionIn.Id,
-		Ts:            sessionIn.Ts,
+		Start:         sessionIn.Start,
+		End:           sessionIn.End,
 		AccId:         sessionIn.AccId,
 		AppId:         sessionIn.AppId,
 		Version:       sessionIn.Version,

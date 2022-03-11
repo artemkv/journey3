@@ -2,8 +2,10 @@ package app
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type sessionIncomingData struct {
@@ -21,6 +23,8 @@ type sessionIncomingData struct {
 }
 
 type sessionOutgoingData struct {
+	Ids           string         `json:"ids"`
+	Dts           string         `json:"dts"`
 	Id            string         `json:"id"`
 	Start         string         `json:"start"`
 	End           string         `json:"end"`
@@ -60,6 +64,8 @@ func handlePostSession(c *gin.Context) {
 
 func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 	return &sessionOutgoingData{
+		Ids:           uuid.New().String(),
+		Dts:           time.Now().UTC().Format(time.RFC3339),
 		Id:            sessionIn.Id,
 		Start:         sessionIn.Start,
 		End:           sessionIn.End,

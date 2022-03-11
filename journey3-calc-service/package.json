@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "@artemkv/datetimeutil": "^1.1.0",
-        "aws-sdk": "^2.978.0"
+        "@aws-sdk/client-dynamodb": "^3.54.0"
     },
     "devDependencies": {},
     "scripts": {}

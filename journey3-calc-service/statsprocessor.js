@@ -13,21 +13,25 @@ exports.processMessage = async (session, dynamoConnector) => {
   if (!session.ids) {
     throw new Error(`Missing required session property: ids`);
   }
+  // TODO: check format
+  if (!session.start) {
+    throw new Error(`Missing required session property: start`);
+  }
 
-  // Save session
+  // Extract common data
+  const hourDt = statsFunctions.getHourDt(session.start);
+  const dayDt = statsFunctions.getDayDt(session.start);
+  const monthDt = statsFunctions.getMonthDt(session.start);
   const build = session.is_release ? 'Release' : 'Debug';
   const version = session.version ? session.version : 'unknown';
-  const hourDt = statsFunctions.getHourDt(session.dts);
   const ids = session.ids;
-  const sessionToSave = getSessionForSaving(session);
 
+  // Save session
+  const sessionToSave = getSessionForSaving(session);
   await dynamoConnector.saveSession(session.aid, build, version, hourDt, ids, sessionToSave);
 
   // Update stats
-  /*let hourDt = statsFunctions.getHourDt(session.dts);
-  let dayDt = statsFunctions.getDayDt(session.dts);
-  let monthDt = statsFunctions.getMonthDt(session.dts);
-  await dynamoConnector.updateStats(session, hourDt, dayDt, monthDt);*/
+  await dynamoConnector.updateStats(build, version, session, hourDt, dayDt, monthDt);
 };
 
 function getSessionForSaving(session) {

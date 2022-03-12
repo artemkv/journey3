@@ -50,7 +50,11 @@ POST /session
     "mode": "Debug",
     "fst_launch": false,
     "has_error": false,
-    "evts": {},
-    "evt_seq": []
+    "evts": {
+        "click_play": 1,
+        "add_to_library": 2,
+        "use_search": 3
+    },
+    "evt_seq": ["use_search", "use_search", "add_to_library", "use_search", "click_play"]
 }
 ```

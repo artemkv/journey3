@@ -19,6 +19,7 @@ exports.processMessage = async (session, dynamoConnector) => {
   }
 
   // Extract common data
+  const yearDt = statsFunctions.getYearDt(session.start);
   const hourDt = statsFunctions.getHourDt(session.start);
   const dayDt = statsFunctions.getDayDt(session.start);
   const monthDt = statsFunctions.getMonthDt(session.start);
@@ -31,7 +32,7 @@ exports.processMessage = async (session, dynamoConnector) => {
   await dynamoConnector.saveSession(session.aid, build, version, hourDt, ids, sessionToSave);
 
   // Update stats
-  await dynamoConnector.updateStats(build, version, session, hourDt, dayDt, monthDt);
+  await dynamoConnector.updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt);
 };
 
 function getSessionForSaving(session) {

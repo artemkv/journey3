@@ -54,6 +54,12 @@ const getMonthDt = function getMonthDt(date) {
   return dt.getYearString(dateUtc) + dt.getMonthString(dateUtc);
 };
 
+const getYearDt = function getYearDt(date) {
+  let dateUtc = new Date(date);
+  return dt.getYearString(dateUtc);
+};
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
+exports.getYearDt = getYearDt;

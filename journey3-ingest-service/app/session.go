@@ -17,6 +17,7 @@ type sessionIncomingData struct {
 	Version                string         `json:"version"`
 	IsRelease              bool           `json:"is_release"`
 	FirstLaunch            bool           `json:"fst_launch"`
+	FirstLaunchThisHour    bool           `json:"fst_launch_hour"`
 	FirstLaunchToday       bool           `json:"fst_launch_day"`
 	FirstLaunchThisMonth   bool           `json:"fst_launch_month"`
 	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
@@ -37,6 +38,7 @@ type sessionOutgoingData struct {
 	Version                string         `json:"version"`
 	IsRelease              bool           `json:"is_release"`
 	FirstLaunch            bool           `json:"fst_launch"`
+	FirstLaunchThisHour    bool           `json:"fst_launch_hour"`
 	FirstLaunchToday       bool           `json:"fst_launch_day"`
 	FirstLaunchThisMonth   bool           `json:"fst_launch_month"`
 	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
@@ -82,6 +84,7 @@ func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 		Version:                sessionIn.Version,
 		IsRelease:              sessionIn.IsRelease,
 		FirstLaunch:            sessionIn.FirstLaunch,
+		FirstLaunchThisHour:    sessionIn.FirstLaunchThisHour,
 		FirstLaunchToday:       sessionIn.FirstLaunchToday,
 		FirstLaunchThisMonth:   sessionIn.FirstLaunchThisMonth,
 		FirstLaunchThisYear:    sessionIn.FirstLaunchThisYear,

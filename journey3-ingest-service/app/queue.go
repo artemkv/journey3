@@ -22,6 +22,9 @@ func EnqueueMessage(message interface{}) (string, error) {
 	}
 	msg := string(bytes)
 
+	// TODO: debug code
+	// fmt.Printf("SENDING: %s", msg)
+
 	// init client
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {

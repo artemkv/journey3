@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {getLast10Years, getYear} from '../datetimeutil';
+import React, { useEffect, useState } from 'react';
+import { getLast10Years, getYear } from '../datetimeutil';
 
 import AppSelectorContainer from './AppSelectorContainer';
 import M from 'materialize-css/dist/js/materialize.min.js';
-import StatsContainer from './StatsContainer';
+import StatsChartContainer from './StatsChartContainer';
+import EventStatsContainer from './EventStatsContainer';
+import * as api from '../sessionapi';
 
 export default () => {
     const [period, setPeriod] = useState('month');
@@ -27,6 +29,7 @@ export default () => {
 
     const now = new Date();
     const dt = now; // TODO: should come from date picker
+    const build = "Debug";
 
     return <div>
         <div className="row">
@@ -51,8 +54,41 @@ export default () => {
             </div>
         </div>
         <div className="row">
-            <StatsContainer
+            <StatsChartContainer
+                title='Sessions'
+                chartId='sessionsPerPeriod'
                 appId={appId}
+                build={build}
+                period={period}
+                date={dt}
+                loadDataCallback={api.getSessionsPerPeriod} />
+            <StatsChartContainer
+                title='Unique Users'
+                chartId='uniqieUsersPerPeriod'
+                appId={appId}
+                build={build}
+                period={period}
+                date={dt}
+                loadDataCallback={api.getUniqueUsersPerPeriod} />
+            <StatsChartContainer
+                title='New Users'
+                chartId='newUsersPerPeriod'
+                appId={appId}
+                build={build}
+                period={period}
+                date={dt}
+                loadDataCallback={api.getNewUsersPerPeriod} />
+            <StatsChartContainer
+                title='Sessions with errors'
+                chartId='errorSessionsPerPeriod'
+                appId={appId}
+                build={build}
+                period={period}
+                date={dt}
+                loadDataCallback={api.getErrorSessionsPerPeriod} />
+            <EventStatsContainer
+                appId={appId}
+                build={build}
                 period={period}
                 date={dt} />
         </div>

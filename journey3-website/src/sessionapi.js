@@ -76,9 +76,33 @@ function callApi(f) {
     });
 }
 
-export const getAppLaunchStats = (appId, period, dt) => {
+export const getSessionsPerPeriod = (appId, build, period, dt) => {
     return callApi(() => {
-        return api.getAppLaunchStats(appId, period, dt, getSession());
+        return api.getSessionsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
+export const getErrorSessionsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getErrorSessionsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
+export const getEventsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getEventsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
+export const getUniqueUsersPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getUniqueUsersPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
+export const getNewUsersPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getNewUsersPerPeriod(appId, build, period, dt, getSession());
     });
 };
 

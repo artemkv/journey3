@@ -99,8 +99,24 @@ export const signIn = (idToken) => {
     return postJson('/signin', { id_token: idToken });
 };
 
-export const getAppLaunchStats = (appId, period, dt, session) => {
-    return getJson(`/applaunchstats?aid=${appId}&period=${period}&dt=${dt}`, session);
+export const getSessionsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/sessions_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getErrorSessionsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/error_sessions_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getEventsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/events_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getUniqueUsersPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/unique_users_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getNewUsersPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/new_users_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };
 
 export const getAcc = (session) => {

@@ -43,3 +43,13 @@ func isDtValid(period string, dt string) bool {
 	}
 	return false
 }
+
+func isBuildValid(build string) bool {
+	if build == "Release" {
+		return true
+	}
+	if build == "Debug" {
+		return true
+	}
+	return false
+}

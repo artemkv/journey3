@@ -38,12 +38,24 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 	router.POST("/signin", reststats.HandleEndpointWithStats(handleSignIn))
 
 	// do business
-	router.GET("/applaunchstats", reststats.HandleEndpointWithStats(
-		withAuthentication(handleAppLaunchStats)))
 
+	// stats
+	router.GET("/sessions_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleSessionsPerPeriod)))
+	router.GET("/error_sessions_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleErrorSessionsPerPeriod)))
+	router.GET("/unique_users_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleUniqueUsersPerPeriod)))
+	router.GET("/new_users_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleNewUsersPerPeriod)))
+	router.GET("/events_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleEventsPerPeriod)))
+
+	// account
 	router.GET("/acc", reststats.HandleEndpointWithStats(
 		withAuthentication(handleGetAcc)))
 
+	// apps
 	router.GET("/apps/:id", reststats.HandleEndpointWithStats(
 		withAuthentication(handleGetApp)))
 	router.GET("/apps", reststats.HandleEndpointWithStats(

@@ -9,9 +9,9 @@ import (
 )
 
 type stageData struct {
-	Ts    string `json:"ts" binding:"required"`
-	Stage int    `json:"stage" binding:"required"`
-	Name  string `json:"name" binding:"required"`
+	Ts    string `json:"ts"`
+	Stage int    `json:"stage"`
+	Name  string `json:"name"`
 }
 
 type sessionIncomingData struct {

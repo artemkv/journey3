@@ -16,6 +16,7 @@ type stageData struct {
 
 type sessionIncomingData struct {
 	Id                     string         `json:"id" binding:"required"`
+	Since                  string         `json:"since"`
 	Start                  string         `json:"start" binding:"required"`
 	End                    string         `json:"end" binding:"required"`
 	AccId                  string         `json:"acc" binding:"required"`
@@ -39,6 +40,7 @@ type sessionOutgoingData struct {
 	Ids                    string         `json:"ids"`
 	Dts                    string         `json:"dts"`
 	Id                     string         `json:"id"`
+	Since                  string         `json:"since"`
 	Start                  string         `json:"start"`
 	End                    string         `json:"end"`
 	AccId                  string         `json:"acc"`
@@ -87,6 +89,7 @@ func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 		Ids:                    uuid.New().String(),
 		Dts:                    time.Now().UTC().Format(time.RFC3339),
 		Id:                     sessionIn.Id,
+		Since:                  sessionIn.Since,
 		Start:                  sessionIn.Start,
 		End:                    sessionIn.End,
 		AccId:                  sessionIn.AccId,

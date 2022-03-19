@@ -17,6 +17,7 @@ exports.processMessage = async (session, dynamoConnector) => {
   if (!session.start) {
     throw new Error(`Missing required session property: start`);
   }
+  // TODO: validate stage!!!
 
   // Extract common data
   const yearDt = statsFunctions.getYearDt(session.start);

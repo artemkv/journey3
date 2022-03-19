@@ -1,0 +1,33 @@
+{
+    "id": "c7d57ab7-f88e-4e1e-b516-2ac27fec9bdf",
+    "since": "2022-03-19T18:03:36.922013Z",
+    "start": "2022-03-19T18:06:58.366120Z",
+    "end": "2022-03-19T18:06:58.981538Z",
+    "acc": "e04b43c9-69c1-4172-9dfd-a3ef1aa17d5e",
+    "aid": "663b16c8-c35e-4887-b964-35a74e5732d2",
+    "version": "1.4.8",
+    "is_release": false,
+    "fst_launch": false,
+    "fst_launch_hour": false,
+    "fst_launch_day": false,
+    "fst_launch_month": false,
+    "fst_launch_year": false,
+    "fst_launch_version": false,
+    "has_error": false,
+    "evts": {
+        "sign_in": 1
+    },
+    "evt_seq": [
+        "sign_in"
+    ],
+    "prev_stage": {
+        "ts": "2022-02-10T18:03:36.914840Z",
+        "stage": 1,
+        "name": "new_user"
+    },
+    "new_stage": {
+        "ts": "2022-03-19T18:03:36.914840Z",
+        "stage": 1,
+        "name": "new_user"
+    }
+}

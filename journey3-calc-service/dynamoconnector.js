@@ -4,6 +4,7 @@ const {
   PutItemCommand,
   UpdateItemCommand,
 } = require("@aws-sdk/client-dynamodb");
+const R = require('ramda');
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html#welcome_whats_new_v3
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html
@@ -75,6 +76,8 @@ const updateStats = async (session, build, version, hourDt, dayDt, monthDt, year
   if (session.has_error) {
     await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
   }
+
+  await updateConversionsByMonth(session, appId, build, version, monthDt, client);
 };
 
 async function updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {
@@ -159,6 +162,24 @@ async function updateUniqueUsersByYear(appId, build, version, yearDt, client) {
 async function updateUniqueUsersByVersion(appId, build, version, client) {
   const uniqueUsersByVersionKey = `UNIQUE_USERS_BY_VERSION#${appId}#${build}`;
   await incrementCounter(client, JOURNEY3_STATS_TABLE, uniqueUsersByVersionKey, `${version}`);
+}
+
+async function updateConversionsByMonth(session, appId, build, version, monthDt, client) {
+  const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
+  const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
+
+  const conversionsMonthKey = `CONVERSIONS_BY_MONTH#${appId}#${build}`;
+  if (session.fst_launch_month) {
+    for (let s = 1; s <= newStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
+    }
+  } else {
+    if (newStage > prevStage) {
+      for (let s = prevStage + 1; s <= newStage; s++) {
+        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
+      }
+    }
+  }
 }
 
 // Atomically increments the value of the attribute "Cnt"

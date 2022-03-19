@@ -8,6 +8,12 @@ import (
 	"github.com/google/uuid"
 )
 
+type stageData struct {
+	Ts    string `json:"ts" binding:"required"`
+	Stage int    `json:"stage" binding:"required"`
+	Name  string `json:"name" binding:"required"`
+}
+
 type sessionIncomingData struct {
 	Id                     string         `json:"id" binding:"required"`
 	Start                  string         `json:"start" binding:"required"`
@@ -25,6 +31,8 @@ type sessionIncomingData struct {
 	HasError               bool           `json:"has_error"`
 	EventCounts            map[string]int `json:"evts" binding:"required"`
 	EventSequence          []string       `json:"evt_seq" binding:"required"`
+	PreviousStage          stageData      `json:"prev_stage"`
+	NewStage               stageData      `json:"new_stage"`
 }
 
 type sessionOutgoingData struct {
@@ -46,6 +54,8 @@ type sessionOutgoingData struct {
 	HasError               bool           `json:"has_error"`
 	EventCounts            map[string]int `json:"evts"`
 	EventSequence          []string       `json:"evt_seq"`
+	PreviousStage          stageData      `json:"prev_stage"`
+	NewStage               stageData      `json:"new_stage"`
 }
 
 func handlePostSession(c *gin.Context) {
@@ -92,5 +102,7 @@ func constructsessionOut(sessionIn *sessionIncomingData) *sessionOutgoingData {
 		HasError:               sessionIn.HasError,
 		EventCounts:            sessionIn.EventCounts,
 		EventSequence:          sessionIn.EventSequence,
+		PreviousStage:          sessionIn.PreviousStage,
+		NewStage:               sessionIn.NewStage,
 	}
 }

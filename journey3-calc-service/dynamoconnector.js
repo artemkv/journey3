@@ -77,7 +77,7 @@ const updateStats = async (session, build, version, hourDt, dayDt, monthDt, year
     await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
   }
 
-  await updateConversionsByMonth(session, appId, build, version, monthDt, client);
+  await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
 };
 
 async function updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {
@@ -164,11 +164,26 @@ async function updateUniqueUsersByVersion(appId, build, version, client) {
   await incrementCounter(client, JOURNEY3_STATS_TABLE, uniqueUsersByVersionKey, `${version}`);
 }
 
-async function updateConversionsByMonth(session, appId, build, version, monthDt, client) {
+async function updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client) {
   const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
   const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
 
+  const conversionsDayKey = `CONVERSIONS_BY_DAY#${appId}#${build}`;
   const conversionsMonthKey = `CONVERSIONS_BY_MONTH#${appId}#${build}`;
+  const conversionsYearKey = `CONVERSIONS_BY_YEAR#${appId}#${build}`;
+
+  if (session.fst_launch_day) {
+    for (let s = 1; s <= newStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsDayKey, `${dayDt}#${s}#${version}`);
+    }
+  } else {
+    if (newStage > prevStage) {
+      for (let s = prevStage + 1; s <= newStage; s++) {
+        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsDayKey, `${dayDt}#${s}#${version}`);
+      }
+    }
+  }
+
   if (session.fst_launch_month) {
     for (let s = 1; s <= newStage; s++) {
       await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
@@ -177,6 +192,18 @@ async function updateConversionsByMonth(session, appId, build, version, monthDt,
     if (newStage > prevStage) {
       for (let s = prevStage + 1; s <= newStage; s++) {
         await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
+      }
+    }
+  }
+
+  if (session.fst_launch_year) {
+    for (let s = 1; s <= newStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsYearKey, `${yearDt}#${s}#${version}`);
+    }
+  } else {
+    if (newStage > prevStage) {
+      for (let s = prevStage + 1; s <= newStage; s++) {
+        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsYearKey, `${yearDt}#${s}#${version}`);
       }
     }
   }

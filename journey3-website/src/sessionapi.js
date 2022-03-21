@@ -94,6 +94,12 @@ export const getEventsPerPeriod = (appId, build, period, dt) => {
     });
 };
 
+export const getEventSessionsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getEventSessionsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
 export const getUniqueUsersPerPeriod = (appId, build, period, dt) => {
     return callApi(() => {
         return api.getUniqueUsersPerPeriod(appId, build, period, dt, getSession());

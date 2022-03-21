@@ -1,10 +1,9 @@
-import * as api from '../sessionapi';
 import * as dateTimeUtil from '../datetimeutil';
 
 import React, { useEffect, useState } from 'react';
 
 import Spinner from './Spinner';
-import StatsChartContainer from './StatsChartPanel';
+import StatsChartPanel from './StatsChartPanel';
 
 import { getLabels, getValues, CHART_COLORS } from './chartutils';
 
@@ -12,16 +11,18 @@ const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
 const DATA_LOADING_FAILED = 2;
 
-// TODO: See if this can be extended to handle various charts
 export default (props) => {
-    const [data, setData] = useState([]);
-    const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
-
+    const title = props.title;
+    const chartId = props.chartId;
     const appId = props.appId;
     const build = props.build;
     const period = props.period;
     const date = props.date;
     const dt = dateTimeUtil.getDt(period, date);
+    const loadDataCallback = props.loadDataCallback;
+
+    const [data, setData] = useState([]);
+    const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
@@ -29,11 +30,8 @@ export default (props) => {
             return;
         }
 
-        // hard-coded to retrieve events
-        api.getEventsPerPeriod(appId, build, period, dt)
+        loadDataCallback(appId, build, period, dt)
             .then((data) => {
-                console.log(JSON.stringify(data)); // TODO:
-
                 setData(data);
                 setDataLoadingStatus(DATA_LOADED);
             })
@@ -48,14 +46,25 @@ export default (props) => {
     }, [appId, period, dt]);
 
     const labels = getLabels(period, date);
-    const datasets = data.map((x, idx) => ({
-        label: x.evt,
-        data: getValues(x.stats, period, date),
-        backgroundColor: CHART_COLORS[idx],
-        borderColor: CHART_COLORS[idx],
+
+    let datasets = [{
+        label: 'Count',
+        data: getValues([], period, date),
+        backgroundColor: '#2d89ef',
+        borderColor: '#2d89ef',
         fill: false,
         lineTension: .1
-    }));
+    }];
+    if (data.length > 0) {
+        datasets = data.map((x, idx) => ({
+            label: x.evt,
+            data: getValues(x.stats, period, date),
+            backgroundColor: CHART_COLORS[idx],
+            borderColor: CHART_COLORS[idx],
+            fill: false,
+            lineTension: .1
+        }));
+    }
     const max = 1.0; // TODO:
 
     // TODO: maybe indicate somehow the loading/error status
@@ -63,9 +72,9 @@ export default (props) => {
         case DATA_NOT_LOADED:
             return <Spinner />;
         case DATA_LOADED:
-            return <StatsChartContainer
-                title='Events'
-                chartId='eventStats'
+            return <StatsChartPanel
+                title={title}
+                chartId={chartId}
                 datasets={datasets}
                 labels={labels}
                 max={max} />;

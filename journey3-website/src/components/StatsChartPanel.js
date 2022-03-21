@@ -4,7 +4,7 @@ import StatsChart from './StatsChart';
 export default (props) => {
     return (
         <div>
-            <h4>{props.title}</h4>
+            <h5>{props.title}</h5>
             <div>
                 <StatsChart
                     chartId={props.chartId}

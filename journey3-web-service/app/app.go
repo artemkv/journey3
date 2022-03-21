@@ -50,6 +50,8 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 		withAuthentication(handleNewUsersPerPeriod)))
 	router.GET("/events_per_period", reststats.HandleEndpointWithStats(
 		withAuthentication(handleEventsPerPeriod)))
+	router.GET("/event_sessions_per_period", reststats.HandleEndpointWithStats(
+		withAuthentication(handleEventSessionsPerPeriod)))
 
 	// account
 	router.GET("/acc", reststats.HandleEndpointWithStats(

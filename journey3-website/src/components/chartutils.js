@@ -25,11 +25,14 @@ export const getValues = (data, period, dateTime) => {
 }
 
 export const CHART_COLORS = [
-    'rgb(54, 162, 235)', // blue
-    'rgb(255, 99, 132)', // red
-    'rgb(75, 192, 192)', // green
-    'rgb(255, 159, 64)', // orange
-    'rgb(255, 205, 86)', // yellow
-    'rgb(153, 102, 255)', // purple
-    'rgb(201, 203, 207)' // grey
+    'rgb(45, 137, 239)', // blue
+    'rgb(255, 87, 34)', // orange
+    'rgb(0, 188, 212)', // cyan
+    'rgb(171, 71, 188)', // purple
+    'rgb(76, 175, 80)', // green
+    'rgb(121, 85, 72)', // brown
+    'rgb(236, 64, 122)', // pink
+    'rgb(38, 166, 154)', // teal
+    'rgb(103, 58, 183)', // deep purple
+    'rgb(124, 179, 66)', // light green
 ];

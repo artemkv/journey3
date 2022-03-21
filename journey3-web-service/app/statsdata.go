@@ -161,6 +161,31 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	return events, nil
 }
 
+func getEventSessionsPerPeriod(appId string, build string, period string, dt string) ([]eventData, error) {
+	// define keys
+	keyPrefix, err := getEventSessionsByPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	// run query
+	results, err := executeQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	events, err := repackResultsByDtEventVersionIntoEventData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return events, nil
+}
+
 func getSessionsByPeriodKeyPrefix(period string) (string, error) {
 	if period == "year" {
 		return "SESSIONS_BY_MONTH", nil
@@ -230,6 +255,21 @@ func getEventsByPeriodKeyPrefix(period string) (string, error) {
 	}
 	if period == "day" {
 		return "EVENTS_BY_HOUR", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
+func getEventSessionsByPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "EVENT_SESSIONS_BY_MONTH", nil
+	}
+	if period == "month" {
+		return "EVENT_SESSIONS_BY_DAY", nil
+	}
+	if period == "day" {
+		return "EVENT_SESSIONS_BY_HOUR", nil
 	}
 
 	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)

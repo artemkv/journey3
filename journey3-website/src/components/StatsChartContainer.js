@@ -3,7 +3,7 @@ import * as dateTimeUtil from '../datetimeutil';
 import React, { useEffect, useState } from 'react';
 
 import Spinner from './Spinner';
-import StatsChartContainer from './StatsChartPanel';
+import StatsChartPanel from './StatsChartPanel';
 
 import { getLabels, getValues } from './chartutils';
 
@@ -11,16 +11,18 @@ const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
 const DATA_LOADING_FAILED = 2;
 
-// TODO: See if this can be extended to handle various charts
 export default (props) => {
-    const [data, setData] = useState([]);
-    const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
-
+    const title = props.title;
+    const chartId = props.chartId;
     const appId = props.appId;
     const build = props.build;
     const period = props.period;
     const date = props.date;
     const dt = dateTimeUtil.getDt(period, date);
+    const loadDataCallback = props.loadDataCallback;
+
+    const [data, setData] = useState([]);
+    const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
@@ -28,7 +30,7 @@ export default (props) => {
             return;
         }
 
-        props.loadDataCallback(appId, build, period, dt)
+        loadDataCallback(appId, build, period, dt)
             .then((data) => {
                 setData(data);
                 setDataLoadingStatus(DATA_LOADED);
@@ -45,6 +47,7 @@ export default (props) => {
 
     const labels = getLabels(period, date);
     const values = getValues(data, period, date);
+
     const datasets = [{
         label: 'Count',
         data: values,
@@ -60,9 +63,9 @@ export default (props) => {
         case DATA_NOT_LOADED:
             return <Spinner />;
         case DATA_LOADED:
-            return <StatsChartContainer
-                title={props.title}
-                chartId={props.chartId}
+            return <StatsChartPanel
+                title={title}
+                chartId={chartId}
                 datasets={datasets}
                 labels={labels}
                 max={max} />;

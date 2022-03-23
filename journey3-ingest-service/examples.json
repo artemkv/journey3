@@ -1,0 +1,53 @@
+{
+    "head": {
+        "t": "shead",
+        "v": "1.0.0",
+        "ids": "d4ec318f-b8e2-4d8a-bed7-cb0d1922bffe",
+        "dts": "2022-03-23T18:26:56Z",
+        "id": "1603cf3c-5611-4fd0-8137-7e30dec8a84b",
+        "since": "2022-03-19T23:25:28.924017Z",
+        "start": "2022-03-23T17:30:50.888718Z",
+        "acc": "<accid>",
+        "aid": "<appid>",
+        "version": "1.4.9",
+        "is_release": false,
+        "fst_launch": false,
+        "fst_launch_hour": false,
+        "fst_launch_day": false,
+        "fst_launch_month": false,
+        "fst_launch_year": false,
+        "fst_launch_version": false
+    },
+    "tail": {
+        "t": "stail",
+        "v": "1.0.0",
+        "ids": "d4ec318f-b8e2-4d8a-bed7-cb0d1922bffe",
+        "dts": "2022-03-23T18:26:56Z",
+        "id": "3edbdecc-efaf-48cf-9310-b1b3228b7eb4",
+        "since": "2022-03-19T23:25:28.924017Z",
+        "start": "2022-03-23T17:29:41.767573Z",
+        "end": "2022-03-23T17:29:42.389210Z",
+        "acc": "<accid>",
+        "aid": "<appid>",
+        "version": "1.4.9",
+        "is_release": false,
+        "fst_launch": false,
+        "has_error": false,
+        "evts": {
+            "sign_in": 1
+        },
+        "evt_seq": [
+            "sign_in"
+        ],
+        "prev_stage": {
+            "ts": "2022-03-20T18:27:22.057934Z",
+            "stage": 3,
+            "name": "engage"
+        },
+        "new_stage": {
+            "ts": "2022-03-20T18:27:22.057934Z",
+            "stage": 3,
+            "name": "engage"
+        }
+    }
+}

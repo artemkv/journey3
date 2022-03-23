@@ -2,7 +2,9 @@ https://dynobase.dev/dynamodb-golang-query-examples/
 
 TODO:
 
-- fill updatedat when modifying user record
+- 
+
+- fill updatedate when modifying user record
 - re-test the api, all edge cases
 
 - when implementing the read-only access for another user, don't allow edit those apps, don't share the account id

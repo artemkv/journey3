@@ -10,3 +10,15 @@ https://materializecss.com/
 - stats page should be routable (period/appid)
 - when not logged in, show intro page
 - format Y-axis values nicely (should be int)
+
+
+- order returned events by name, so that the color is (mostly) the same
+- allow selecting which events to put on the chart
+- funnels
+
+
+- unique users
+- unique users by version
+- sessions
+
+- splits by version

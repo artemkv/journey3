@@ -63,7 +63,7 @@ export default (props) => {
             borderColor: CHART_COLORS[idx],
             fill: false,
             lineTension: .1
-        }));
+        }))/*.filter(x => x.label === "edit_win")*/; // TODO:
     }
     const max = 1.0; // TODO:
 

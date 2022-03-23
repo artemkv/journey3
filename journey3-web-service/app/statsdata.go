@@ -52,7 +52,7 @@ func getSessionsPerPeriod(appId string, build string, period string, dt string) 
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -77,7 +77,7 @@ func getErrorSessionsPerPeriod(appId string, build string, period string, dt str
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -102,7 +102,7 @@ func getUniqueUsersPerPeriod(appId string, build string, period string, dt strin
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -127,7 +127,7 @@ func getNewUsersPerPeriod(appId string, build string, period string, dt string) 
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -152,7 +152,7 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	}
 
 	// re-pack the results
-	events, err := repackResultsByDtEventVersionIntoEventData(results)
+	events, err := repackResultsByDtEventIgnoringVersionIntoEventData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -177,7 +177,7 @@ func getEventSessionsPerPeriod(appId string, build string, period string, dt str
 	}
 
 	// re-pack the results
-	events, err := repackResultsByDtEventVersionIntoEventData(results)
+	events, err := repackResultsByDtEventIgnoringVersionIntoEventData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -341,6 +341,37 @@ func executeQuery(hashKey string, sortKeyPrefix string) (*dynamodb.QueryOutput, 
 	return result, nil
 }
 
+func repackResultsByDtIgnoringVersionIntoStatsData(results *dynamodb.QueryOutput) ([]statsData, error) {
+	statsByDt := make(map[string]statsData)
+	for _, v := range results.Items {
+		item := statsItem{}
+
+		err := attributevalue.UnmarshalMap(v, &item)
+		if err != nil {
+			return nil, err
+		}
+
+		dt, _ := splitIntoDtVersion(item.SortKey)
+
+		if _, ok := statsByDt[dt]; !ok {
+			statsByDt[dt] = statsData{
+				Dt:    dt,
+				Count: 0,
+			}
+		}
+		dtStats := statsByDt[dt]
+		dtStats.Count += item.Cnt
+		statsByDt[dt] = dtStats
+	}
+
+	stats := make([]statsData, 0, len(statsByDt))
+	for _, v := range statsByDt {
+		stats = append(stats, v)
+	}
+	return stats, nil
+}
+
+/* TODO: decide what to do with version and how to return the data in that case
 func repackResultsByDtVersionIntoStatsData(results *dynamodb.QueryOutput) ([]statsData, error) {
 	stats := make([]statsData, 0, len(results.Items))
 	for _, v := range results.Items {
@@ -361,7 +392,50 @@ func repackResultsByDtVersionIntoStatsData(results *dynamodb.QueryOutput) ([]sta
 	}
 	return stats, nil
 }
+*/
 
+func repackResultsByDtEventIgnoringVersionIntoEventData(results *dynamodb.QueryOutput) ([]eventData, error) {
+	statsByEventAndDate := make(map[string]map[string]statsData)
+	for _, v := range results.Items {
+		item := statsItem{}
+
+		err := attributevalue.UnmarshalMap(v, &item)
+		if err != nil {
+			return nil, err
+		}
+
+		dt, event, _ := splitIntoDtEventVersion(item.SortKey)
+
+		if _, ok := statsByEventAndDate[event]; !ok {
+			statsByEventAndDate[event] = make(map[string]statsData)
+		}
+		if _, ok := statsByEventAndDate[event][dt]; !ok {
+			statsByEventAndDate[event][dt] = statsData{
+				Dt:    dt,
+				Count: 0,
+			}
+		}
+		dtStats := statsByEventAndDate[event][dt]
+		dtStats.Count += item.Cnt
+		statsByEventAndDate[event][dt] = dtStats
+	}
+
+	events := make([]eventData, 0, len(statsByEventAndDate))
+	for event, statsByDt := range statsByEventAndDate {
+		stats := make([]statsData, 0, len(statsByDt))
+		for _, v := range statsByDt {
+			stats = append(stats, v)
+		}
+		eventStats := eventData{
+			Event: event,
+			Stats: stats,
+		}
+		events = append(events, eventStats)
+	}
+	return events, nil
+}
+
+/*
 func repackResultsByDtEventVersionIntoEventData(results *dynamodb.QueryOutput) ([]eventData, error) {
 	statsByEvent := make(map[string]eventData)
 	for _, v := range results.Items {
@@ -395,6 +469,7 @@ func repackResultsByDtEventVersionIntoEventData(results *dynamodb.QueryOutput) (
 	}
 	return events, nil
 }
+*/
 
 func logAndConvertError(err error) error {
 	log.Printf("%v", err)

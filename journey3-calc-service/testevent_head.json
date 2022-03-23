@@ -1,0 +1,20 @@
+{
+    "Records": [
+        {
+            "messageId": "35431bb2-2874-41ec-9dbf-174cf8da8f96",
+            "receiptHandle": "AQEBzPLFeQ5wvZSdDNMfQRWpyIg4nD/QgqOlTylEKrDRl42jcLAi/wDO38KoWqnfJVjVho8ti/mgffuOhUZuW22zVKsFTZ/V03Vq7D8HqHhYrjYeGS3ata0yaQKneYnTZIJCcUlbhv4TDV0EW+stCIys7v9saNompg+5W/dahxoTdsrOvDHrQgc2zib47M9WIciYCT06Fi87bkqQ9gP94W6VKtyD0ENi+n1JsgmzlQf0CBy9baRgLHfqubkhyvdbPhlrSrnhNTfEFd/RCT8FYPWSlOIF4zW0a07jCpyCdi7EXopuqvWRKUuY+wf/AaiFikkns8iNoSWPvZy7bkXO7jcv5Hq0dSf8ZUHGudG65+ItwQaUiRaBP/7xWHP22Vwzn9Aq4c5rp6Ul0KsixgVf+fYshw==",
+            "body": "{\"t\":\"shead\",\"v\":\"1.0.0\",\"ids\":\"d4ec318f-b8e2-4d8a-bed7-cb0d1922bffe\",\"dts\":\"2022-03-23T18:26:56Z\",\"id\":\"1603cf3c-5611-4fd0-8137-7e30dec8a84b\",\"since\":\"2022-03-19T23:25:28.924017Z\",\"start\":\"2022-03-23T17:30:50.888718Z\",\"acc\":\"e04b43c9-69c1-4172-9dfd-a3ef1aa17d5e\",\"aid\":\"663b16c8-c35e-4887-b964-35a74e5732d2\",\"version\":\"1.4.9\",\"is_release\":false,\"fst_launch\":false,\"fst_launch_hour\":false,\"fst_launch_day\":false,\"fst_launch_month\":false,\"fst_launch_year\":false,\"fst_launch_version\":false}",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "SentTimestamp": "1629991089416",
+                "SenderId": "473928362053",
+                "ApproximateFirstReceiveTimestamp": "1629991089456"
+            },
+            "messageAttributes": {},
+            "md5OfBody": "47bce5c74f589f4867dbd57e9ca9f808",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-east-1:XXXXXXXXXXX:journey3-messages",
+            "awsRegion": "us-east-1"
+        }
+    ]
+}

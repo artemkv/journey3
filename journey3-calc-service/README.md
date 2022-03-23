@@ -46,6 +46,10 @@ Invoke locally (use local DynamoDB)
 
 ```
 serverless invoke local --function compute-stats --path=testevent.json --env IS_OFFLINE=true --env AWS_ACCESS_KEY_ID=fakeMyKeyId --env AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+
+serverless invoke local --function compute-stats --path=testevent_head.json --env IS_OFFLINE=true --env AWS_ACCESS_KEY_ID=fakeMyKeyId --env AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
+
+serverless invoke local --function compute-stats --path=testevent_tail.json --env IS_OFFLINE=true --env AWS_ACCESS_KEY_ID=fakeMyKeyId --env AWS_SECRET_ACCESS_KEY=fakeSecretAccessKey
 ```
 
 ## Timeouts

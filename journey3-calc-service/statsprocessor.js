@@ -29,16 +29,24 @@ exports.processMessage = async (session, dynamoConnector) => {
   const ids = session.ids;
 
   // Save session
-  const sessionToSave = getSessionForSaving(session);
-  await dynamoConnector.saveSession(session.aid, build, version, hourDt, ids, sessionToSave);
+  if (session.t === "stail" || !session.t) {
+    const sessionToSave = getSessionForSaving(session);
+    await dynamoConnector.saveSession(session.aid, build, version, hourDt, ids, sessionToSave);
+  }
 
   // Update stats
-  await dynamoConnector.updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt);
+  if (!session.t) {
+    await dynamoConnector.updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt);
+  } else if (session.t === "shead") {
+    await dynamoConnector.updateStatsFromSessionHead(session, build, version, hourDt, dayDt, monthDt, yearDt);
+  } else if (session.t === "stail") {
+    await dynamoConnector.updateStatsFromSessionTail(session, build, version, hourDt, dayDt, monthDt, yearDt);
+  }
 };
 
 function getSessionForSaving(session) {
   return {
-    id: session.id,
+    id: session.ids,
     start: session.start,
     end: session.end,
     version: session.version,

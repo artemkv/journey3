@@ -31,6 +31,12 @@ exports.getConnector = () => {
     updateStats: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
       return await updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
     },
+    updateStatsFromSessionHead: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
+      return await updateStatsFromSessionHead(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
+    },
+    updateStatsFromSessionTail: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
+      return await updateStatsFromSessionTail(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
+    },
   };
 };
 
@@ -45,6 +51,47 @@ const saveSession = async (aid, build, version, dts, ids, session, client) => {
   return await saveObject(client, JOURNEY3_SESSIONS_TABLE, key, sortKey, session);
 }
 
+const updateStatsFromSessionHead = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
+  const appId = session.aid;
+
+  if (session.fst_launch) {
+    await updateUniqueUsers(appId, build, version, client);
+    await updateNewUsersByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
+  }
+
+  if (session.fst_launch_hour) {
+    await updateUniqueUsersByHour(appId, build, version, hourDt, client);
+  }
+  if (session.fst_launch_day) {
+    await updateUniqueUsersByDay(appId, build, version, dayDt, client);
+  }
+  if (session.fst_launch_month) {
+    await updateUniqueUsersByMonth(appId, build, version, monthDt, client);
+  }
+  if (session.fst_launch_year) {
+    await updateUniqueUsersByYear(appId, build, version, yearDt, client);
+  }
+  if (session.fst_launch_version) {
+    await updateUniqueUsersByVersion(appId, build, version, client);
+  }
+
+  await updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
+}
+
+const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
+  const appId = session.aid;
+
+  await updateEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
+  await updateEventSessionsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
+
+  if (session.has_error) {
+    await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
+  }
+
+  await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
+}
+
+// TODO: deprecate
 const updateStats = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
   const appId = session.aid;
 

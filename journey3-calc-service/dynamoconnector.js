@@ -131,12 +131,16 @@ const updateStats = async (session, build, version, hourDt, dayDt, monthDt, year
 };
 
 async function updateRetention(session, appId, build, version, dayDt, client) {
-  const retentionKey = `RETENTION#${appId}#${build}`;
+  const sinceDt = statsfunc.getDayDt(session.since);
 
   const daysSince = statsfunc.getDaysSince(session.since, session.start);
   const bucket = statsfunc.getRetentionBucket(daysSince);
 
-  await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionKey, `${dayDt}#${bucket}#${version}`);
+  const retentionOnKey = `RETENTION_ON#${appId}#${build}`;
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionOnKey, `${dayDt}#${bucket}#${version}`);
+
+  const retentionSinceKey = `RETENTION_SINCE#${appId}#${build}`;
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionSinceKey, `${sinceDt}#${bucket}#${version}`);
 }
 
 async function updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {

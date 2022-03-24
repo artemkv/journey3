@@ -5,6 +5,7 @@ const {
   UpdateItemCommand,
 } = require("@aws-sdk/client-dynamodb");
 const R = require('ramda');
+const statsfunc = require('./statsfunc');
 
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/welcome.html#welcome_whats_new_v3
 // https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/dynamodb-example-table-read-write.html
@@ -64,6 +65,7 @@ const updateStatsFromSessionHead = async (session, build, version, hourDt, dayDt
   }
   if (session.fst_launch_day) {
     await updateUniqueUsersByDay(appId, build, version, dayDt, client);
+    await updateRetention(session, appId, build, version, dayDt, client);
   }
   if (session.fst_launch_month) {
     await updateUniqueUsersByMonth(appId, build, version, monthDt, client);
@@ -105,6 +107,7 @@ const updateStats = async (session, build, version, hourDt, dayDt, monthDt, year
   }
   if (session.fst_launch_day) {
     await updateUniqueUsersByDay(appId, build, version, dayDt, client);
+    await updateRetention(session, appId, build, version, dayDt, client);
   }
   if (session.fst_launch_month) {
     await updateUniqueUsersByMonth(appId, build, version, monthDt, client);
@@ -126,6 +129,15 @@ const updateStats = async (session, build, version, hourDt, dayDt, monthDt, year
 
   await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
 };
+
+async function updateRetention(session, appId, build, version, dayDt, client) {
+  const retentionKey = `RETENTION#${appId}#${build}`;
+
+  const daysSince = statsfunc.getDaysSince(session.since, session.start);
+  const bucket = statsfunc.getRetentionBucket(daysSince);
+
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionKey, `${dayDt}#${bucket}#${version}`);
+}
 
 async function updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {
   const sessionsByHourKey = `SESSIONS_BY_HOUR#${appId}#${build}`;

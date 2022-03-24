@@ -9,8 +9,13 @@
     "dependencies": {
         "@artemkv/datetimeutil": "^1.1.0",
         "@aws-sdk/client-dynamodb": "^3.54.0",
+        "dayjs": "^1.11.0",
         "ramda": "^0.28.0"
     },
-    "devDependencies": {},
-    "scripts": {}
+    "devDependencies": {
+        "jest": "^27.5.1"
+    },
+    "scripts": {
+        "test": "jest"
+    }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 const dt = require('@artemkv/datetimeutil');
+const dayjs = require('dayjs');
 
 // Pure function go here
 
@@ -29,6 +30,8 @@ const validateAction = function validateAction(action) {
     }
     return { ok: true }
 }*/
+
+// TODO: rewrite everything in a same stile, probably using lambdas
 
 const getHourDt = function getHourDt(date) {
   let dateUtc = new Date(date);
@@ -59,7 +62,29 @@ const getYearDt = function getYearDt(date) {
   return dt.getYearString(dateUtc);
 };
 
+const getDaysSince = (since, start) => {
+  const from = dayjs(since);
+  const to = dayjs(start);
+
+  return to.diff(from, 'day');
+}
+
+const getRetentionBucket = (daysSince) => {
+  if (daysSince <= 0) {
+    return 0;
+  }
+
+  const buckets = [1, 2, 5, 8, 12, 18, 27, 40, 60, 1000000];
+  let idx = 0;
+  while (daysSince > buckets[idx]) {
+    idx++;
+  }
+  return buckets[idx];
+}
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
 exports.getYearDt = getYearDt;
+exports.getDaysSince = getDaysSince;
+exports.getRetentionBucket = getRetentionBucket;

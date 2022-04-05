@@ -1,13 +1,19 @@
-import { CategoryScale, Chart, LineController, LineElement, LinearScale, PointElement, Tooltip } from 'chart.js';
-import React, { useEffect } from 'react';
+import {CategoryScale, Chart, LineController, LineElement, LinearScale, PointElement, Tooltip} from 'chart.js';
+import React, {useState, useEffect} from 'react';
 
 Chart.register(LinearScale, LineController, CategoryScale, PointElement, LineElement, Tooltip);
 
 export default (props) => {
     const chartId = props.chartId;
 
+    const [chart, setChart] = useState(undefined);
+
     useEffect(() => {
-        new Chart(chartId, {
+        if (chart) {
+            chart.destroy();
+        }
+
+        const newChart = new Chart(chartId, {
             type: 'line',
             data: {
                 datasets: props.datasets,
@@ -26,7 +32,9 @@ export default (props) => {
                 }
             }
         });
-    }, []);
+
+        setChart(newChart);
+    }, [props.datasets]);
 
     return (
         <canvas id={chartId}></canvas>

@@ -22,7 +22,7 @@ export default (props) => {
                 setData(data);
                 // TODO: use ramda to access inner property in a safe way?
                 if (data.length > 0) {
-                    props.onAppChanged(data[0].aid);
+                    props.onAppChanged(data[1].aid); // TODO: hard-coded to app 1
                 }
                 setDataLoadingStatus(DATA_LOADED);
             })

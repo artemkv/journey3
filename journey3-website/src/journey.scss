@@ -6,6 +6,19 @@
   margin-left: 8px;
 }
 
+.double-distance-right {
+  margin-right: 16px;
+}
+
 .hero {
   height: 300px;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.panel {
+  margin: 10px;
 }

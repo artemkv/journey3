@@ -27,13 +27,16 @@ type statsItem struct {
 }
 
 type statsData struct {
-	Dt    string `json:"dt"`
-	Count int    `json:"count"`
+	Dt      string `json:"dt"`
+	Version string `json:"version"`
+	Count   int    `json:"count"`
 }
 
-type eventData struct {
-	Event string      `json:"evt"`
-	Stats []statsData `json:"stats"`
+type eventStatsData struct {
+	Dt      string `json:"dt"`
+	Version string `json:"version"`
+	Event   string `json:"evt"`
+	Count   int    `json:"count"`
 }
 
 func getSessionsPerPeriod(appId string, build string, period string, dt string) ([]statsData, error) {
@@ -52,7 +55,7 @@ func getSessionsPerPeriod(appId string, build string, period string, dt string) 
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -77,7 +80,7 @@ func getErrorSessionsPerPeriod(appId string, build string, period string, dt str
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -102,7 +105,7 @@ func getUniqueUsersPerPeriod(appId string, build string, period string, dt strin
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -127,7 +130,7 @@ func getNewUsersPerPeriod(appId string, build string, period string, dt string) 
 	}
 
 	// re-pack the results
-	stats, err := repackResultsByDtIgnoringVersionIntoStatsData(results)
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -136,7 +139,7 @@ func getNewUsersPerPeriod(appId string, build string, period string, dt string) 
 	return stats, nil
 }
 
-func getEventsPerPeriod(appId string, build string, period string, dt string) ([]eventData, error) {
+func getEventsPerPeriod(appId string, build string, period string, dt string) ([]eventStatsData, error) {
 	// define keys
 	keyPrefix, err := getEventsByPeriodKeyPrefix(period)
 	if err != nil {
@@ -152,7 +155,7 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	}
 
 	// re-pack the results
-	events, err := repackResultsByDtEventIgnoringVersionIntoEventData(results)
+	events, err := repackResultsByDtEventVersionIntoEventData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -161,7 +164,7 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	return events, nil
 }
 
-func getEventSessionsPerPeriod(appId string, build string, period string, dt string) ([]eventData, error) {
+func getEventSessionsPerPeriod(appId string, build string, period string, dt string) ([]eventStatsData, error) {
 	// define keys
 	keyPrefix, err := getEventSessionsByPeriodKeyPrefix(period)
 	if err != nil {
@@ -177,7 +180,7 @@ func getEventSessionsPerPeriod(appId string, build string, period string, dt str
 	}
 
 	// re-pack the results
-	events, err := repackResultsByDtEventIgnoringVersionIntoEventData(results)
+	events, err := repackResultsByDtEventVersionIntoEventData(results)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -341,37 +344,6 @@ func executeQuery(hashKey string, sortKeyPrefix string) (*dynamodb.QueryOutput, 
 	return result, nil
 }
 
-func repackResultsByDtIgnoringVersionIntoStatsData(results *dynamodb.QueryOutput) ([]statsData, error) {
-	statsByDt := make(map[string]statsData)
-	for _, v := range results.Items {
-		item := statsItem{}
-
-		err := attributevalue.UnmarshalMap(v, &item)
-		if err != nil {
-			return nil, err
-		}
-
-		dt, _ := splitIntoDtVersion(item.SortKey)
-
-		if _, ok := statsByDt[dt]; !ok {
-			statsByDt[dt] = statsData{
-				Dt:    dt,
-				Count: 0,
-			}
-		}
-		dtStats := statsByDt[dt]
-		dtStats.Count += item.Cnt
-		statsByDt[dt] = dtStats
-	}
-
-	stats := make([]statsData, 0, len(statsByDt))
-	for _, v := range statsByDt {
-		stats = append(stats, v)
-	}
-	return stats, nil
-}
-
-/* TODO: decide what to do with version and how to return the data in that case
 func repackResultsByDtVersionIntoStatsData(results *dynamodb.QueryOutput) ([]statsData, error) {
 	stats := make([]statsData, 0, len(results.Items))
 	for _, v := range results.Items {
@@ -382,20 +354,20 @@ func repackResultsByDtVersionIntoStatsData(results *dynamodb.QueryOutput) ([]sta
 			return nil, err
 		}
 
-		dt, _ := splitIntoDtVersion(item.SortKey)
+		dt, version := splitIntoDtVersion(item.SortKey)
 
 		statsItem := statsData{
-			Dt:    dt,
-			Count: item.Cnt,
+			Dt:      dt,
+			Version: version,
+			Count:   item.Cnt,
 		}
 		stats = append(stats, statsItem)
 	}
 	return stats, nil
 }
-*/
 
-func repackResultsByDtEventIgnoringVersionIntoEventData(results *dynamodb.QueryOutput) ([]eventData, error) {
-	statsByEventAndDate := make(map[string]map[string]statsData)
+func repackResultsByDtEventVersionIntoEventData(results *dynamodb.QueryOutput) ([]eventStatsData, error) {
+	stats := make([]eventStatsData, 0, len(results.Items))
 	for _, v := range results.Items {
 		item := statsItem{}
 
@@ -404,72 +376,18 @@ func repackResultsByDtEventIgnoringVersionIntoEventData(results *dynamodb.QueryO
 			return nil, err
 		}
 
-		dt, event, _ := splitIntoDtEventVersion(item.SortKey)
+		dt, event, version := splitIntoDtEventVersion(item.SortKey)
 
-		if _, ok := statsByEventAndDate[event]; !ok {
-			statsByEventAndDate[event] = make(map[string]statsData)
+		statsItem := eventStatsData{
+			Dt:      dt,
+			Version: version,
+			Event:   event,
+			Count:   item.Cnt,
 		}
-		if _, ok := statsByEventAndDate[event][dt]; !ok {
-			statsByEventAndDate[event][dt] = statsData{
-				Dt:    dt,
-				Count: 0,
-			}
-		}
-		dtStats := statsByEventAndDate[event][dt]
-		dtStats.Count += item.Cnt
-		statsByEventAndDate[event][dt] = dtStats
+		stats = append(stats, statsItem)
 	}
-
-	events := make([]eventData, 0, len(statsByEventAndDate))
-	for event, statsByDt := range statsByEventAndDate {
-		stats := make([]statsData, 0, len(statsByDt))
-		for _, v := range statsByDt {
-			stats = append(stats, v)
-		}
-		eventStats := eventData{
-			Event: event,
-			Stats: stats,
-		}
-		events = append(events, eventStats)
-	}
-	return events, nil
+	return stats, nil
 }
-
-/*
-func repackResultsByDtEventVersionIntoEventData(results *dynamodb.QueryOutput) ([]eventData, error) {
-	statsByEvent := make(map[string]eventData)
-	for _, v := range results.Items {
-		item := statsItem{}
-
-		err := attributevalue.UnmarshalMap(v, &item)
-		if err != nil {
-			return nil, err
-		}
-
-		dt, event, _ := splitIntoDtEventVersion(item.SortKey)
-		statsItem := statsData{
-			Dt:    dt,
-			Count: item.Cnt,
-		}
-
-		if _, ok := statsByEvent[event]; !ok {
-			statsByEvent[event] = eventData{
-				Event: event,
-				Stats: make([]statsData, 0),
-			}
-		}
-		eventStats := statsByEvent[event]
-		eventStats.Stats = append(eventStats.Stats, statsItem)
-		statsByEvent[event] = eventStats
-	}
-
-	events := make([]eventData, 0, len(statsByEvent))
-	for _, v := range statsByEvent {
-		events = append(events, v)
-	}
-	return events, nil
-}
-*/
 
 func logAndConvertError(err error) error {
 	log.Printf("%v", err)

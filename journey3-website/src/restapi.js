@@ -96,7 +96,7 @@ function putJson(endpoint, data, session) {
 }
 
 export const signIn = (idToken) => {
-    return postJson('/signin', { id_token: idToken });
+    return postJson('/signin', {id_token: idToken});
 };
 
 export const getSessionsPerPeriod = (appId, build, period, dt, session) => {

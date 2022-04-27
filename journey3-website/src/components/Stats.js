@@ -32,13 +32,13 @@ export default () => {
 
     return (
         <div>
-            <div className='row'>
-                <select className='browser-default'>
-                    <option value='202010'>October, 2020</option>
+            <div className="row">
+                <select className="browser-default">
+                    <option value="202010">October, 2020</option>
                 </select>
-                <input type='text' className='datepicker' />
+                <input type="text" className="datepicker" />
                 <select
-                    className='browser-default'
+                    className="browser-default"
                     value={getYear(now)}
                     onChange={onYearChanged}
                 >
@@ -49,30 +49,30 @@ export default () => {
                     ))}
                 </select>
             </div>
-            <div className='row'>
-                <div className='col s4'>
+            <div className="row">
+                <div className="col s4">
                     <select
-                        className='browser-default'
+                        className="browser-default"
                         value={period}
                         onChange={onPeriodChanged}
                     >
-                        <option value='year'>Year</option>
-                        <option value='month'>Month</option>
-                        <option value='day'>Day</option>
+                        <option value="year">Year</option>
+                        <option value="month">Month</option>
+                        <option value="day">Day</option>
                     </select>
                 </div>
-                <div className='col s8'>
+                <div className="col s8">
                     <AppSelectorContainer
                         selectedApp={appId}
                         onAppChanged={onAppChanged}
                     />
                 </div>
             </div>
-            <div className='row'>
-                <div className='col s6'>
+            <div className="row">
+                <div className="col s6">
                     <StatsChartContainer
-                        title='Sessions'
-                        chartId='sessionsPerPeriod'
+                        title="Sessions"
+                        chartId="sessionsPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}
@@ -80,8 +80,8 @@ export default () => {
                         loadDataCallback={api.getSessionsPerPeriod}
                     />
                     <StatsChartContainer
-                        title='Unique users'
-                        chartId='uniqieUsersPerPeriod'
+                        title="Unique users"
+                        chartId="uniqieUsersPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}
@@ -89,8 +89,8 @@ export default () => {
                         loadDataCallback={api.getUniqueUsersPerPeriod}
                     />
                     <StatsChartContainer
-                        title='New users'
-                        chartId='newUsersPerPeriod'
+                        title="New users"
+                        chartId="newUsersPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}
@@ -98,10 +98,10 @@ export default () => {
                         loadDataCallback={api.getNewUsersPerPeriod}
                     />
                 </div>
-                <div className='col s6'>
+                <div className="col s6">
                     <EventStatsChartContainer
-                        title='Events'
-                        chartId='eventsPerPeriod'
+                        title="Events"
+                        chartId="eventsPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}
@@ -109,8 +109,8 @@ export default () => {
                         loadDataCallback={api.getEventsPerPeriod}
                     />
                     <EventStatsChartContainer
-                        title='Sessions by event'
-                        chartId='eventSessionsPerPeriod'
+                        title="Sessions by event"
+                        chartId="eventSessionsPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}
@@ -118,8 +118,8 @@ export default () => {
                         loadDataCallback={api.getEventSessionsPerPeriod}
                     />
                     <EventStatsChartContainer
-                        title='Sessions with errors'
-                        chartId='errorSessionsPerPeriod'
+                        title="Sessions with errors"
+                        chartId="errorSessionsPerPeriod"
                         appId={appId}
                         build={build}
                         period={period}

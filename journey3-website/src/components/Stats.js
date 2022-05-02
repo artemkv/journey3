@@ -26,7 +26,7 @@ export default () => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-03-28T00:00:00'); // TODO:
+    const now = new Date('2022-04-27T00:00:00'); // TODO:
     const dt = now; // TODO: should come from date picker
     const build = 'Release'; // TODO: should come UI
 

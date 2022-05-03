@@ -17,6 +17,7 @@ export default (props) => {
     }, []);
 
     const dimension = (dim, onFilterUpdate) => <ModalFilterDimension
+        key={dim.id}
         dim={dim}
         onFilterUpdate={onFilterUpdate}
     />;

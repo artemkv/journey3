@@ -5,8 +5,30 @@ export default (props) => {
     const dim = props.dim;
     const onFilterUpdate = props.onFilterUpdate;
 
-    const onChange = (event, path) => {
-        onFilterUpdate(path, event.target.checked);
+    const onSelectedChange = (event, dimId, dimValueId) => {
+        const checked = event.target.checked;
+        const updates = [];
+        if (checked) {
+            updates.push( {
+                path: [dimId, 'all'],
+                enabled: false
+            });
+        }
+        updates.push( {
+            path: [dimId, 'selected', dimValueId],
+            enabled: checked
+        });
+        onFilterUpdate(updates);
+    };
+
+    const onAllChange = (event, dimId) => {
+        const checked = event.target.checked;
+        onFilterUpdate([
+            {
+                path: [dimId, 'all'],
+                enabled: checked
+            }
+        ]);
     };
 
     const dimValue = (dimId, dimValue) => <span key={dimValue.id} className="double-distance-right">
@@ -15,14 +37,14 @@ export default (props) => {
                 type="checkbox"
                 className="filled-in"
                 checked={dimValue.checked}
-                onChange={(e) => onChange(e, [dimId, 'selected', dimValue.id])}
+                onChange={(e) => onSelectedChange(e, dimId, dimValue.id)}
             />
             <span>{dimValue.label}</span>
         </label>
     </span>;
 
     return (
-        <div key={dim.id}>
+        <div>
             <div className="row">
                 <div className="col s12">
                     <h5>{dim.title}</h5>
@@ -36,7 +58,7 @@ export default (props) => {
                                 type="checkbox"
                                 className="filled-in"
                                 checked={dim.all.checked}
-                                onChange={(e) => onChange(e, [dim.id, 'all'])}
+                                onChange={(e) => onAllChange(e, dim.id)}
                             />
                             <span>{dim.all.label}</span>
                         </label>

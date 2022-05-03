@@ -61,8 +61,11 @@ export default (props) => {
         loadData();
     }, [appId, period, dt]);
 
-    const onFilterUpdate = (path, enabled) => {
-        const newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, filterOptions);
+    const onFilterUpdate = (updates) => {
+        let newFo = filterOptions;
+        updates.forEach(({path, enabled}) => {
+            newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
+        });
         setFilterOptions(newFo);
         calculateDatasets(data, newFo, period, date);
     };

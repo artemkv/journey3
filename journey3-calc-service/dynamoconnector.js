@@ -90,6 +90,7 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
     await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
   }
 
+  // TODO: does not work, we need fst_launch_day, fst_launch_month, fst_launch_year
   await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
 }
 

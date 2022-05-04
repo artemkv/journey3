@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import {charRange} from './util';
 
 export function getYear(date) {
@@ -77,3 +79,10 @@ export function getLast10Years(date) {
     }
     return years;
 }
+
+export const getDaysSince = (since, start) => {
+    const from = dayjs(since);
+    const to = dayjs(start);
+
+    return to.diff(from, 'day');
+};

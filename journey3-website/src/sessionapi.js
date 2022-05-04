@@ -112,6 +112,24 @@ export const getNewUsersPerPeriod = (appId, build, period, dt) => {
     });
 };
 
+export const getRetentionOnDay = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getRetentionOnDay(appId, build, period, dt, getSession());
+    });
+};
+
+export const getRetentionSinceDay = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getRetentionSinceDay(appId, build, period, dt, getSession());
+    });
+};
+
+export const getConversions = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getConversions(appId, build, period, dt, getSession());
+    });
+};
+
 export const getAcc = () => {
     return callApi(() => {
         return api.getAcc(getSession());

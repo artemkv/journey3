@@ -31,6 +31,10 @@ func isPeriodValid(period string) bool {
 	return false
 }
 
+func isRetentionPeriodValid(period string) bool {
+	return period == "day"
+}
+
 func isDtValid(period string, dt string) bool {
 	if period == "year" {
 		return len(dt) == 4 // TODO: could think about more rigorous validation

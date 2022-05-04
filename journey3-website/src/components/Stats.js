@@ -5,6 +5,9 @@ import AppSelectorContainer from './AppSelectorContainer';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import StatsChartContainer from './StatsChartContainer';
 import EventStatsChartContainer from './EventStatsChartContainer';
+import RetentionStatsChartContainer from './RetentionStatsChartContainer';
+import RangeRetentionStatsGridContainer from './RangeRetentionStatsGridContainer';
+import ConversionStatsChartContainer from './ConversionStatsChartContainer';
 import * as api from '../sessionapi';
 
 export default () => {
@@ -26,7 +29,7 @@ export default () => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-04-27T00:00:00'); // TODO:
+    const now = new Date('2022-04-28T00:00:00'); // TODO:
     const dt = now; // TODO: should come from date picker
     const build = 'Release'; // TODO: should come UI
 
@@ -68,6 +71,21 @@ export default () => {
                     />
                 </div>
             </div>
+
+            <div className="row">
+                <div className="col s6">
+                    <ConversionStatsChartContainer
+                        title="Conversions"
+                        chartId="conversions"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getConversions}
+                    />
+                </div>
+            </div>
+
             <div className="row">
                 <div className="col s6">
                     <StatsChartContainer
@@ -127,6 +145,26 @@ export default () => {
                         loadDataCallback={api.getErrorSessionsPerPeriod}
                     />
                 </div>
+            </div>
+            <div className="row">
+                <RetentionStatsChartContainer
+                    title="Daily Retention"
+                    chartId="retention_on_day"
+                    appId={appId}
+                    build={build}
+                    period="day"
+                    date={dt}
+                    loadDataCallback={api.getRetentionOnDay}
+                />
+                <RangeRetentionStatsGridContainer
+                    title="Range Retention"
+                    chartId="retention_since_day"
+                    appId={appId}
+                    build={build}
+                    period="day"
+                    date={dt}
+                    loadDataCallback={api.getRetentionSinceDay}
+                />
             </div>
         </div>
     );

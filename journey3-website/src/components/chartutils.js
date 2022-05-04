@@ -1,3 +1,4 @@
+import {range} from 'ramda';
 import * as dateTimeUtil from '../datetimeutil';
 import {charRange} from '../util';
 
@@ -15,7 +16,7 @@ export const getLabels = (period, dateTime) => {
 };
 
 export const getValues = (data, filterOptions, period, dateTime) => {
-    const values = [];
+    const values = {};
 
     const keyFunc = getDimKeyFunc(filterOptions);
     const filterFunc = getDimFilterFunc(filterOptions);
@@ -169,6 +170,125 @@ export const getDatasets = (values) => {
 export const getMaxValue = (values) => {
     return Math.max(...values.map((x) => x.values).flat(), 1);
 };
+
+export const getRetentionBuckets = () => {
+    return ['0', '1', '2', '5', '8', '12', '18', '27', '40', '60', '90'];
+};
+
+export const getRetentionBucketLabels = () => {
+    return ['0 days', '1 day', '2 days', '3-5 days', '6-8 days',
+        '9-12 days', '13-18 days', '19-27 days', '28-40 days', '41-60 days', '>60 days'];
+};
+
+export const getBucketIdx = (since, start) => {
+    const days = dateTimeUtil.getDaysSince(since, start);
+
+    if (days < 1) {
+        return 0;
+    }
+    if (days == 1) {
+        return 1;
+    }
+    if (days <= 2) {
+        return 2;
+    }
+    if (days <= 5) {
+        return 3;
+    }
+    if (days <= 8) {
+        return 4;
+    }
+    if (days <= 12) {
+        return 5;
+    }
+    if (days <= 18) {
+        return 6;
+    }
+    if (days <= 27) {
+        return 7;
+    }
+    if (days <= 40) {
+        return 8;
+    }
+    if (days <= 60) {
+        return 9;
+    }
+    if (days <= 90) {
+        return 10;
+    }
+    return -1;
+};
+
+export const getRetentionValues = (data, filterOptions) => {
+    const values = {};
+
+    const keyFunc = getDimKeyFunc(filterOptions);
+    const filterFunc = getDimFilterFunc(filterOptions);
+
+    const visibleData = data.filter(filterFunc);
+
+    const keys = extractDimKeys(visibleData, keyFunc);
+    const buckets = getRetentionBuckets();
+
+    // prepare dimensions
+    keys.forEach((k) => values[k] = {label: k, values: {}});
+    // fills dimensions with zero values
+    buckets.forEach((bkt) => {
+        itermap(values, (v) => {
+            v.values[bkt] = 0;
+        });
+    });
+    // project data
+    visibleData
+        .forEach((x) => {
+            values[keyFunc(x)].values[x.bucket] += x.count;
+        });
+    // convert to final format
+    return mapmap(values, (v) => {
+        return {
+            label: v.label,
+            values: buckets.map((dt) => v.values[dt])
+        };
+    });
+};
+
+export const getConversionStages = (data) => {
+    return range(1, Math.max(...data.map((x) => +x.stage)) + 1);
+};
+
+export const getConversionValues = (data, filterOptions) => {
+    const values = {};
+
+    const keyFunc = getDimKeyFunc(filterOptions);
+    const filterFunc = getDimFilterFunc(filterOptions);
+
+    const visibleData = data.filter(filterFunc);
+
+    const keys = extractDimKeys(visibleData, keyFunc);
+    const stages = getConversionStages(data);
+
+    // prepare dimensions
+    keys.forEach((k) => values[k] = {label: k, values: {}});
+    // fills dimensions with zero values
+    stages.forEach((s) => {
+        itermap(values, (v) => {
+            v.values[s] = 0;
+        });
+    });
+    // project data
+    visibleData
+        .forEach((x) => {
+            values[keyFunc(x)].values[x.stage] += x.count;
+        });
+    // convert to final format
+    return mapmap(values, (v) => {
+        return {
+            label: v.label,
+            values: stages.map((s) => v.values[s])
+        };
+    });
+};
+
 
 export const CHART_COLORS = [
     'rgb(45, 137, 239)', // blue

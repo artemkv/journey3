@@ -123,6 +123,18 @@ export const getNewUsersPerPeriod = (appId, build, period, dt, session) => {
     return getJson(`/new_users_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };
 
+export const getRetentionOnDay = (appId, build, period, dt, session) => {
+    return getJson(`/retention_on_day?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getRetentionSinceDay = (appId, build, period, dt, session) => {
+    return getJson(`/retention_since_day?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getConversions = (appId, build, period, dt, session) => {
+    return getJson(`/conversions?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
 export const getAcc = (session) => {
     return getJson(`/acc`, session);
 };

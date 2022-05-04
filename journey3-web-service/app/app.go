@@ -40,6 +40,7 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 	// do business
 
 	// stats
+	// TODO: is this a good naming convention? should I drop per_period?
 	router.GET("/sessions_per_period", reststats.HandleEndpointWithStats(
 		withAuthentication(handleSessionsPerPeriod)))
 	router.GET("/error_sessions_per_period", reststats.HandleEndpointWithStats(
@@ -52,6 +53,14 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 		withAuthentication(handleEventsPerPeriod)))
 	router.GET("/event_sessions_per_period", reststats.HandleEndpointWithStats(
 		withAuthentication(handleEventSessionsPerPeriod)))
+
+	router.GET("/retention_on_day", reststats.HandleEndpointWithStats(
+		withAuthentication(handleRetentionOnDayPerBucket)))
+	router.GET("/retention_since_day", reststats.HandleEndpointWithStats(
+		withAuthentication(handleRetentionSinceDayPerBucket)))
+
+	router.GET("/conversions", reststats.HandleEndpointWithStats(
+		withAuthentication(handleConversionsPerStage)))
 
 	// account
 	router.GET("/acc", reststats.HandleEndpointWithStats(

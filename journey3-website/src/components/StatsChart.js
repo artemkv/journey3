@@ -1,10 +1,27 @@
-import {CategoryScale, Chart, LineController, LineElement, LinearScale, PointElement, Tooltip} from 'chart.js';
+import {
+    CategoryScale,
+    Chart,
+    LineController,
+    BarController,
+    LineElement,
+    BarElement,
+    LinearScale,
+    PointElement,
+    Tooltip}
+    from 'chart.js';
 import React, {useState, useEffect} from 'react';
 
-Chart.register(LinearScale, LineController, CategoryScale, PointElement, LineElement, Tooltip);
+Chart.register(
+    LinearScale, LineController,
+    BarController, BarElement,
+    CategoryScale, PointElement, LineElement, Tooltip);
 
 export default (props) => {
     const chartId = props.chartId;
+    const datasets = props.datasets;
+    const labels = props.labels;
+    const max = props.max;
+    const type = props.type ?? 'line';
 
     const [chart, setChart] = useState(undefined);
 
@@ -14,17 +31,21 @@ export default (props) => {
         }
 
         const newChart = new Chart(chartId, {
-            type: 'line',
+            type,
             data: {
-                datasets: props.datasets,
-                labels: props.labels
+                datasets,
+                labels
             },
             options: {
                 responsive: true,
                 scales: {
+                    x: {
+                        stacked: true
+                    },
                     y: {
                         suggestedMin: 0,
-                        suggestedMax: props.max
+                        suggestedMax: max,
+                        stacked: true
                     }
                 },
                 legend: {
@@ -34,7 +55,7 @@ export default (props) => {
         });
 
         setChart(newChart);
-    }, [props.datasets]);
+    }, [datasets]);
 
     return (
         <canvas id={chartId}></canvas>

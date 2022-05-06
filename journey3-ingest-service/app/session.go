@@ -99,43 +99,53 @@ type sessionHeadOutgoingData struct {
 }
 
 type sessionTailIncomingData struct {
-	Type          string         `json:"t" binding:"required"`
-	ProtoVersion  string         `json:"v" binding:"required"`
-	Id            string         `json:"id" binding:"required"`
-	Since         string         `json:"since" binding:"required"`
-	Start         string         `json:"start" binding:"required"`
-	End           string         `json:"end" binding:"required"`
-	AccId         string         `json:"acc" binding:"required"`
-	AppId         string         `json:"aid" binding:"required"`
-	Version       string         `json:"version"`
-	IsRelease     bool           `json:"is_release"`
-	FirstLaunch   bool           `json:"fst_launch"`
-	HasError      bool           `json:"has_error"`
-	EventCounts   map[string]int `json:"evts" binding:"required"`
-	EventSequence []string       `json:"evt_seq" binding:"required"`
-	PrevStage     stageData      `json:"prev_stage" binding:"required"`
-	NewStage      stageData      `json:"new_stage" binding:"required"`
+	Type                   string         `json:"t" binding:"required"`
+	ProtoVersion           string         `json:"v" binding:"required"`
+	Id                     string         `json:"id" binding:"required"`
+	Since                  string         `json:"since" binding:"required"`
+	Start                  string         `json:"start" binding:"required"`
+	End                    string         `json:"end" binding:"required"`
+	AccId                  string         `json:"acc" binding:"required"`
+	AppId                  string         `json:"aid" binding:"required"`
+	Version                string         `json:"version"`
+	IsRelease              bool           `json:"is_release"`
+	FirstLaunch            bool           `json:"fst_launch"`
+	FirstLaunchThisHour    bool           `json:"fst_launch_hour"`
+	FirstLaunchToday       bool           `json:"fst_launch_day"`
+	FirstLaunchThisMonth   bool           `json:"fst_launch_month"`
+	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
+	FirstLaunchThisVersion bool           `json:"fst_launch_version"`
+	HasError               bool           `json:"has_error"`
+	EventCounts            map[string]int `json:"evts" binding:"required"`
+	EventSequence          []string       `json:"evt_seq" binding:"required"`
+	PrevStage              stageData      `json:"prev_stage" binding:"required"`
+	NewStage               stageData      `json:"new_stage" binding:"required"`
 }
 
 type sessionTailOutgoingData struct {
-	Type          string         `json:"t"`
-	ProtoVersion  string         `json:"v"`
-	Ids           string         `json:"ids"`
-	Dts           string         `json:"dts"`
-	Id            string         `json:"id"`
-	Since         string         `json:"since"`
-	Start         string         `json:"start"`
-	End           string         `json:"end"`
-	AccId         string         `json:"acc"`
-	AppId         string         `json:"aid"`
-	Version       string         `json:"version"`
-	IsRelease     bool           `json:"is_release"`
-	FirstLaunch   bool           `json:"fst_launch"`
-	HasError      bool           `json:"has_error"`
-	EventCounts   map[string]int `json:"evts"`
-	EventSequence []string       `json:"evt_seq"`
-	PrevStage     stageData      `json:"prev_stage"`
-	NewStage      stageData      `json:"new_stage"`
+	Type                   string         `json:"t"`
+	ProtoVersion           string         `json:"v"`
+	Ids                    string         `json:"ids"`
+	Dts                    string         `json:"dts"`
+	Id                     string         `json:"id"`
+	Since                  string         `json:"since"`
+	Start                  string         `json:"start"`
+	End                    string         `json:"end"`
+	AccId                  string         `json:"acc"`
+	AppId                  string         `json:"aid"`
+	Version                string         `json:"version"`
+	IsRelease              bool           `json:"is_release"`
+	FirstLaunch            bool           `json:"fst_launch"`
+	FirstLaunchThisHour    bool           `json:"fst_launch_hour"`
+	FirstLaunchToday       bool           `json:"fst_launch_day"`
+	FirstLaunchThisMonth   bool           `json:"fst_launch_month"`
+	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
+	FirstLaunchThisVersion bool           `json:"fst_launch_version"`
+	HasError               bool           `json:"has_error"`
+	EventCounts            map[string]int `json:"evts"`
+	EventSequence          []string       `json:"evt_seq"`
+	PrevStage              stageData      `json:"prev_stage"`
+	NewStage               stageData      `json:"new_stage"`
 }
 
 func handlePostSessionHead(c *gin.Context) {
@@ -260,23 +270,28 @@ func constructSessionHeadOut(in *sessionHeadIncomingData) *sessionHeadOutgoingDa
 
 func constructSessionTailOut(in *sessionTailIncomingData) *sessionTailOutgoingData {
 	return &sessionTailOutgoingData{
-		Type:          in.Type,
-		ProtoVersion:  in.ProtoVersion,
-		Ids:           uuid.New().String(),
-		Dts:           time.Now().UTC().Format(time.RFC3339),
-		Id:            in.Id,
-		Since:         in.Since,
-		Start:         in.Start,
-		End:           in.End,
-		AccId:         in.AccId,
-		AppId:         in.AppId,
-		Version:       in.Version,
-		IsRelease:     in.IsRelease,
-		FirstLaunch:   in.FirstLaunch,
-		HasError:      in.HasError,
-		EventCounts:   in.EventCounts,
-		EventSequence: in.EventSequence,
-		PrevStage:     in.PrevStage,
-		NewStage:      in.NewStage,
+		Type:                   in.Type,
+		ProtoVersion:           in.ProtoVersion,
+		Ids:                    uuid.New().String(),
+		Dts:                    time.Now().UTC().Format(time.RFC3339),
+		Id:                     in.Id,
+		Since:                  in.Since,
+		Start:                  in.Start,
+		End:                    in.End,
+		AccId:                  in.AccId,
+		AppId:                  in.AppId,
+		Version:                in.Version,
+		IsRelease:              in.IsRelease,
+		FirstLaunch:            in.FirstLaunch,
+		FirstLaunchThisHour:    in.FirstLaunchThisHour,
+		FirstLaunchToday:       in.FirstLaunchToday,
+		FirstLaunchThisMonth:   in.FirstLaunchThisMonth,
+		FirstLaunchThisYear:    in.FirstLaunchThisYear,
+		FirstLaunchThisVersion: in.FirstLaunchThisVersion,
+		HasError:               in.HasError,
+		EventCounts:            in.EventCounts,
+		EventSequence:          in.EventSequence,
+		PrevStage:              in.PrevStage,
+		NewStage:               in.NewStage,
 	}
 }

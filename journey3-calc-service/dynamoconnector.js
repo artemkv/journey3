@@ -13,6 +13,7 @@ const statsfunc = require('./statsfunc');
 const JOURNEY3_APP_TABLE = 'journey3app';
 const JOURNEY3_STATS_TABLE = 'journey3stats';
 const JOURNEY3_SESSIONS_TABLE = 'journey3sessions';
+const JOURNEY3_META_TABLE = 'journey3meta';
 
 exports.getConnector = () => {
   let options = {};
@@ -92,6 +93,7 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
 
   // TODO: does not work, we need fst_launch_day, fst_launch_month, fst_launch_year
   await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
+  await updateStageMetadata(session, appId, build, client);
 }
 
 // TODO: deprecate
@@ -276,6 +278,18 @@ async function updateConversions(session, appId, build, version, dayDt, monthDt,
   }
 }
 
+async function updateStageMetadata(session, appId, build, client) {
+  const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
+  const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
+
+  const prevStageName = R.pathOr(1, ['prev_stage', 'name'], session);
+  const newStageName = R.pathOr(1, ['new_stage', 'name'], session);
+
+  const stagesKey = `STAGES#${appId}#${build}`;
+  saveString(client, JOURNEY3_META_TABLE, stagesKey, `${prevStage}`, prevStageName);
+  saveString(client, JOURNEY3_META_TABLE, stagesKey, `${newStage}`, newStageName);
+}
+
 // Atomically increments the value of the attribute "Cnt"
 // and returns the new value
 async function incrementCounter(client, tableName, key, sortKey, amt = 1) {
@@ -317,6 +331,19 @@ async function keyExists(client, tableName, key, sortKey) {
     return false;
   }
   return true;
+}
+
+async function saveString(client, tableName, key, sortKey, s) {
+  var params = {
+    TableName: tableName,
+    Item: {
+      Key: { S: key },
+      SortKey: { S: sortKey },
+      Val: { S: s }
+    },
+  };
+
+  return await client.send(new PutItemCommand(params));
 }
 
 async function saveObject(client, tableName, key, sortKey, obj) {

@@ -14,4 +14,5 @@ TODO:
 - unit-test
 
 
+- prevent 1 metric failed from failing the whole session
 - set TTL when storing sessions

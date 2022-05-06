@@ -52,6 +52,11 @@ const getDayDt = function getDayDt(date) {
   );
 };
 
+const getDay = function getDayDt(date) {
+  let dateUtc = new Date(date);
+  return `${dt.getYearString(dateUtc)}-${dt.getMonthString(dateUtc)}${dt.getDayString(dateUtc)}`;
+}
+
 const getMonthDt = function getMonthDt(date) {
   let dateUtc = new Date(date);
   return dt.getYearString(dateUtc) + dt.getMonthString(dateUtc);
@@ -63,8 +68,8 @@ const getYearDt = function getYearDt(date) {
 };
 
 const getDaysSince = (since, start) => {
-  const from = dayjs(since);
-  const to = dayjs(start);
+  const from = dayjs(getDay(since));
+  const to = dayjs(getDay(start));
 
   return to.diff(from, 'day');
 }

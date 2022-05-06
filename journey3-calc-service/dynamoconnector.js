@@ -137,9 +137,12 @@ async function updateRetention(session, appId, build, version, dayDt, client) {
   const daysSince = statsfunc.getDaysSince(session.since, session.start);
   const bucket = statsfunc.getRetentionBucket(daysSince);
 
+  // on that day, how many users were from which bucket
   const retentionOnKey = `RETENTION_ON#${appId}#${build}`;
   await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionOnKey, `${dayDt}#${bucket}#${version}`);
 
+  // from that day, how many users returned on each day
+  // TODO: currently days are counted as 24 hour intervals, not calendar days
   const retentionSinceKey = `RETENTION_SINCE#${appId}#${build}`;
   await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionSinceKey, `${sinceDt}#${bucket}#${version}`);
 }

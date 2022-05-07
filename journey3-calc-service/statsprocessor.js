@@ -52,6 +52,7 @@ function getSessionForSaving(session) {
     version: session.version,
     fst_launch: session.fst_launch,
     has_error: session.has_error,
+    has_crash: session.has_crash,
     evt_seq: session.evt_seq
   };
 }

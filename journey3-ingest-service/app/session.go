@@ -116,6 +116,7 @@ type sessionTailIncomingData struct {
 	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
 	FirstLaunchThisVersion bool           `json:"fst_launch_version"`
 	HasError               bool           `json:"has_error"`
+	HasCrash               bool           `json:"has_crash"`
 	EventCounts            map[string]int `json:"evts" binding:"required"`
 	EventSequence          []string       `json:"evt_seq" binding:"required"`
 	PrevStage              stageData      `json:"prev_stage" binding:"required"`
@@ -142,6 +143,7 @@ type sessionTailOutgoingData struct {
 	FirstLaunchThisYear    bool           `json:"fst_launch_year"`
 	FirstLaunchThisVersion bool           `json:"fst_launch_version"`
 	HasError               bool           `json:"has_error"`
+	HasCrash               bool           `json:"has_crash"`
 	EventCounts            map[string]int `json:"evts"`
 	EventSequence          []string       `json:"evt_seq"`
 	PrevStage              stageData      `json:"prev_stage"`
@@ -289,6 +291,7 @@ func constructSessionTailOut(in *sessionTailIncomingData) *sessionTailOutgoingDa
 		FirstLaunchThisYear:    in.FirstLaunchThisYear,
 		FirstLaunchThisVersion: in.FirstLaunchThisVersion,
 		HasError:               in.HasError,
+		HasCrash:               in.HasCrash,
 		EventCounts:            in.EventCounts,
 		EventSequence:          in.EventSequence,
 		PrevStage:              in.PrevStage,

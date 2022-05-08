@@ -35,7 +35,6 @@ func SetupRouter(router *gin.Engine) {
 	router.GET("/stats", reststats.HandleEndpointWithStats(reststats.HandleGetStats))
 
 	// do business
-	router.POST("/session", reststats.HandleEndpointWithStats(handlePostSession))
 	router.POST("/session_head", reststats.HandleEndpointWithStats(handlePostSessionHead))
 	router.POST("/session_tail", reststats.HandleEndpointWithStats(handlePostSessionTail))
 

@@ -12,7 +12,3 @@ TODO:
 
 - implement using testing guidelines: https://www.serverless.com/framework/docs/providers/aws/guide/testing/
 - unit-test
-
-
-- prevent 1 metric failed from failing the whole session
-- set TTL when storing sessions

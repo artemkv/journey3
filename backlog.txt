@@ -1,0 +1,60 @@
+!! Flutter Prototype
+
+- send firstLaunchThisXXX etc. with Session tail
+- Report crashes
+- Refactor the code and make Journey non-static
+
+
+!! Android Native Prototype
+
+
+!! Web Node Prototype
+
+- Implement
+- Use with notedok
+
+
+!! Flutter Library
+
+- Cover with unit-tests
+- Publish to public repo
+
+
+!! Android Native Prototype
+
+- Cover with unit-tests
+- Publish to Maven
+
+
+!! Ingest Service
+
+- Remove deprecates session endpoint
+- Review validation
+
+
+!! Calc Service
+
+- Update the sort key for sessions
+- Set TTL when storing sessions
+- Prevent 1 metric failed from failing the whole session
+- Implement limit of 100 sessions per account
+- (F) Session duration distribution
+
+
+!! Web UI
+
+- Start loading data only after apps are pre-filled
+- Show totals for all charts
+- Cumulative or not, depending on the chart
+- Good labels for tooltips
+- Date/time selector
+- Retention in %
+- (F) Show unique users dashed on new users chart
+- (F) Save current filters
+- (F) Events histograms
+- (F) Share stats with other people
+- (F) Allow editing metadata (stages)
+
+
+!! Doc
+

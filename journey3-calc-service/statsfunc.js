@@ -87,9 +87,20 @@ const getRetentionBucket = (daysSince) => {
   return buckets[idx];
 }
 
+const getErrorLevel = (session) => {
+  let errLevel= 'n';
+  if (session.has_crash) {
+    errLevel = 'c';
+  } else if (session.has_error) {
+    errLevel = 'e';
+  }
+  return errLevel;
+}
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
 exports.getYearDt = getYearDt;
 exports.getDaysSince = getDaysSince;
 exports.getRetentionBucket = getRetentionBucket;
+exports.getErrorLevel = getErrorLevel;

@@ -47,8 +47,10 @@ const appExists = async (acc, aid, client) => {
 }
 
 const saveSession = async (aid, build, version, dts, ids, session, client) => {
+  const errLevel = statsfunc.getErrorLevel(session);
+
   const key = `SESSION#${aid}#${build}`;
-  const sortKey = `${dts}#${version}#${ids}`;
+  const sortKey = `${errLevel}#${version}#${dts}#${ids}`;
 
   return await saveObject(client, JOURNEY3_SESSIONS_TABLE, key, sortKey, session);
 }

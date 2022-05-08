@@ -6,7 +6,14 @@ import React, {useEffect, useState} from 'react';
 import Spinner from './Spinner';
 import StatsChartPanel from './StatsChartPanel';
 
-import {getConversionStages, getConversionValues, getFilterOptions, getDatasets, getMaxValue} from './chartutils';
+import {
+    getConversionStages,
+    getConversionValues,
+    getFilterOptions,
+    getDatasets,
+    getMaxValue,
+    tomap
+} from './chartutils';
 
 const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
@@ -24,6 +31,7 @@ export default (props) => {
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
+    const [stages, setStages] = useState([]);
     const [data, setData] = useState([]);
     const [labels, setLabels] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
@@ -38,11 +46,16 @@ export default (props) => {
         }
 
         loadDataCallback(appId, build, period, dt)
-            .then((data) => {
+            .then((stagesAndStats) => {
+                const data = stagesAndStats.stats;
+                const stages = stagesAndStats.stages;
+
                 setData(data);
+                setStages(stages);
+
                 const fo = getFilterOptions(data); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(data, fo);
+                calculateDatasets(data, stages, fo);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -51,11 +64,16 @@ export default (props) => {
             });
     }
 
-    function calculateDatasets(data, filterOptions) {
-        setLabels(getConversionStages(data));
+    function calculateDatasets(data, stages, filterOptions) {
+        setLabels(convertToLabels(getConversionStages(data), stages));
         const values = getConversionValues(data, filterOptions);
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
+    }
+
+    function convertToLabels(numericVals, stages) {
+        const stageMap = tomap(stages, (x) => x.stage, (x) => x.name);
+        return numericVals.map((x) => x in stageMap ? stageMap[x] : `stage ${x}`);
     }
 
     useEffect(() => {
@@ -68,7 +86,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(data, newFo);
+        calculateDatasets(data, stages, newFo);
     };
 
     // TODO: maybe indicate somehow the loading/error status

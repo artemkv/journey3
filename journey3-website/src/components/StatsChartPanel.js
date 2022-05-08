@@ -11,12 +11,19 @@ export default (props) => {
     const labels = props.labels;
     const max = props.max;
     const type = props.type;
+    const total = props.total;
+
+    const totalCount = (total) => <div className="row flex">
+        <div className="col s12 valign-wrapper">
+            <h6>Total: <b>{total}</b></h6>
+        </div>
+    </div>;
 
     return (
         <div className="panel">
             <div className="row flex">
                 <div className="col s10 valign-wrapper">
-                    <h5>{title}</h5>
+                    <h5><b>{title}</b></h5>
                 </div>
                 <div className="col s2 valign-wrapper">
                     <ModalFilter
@@ -26,6 +33,7 @@ export default (props) => {
                     />
                 </div>
             </div>
+            {total >= 0 ? totalCount(total) : ''}
             <div>
                 <StatsChart
                     chartId={chartId}

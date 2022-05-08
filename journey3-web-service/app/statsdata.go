@@ -6,8 +6,6 @@ import (
 	"strings"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -69,7 +67,7 @@ func getSessionsPerPeriod(appId string, build string, period string, dt string) 
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -94,7 +92,7 @@ func getErrorSessionsPerPeriod(appId string, build string, period string, dt str
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -119,7 +117,32 @@ func getUniqueUsersPerPeriod(appId string, build string, period string, dt strin
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return stats, nil
+}
+
+func getUniqueUsersPerHigherPeriod(appId string, build string, period string, dt string) ([]statsData, error) {
+	// define keys
+	keyPrefix, err := getUniqueUsersByHigherPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	// run query
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -144,7 +167,7 @@ func getNewUsersPerPeriod(appId string, build string, period string, dt string) 
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -169,7 +192,7 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -194,7 +217,7 @@ func getEventSessionsPerPeriod(appId string, build string, period string, dt str
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -214,7 +237,7 @@ func getRetentionOnDayPerBucket(appId string, build string, dt string) ([]retent
 	sortKeyPrefix := dt
 
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -238,9 +261,10 @@ func getRetentionSinceDayPerBucket(appId string, build string, dt string) ([]ret
 		return nil, logAndConvertError(err)
 	}
 	from := to.AddDate(0, 0, -90)
+	to = to.AddDate(0, 0, 1)
 
 	// run query
-	results, err := executeRangeQuery(hashKey, from.Format("20060102"), to.Format("20060102"))
+	results, err := executeStatsRangeQuery(hashKey, from.Format("20060102"), to.Format("20060102"))
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -263,10 +287,8 @@ func getConversionsPerStage(appId string, build string, period string, dt string
 	hashKey := getHashKey(keyPrefix, appId, build)
 	sortKeyPrefix := dt
 
-	fmt.Printf("HASH: %s\n", hashKey)
-
 	// run query
-	results, err := executeQuery(hashKey, sortKeyPrefix)
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
 	if err != nil {
 		return nil, logAndConvertError(err)
 	}
@@ -320,6 +342,21 @@ func getUniqueUsersByPeriodKeyPrefix(period string) (string, error) {
 	}
 	if period == "day" {
 		return "UNIQUE_USERS_BY_HOUR", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
+func getUniqueUsersByHigherPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "UNIQUE_USERS_BY_YEAR", nil
+	}
+	if period == "month" {
+		return "UNIQUE_USERS_BY_MONTH", nil
+	}
+	if period == "day" {
+		return "UNIQUE_USERS_BY_DAY", nil
 	}
 
 	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
@@ -438,11 +475,7 @@ func splitIntoDtStageVersion(key string) (string, string, string) {
 	return dt, stage, vesion
 }
 
-func getHashKey(keyPrefix string, appId string, build string) string {
-	return fmt.Sprintf("%s#%s#%s", keyPrefix, appId, build)
-}
-
-func executeQuery(hashKey string, sortKeyPrefix string) (*dynamodb.QueryOutput, error) {
+func executeStatsQuery(hashKey string, sortKeyPrefix string) (*dynamodb.QueryOutput, error) {
 	// get service
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
@@ -479,7 +512,7 @@ func executeQuery(hashKey string, sortKeyPrefix string) (*dynamodb.QueryOutput, 
 	return result, nil
 }
 
-func executeRangeQuery(hashKey string, lower string, upper string) (*dynamodb.QueryOutput, error) {
+func executeStatsRangeQuery(hashKey string, lower string, upper string) (*dynamodb.QueryOutput, error) {
 	// get service
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
@@ -629,9 +662,4 @@ func repackResultsByStageVersionIntoConversionStatsData(results *dynamodb.QueryO
 		stats = append(stats, statsItem)
 	}
 	return stats, nil
-}
-
-func logAndConvertError(err error) error {
-	log.Printf("%v", err)
-	return fmt.Errorf("service unavailable")
 }

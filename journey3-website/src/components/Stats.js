@@ -10,8 +10,12 @@ import RangeRetentionStatsGridContainer from './RangeRetentionStatsGridContainer
 import ConversionStatsChartContainer from './ConversionStatsChartContainer';
 import * as api from '../sessionapi';
 
+const PERIOD_DAY = 'day';
+const PERIOD_MONTH = 'month';
+const PERIOD_YEAR = 'year';
+
 export default () => {
-    const [period, setPeriod] = useState('month');
+    const [period, setPeriod] = useState(PERIOD_DAY);
     const [appId, setAppId] = useState('');
 
     useEffect(() => {
@@ -29,7 +33,7 @@ export default () => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-04-28T00:00:00'); // TODO:
+    const now = new Date('2022-05-06T00:00:00'); // TODO:
     const dt = now; // TODO: should come from date picker
     const build = 'Release'; // TODO: should come UI
 
@@ -57,11 +61,10 @@ export default () => {
                     <select
                         className="browser-default"
                         value={period}
-                        onChange={onPeriodChanged}
-                    >
-                        <option value="year">Year</option>
-                        <option value="month">Month</option>
-                        <option value="day">Day</option>
+                        onChange={onPeriodChanged} >
+                        <option value={PERIOD_YEAR}>Year</option>
+                        <option value={PERIOD_MONTH}>Month</option>
+                        <option value={PERIOD_DAY}>Day</option>
                     </select>
                 </div>
                 <div className="col s8">
@@ -75,7 +78,7 @@ export default () => {
             <div className="row">
                 <div className="col s6">
                     <ConversionStatsChartContainer
-                        title="Conversions"
+                        title="Stage conversions"
                         chartId="conversions"
                         appId={appId}
                         build={build}
@@ -105,6 +108,7 @@ export default () => {
                         period={period}
                         date={dt}
                         loadDataCallback={api.getUniqueUsersPerPeriod}
+                        useHigherPeriodTotal={true}
                     />
                     <StatsChartContainer
                         title="New users"
@@ -127,7 +131,7 @@ export default () => {
                         loadDataCallback={api.getEventsPerPeriod}
                     />
                     <EventStatsChartContainer
-                        title="Sessions by event"
+                        title="Sessions with event"
                         chartId="eventSessionsPerPeriod"
                         appId={appId}
                         build={build}
@@ -146,9 +150,10 @@ export default () => {
                     />
                 </div>
             </div>
+
             <div className="row">
                 <RetentionStatsChartContainer
-                    title="Daily Retention"
+                    title="Today's user segments"
                     chartId="retention_on_day"
                     appId={appId}
                     build={build}
@@ -157,16 +162,15 @@ export default () => {
                     loadDataCallback={api.getRetentionOnDay}
                 />
                 <RangeRetentionStatsGridContainer
-                    title="Range Retention"
+                    title="Retention"
                     chartId="retention_since_day"
                     appId={appId}
                     build={build}
                     period="day"
-                    date={dt}
+                    date={new Date()}
                     loadDataCallback={api.getRetentionSinceDay}
                 />
             </div>
         </div>
     );
 };
-

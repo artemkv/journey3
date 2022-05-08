@@ -28,7 +28,7 @@ export default (props) => {
         <div className="panel">
             <div className="row flex">
                 <div className="col s10 valign-wrapper">
-                    <h5>{title}</h5>
+                    <h5><b>{title}</b></h5>
                 </div>
                 <div className="col s2 valign-wrapper">
                     <ModalFilter

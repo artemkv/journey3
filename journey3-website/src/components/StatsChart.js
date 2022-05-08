@@ -40,12 +40,12 @@ export default (props) => {
                 responsive: true,
                 scales: {
                     x: {
-                        stacked: true
+                        stacked: false // TODO: for retention and conversions, yes
                     },
                     y: {
                         suggestedMin: 0,
                         suggestedMax: max,
-                        stacked: true
+                        stacked: false // TODO: for retention and conversions, yes
                     }
                 },
                 legend: {

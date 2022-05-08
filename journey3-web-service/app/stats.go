@@ -21,6 +21,36 @@ const (
 	INVALID_BUILD_ERROR_MESSAGE            = "invalid value '%s' for 'build', expected 'Debug', 'Release'"
 )
 
+type sessionsResponseStatsData struct {
+	Stats []statsData `json:"stats"`
+}
+
+type errorSessionsResponseStatsData struct {
+	Stats []statsData `json:"stats"`
+}
+
+type eventsResponseStatsData struct {
+	Stats []eventStatsData `json:"stats"`
+}
+
+type eventSessionsResponseStatsData struct {
+	Stats []eventStatsData `json:"stats"`
+}
+
+type uniqueUsersResponseStatsData struct {
+	HigherPeriodStats []statsData `json:"higher_period_stats"`
+	Stats             []statsData `json:"stats"`
+}
+
+type newUsersResponseStatsData struct {
+	Stats []statsData `json:"stats"`
+}
+
+type conversionStagesAndStatsData struct {
+	Stages []stageData           `json:"stages"`
+	Stats  []conversionStatsData `json:"stats"`
+}
+
 func handleSessionsPerPeriod(c *gin.Context, userId string, email string, _ string) {
 	// get params from query string
 	var statsRequest statsRequestData
@@ -69,7 +99,11 @@ func handleSessionsPerPeriod(c *gin.Context, userId string, email string, _ stri
 		return
 	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := sessionsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleErrorSessionsPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -120,7 +154,11 @@ func handleErrorSessionsPerPeriod(c *gin.Context, userId string, email string, _
 		return
 	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := errorSessionsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleUniqueUsersPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -170,8 +208,18 @@ func handleUniqueUsersPerPeriod(c *gin.Context, userId string, email string, _ s
 		toInternalServerError(c, err.Error())
 		return
 	}
+	higherPeriodStats, err := getUniqueUsersPerHigherPeriod(appId, build, period, dt)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := uniqueUsersResponseStatsData{
+		HigherPeriodStats: higherPeriodStats,
+		Stats:             stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleNewUsersPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -222,7 +270,11 @@ func handleNewUsersPerPeriod(c *gin.Context, userId string, email string, _ stri
 		return
 	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := newUsersResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleEventsPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -273,7 +325,11 @@ func handleEventsPerPeriod(c *gin.Context, userId string, email string, _ string
 		return
 	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := eventsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleEventSessionsPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -324,7 +380,11 @@ func handleEventSessionsPerPeriod(c *gin.Context, userId string, email string, _
 		return
 	}
 
-	toSuccess(c, stats)
+	// assemble and return result
+	result := eventSessionsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
 }
 
 func handleRetentionOnDayPerBucket(c *gin.Context, userId string, email string, _ string) {
@@ -477,5 +537,17 @@ func handleConversionsPerStage(c *gin.Context, userId string, email string, _ st
 		return
 	}
 
-	toSuccess(c, stats)
+	// retrieve metadata
+	stages, err := getStages(appId, build)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
+	result := conversionStagesAndStatsData{
+		Stages: stages,
+		Stats:  stats,
+	}
+
+	toSuccess(c, result)
 }

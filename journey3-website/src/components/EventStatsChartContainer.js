@@ -6,7 +6,7 @@ import React, {useEffect, useState} from 'react';
 import Spinner from './Spinner';
 import StatsChartPanel from './StatsChartPanel';
 
-import {getLabels, getValues, getFilterOptions, getDatasets, getMaxValue} from './chartutils';
+import {getLabels, getValues, getFilterOptions, getDatasets, getMaxValue, getTotal} from './chartutils';
 
 const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
@@ -25,11 +25,12 @@ export default (props) => {
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
-    const [data, setData] = useState([]);
+    const [stats, setStats] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
 
     const [datasets, setDatasets] = useState([]);
     const [max, setMax] = useState(1.0);
+    const [total, setTotal] = useState(-1);
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
@@ -39,10 +40,12 @@ export default (props) => {
 
         loadDataCallback(appId, build, period, dt)
             .then((data) => {
-                setData(data);
-                const fo = getFilterOptions(data, true); // TODO: merge with saved values
+                const stats = data.stats;
+
+                setStats(stats);
+                const fo = getFilterOptions(stats, true); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(data, fo, period, date);
+                calculateDatasets(stats, fo, period, date);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -51,10 +54,11 @@ export default (props) => {
             });
     }
 
-    function calculateDatasets(data, filterOptions, period, date) {
-        const values = getValues(data, filterOptions, period, date);
+    function calculateDatasets(stats, filterOptions, period, date) {
+        const values = getValues(stats, filterOptions, period, date);
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
+        setTotal(getTotal(values));
     }
 
     useEffect(() => {
@@ -67,7 +71,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(data, newFo, period, date);
+        calculateDatasets(stats, newFo, period, date);
     };
 
     // TODO: maybe indicate somehow the loading/error status
@@ -82,7 +86,8 @@ export default (props) => {
             filterOptions={filterOptions}
             onFilterUpdate={onFilterUpdate}
             datasets={datasets}
-            max={max} />;
+            max={max}
+            total={total} />;
     case DATA_LOADING_FAILED:
         // TODO: show error in a user-friendly way
         return <div>ERROR LOADING DATA</div>;

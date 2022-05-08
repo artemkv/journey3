@@ -15,6 +15,15 @@ export const getLabels = (period, dateTime) => {
     }
 };
 
+export const getHigherPeriodTotal = (data, filterOptions, period, dateTime) => {
+    const dt = dateTimeUtil.getDt(period, dateTime);
+    const filterFunc = getDimFilterFunc(filterOptions);
+    const dateFilterFunc = (rec) => filterFunc(rec) && rec.dt === dt;
+
+    const visibleData = data.filter(dateFilterFunc);
+    return visibleData.map((x) => x.count).reduce((total, num) => total + num, 0);
+};
+
 export const getValues = (data, filterOptions, period, dateTime) => {
     const values = {};
 
@@ -123,13 +132,13 @@ const getDimFilterFunc = (filterOptions) => {
 
     let versionsToInclude = {};
     if (splitByVersion) {
-        versionsToInclude = tomap( Object.keys(filterOptions.dimensions.version.selected)
+        versionsToInclude = toset(Object.keys(filterOptions.dimensions.version.selected)
             .filter((key, _) => filterOptions.dimensions.version.selected[key].checked));
     }
 
     let eventsToInclude = {};
     if (splitByEvent) {
-        eventsToInclude = tomap(Object.keys(filterOptions.dimensions.event.selected)
+        eventsToInclude = toset(Object.keys(filterOptions.dimensions.event.selected)
             .filter((key, _) => filterOptions.dimensions.event.selected[key].checked));
     }
 
@@ -169,6 +178,10 @@ export const getDatasets = (values) => {
 
 export const getMaxValue = (values) => {
     return Math.max(...values.map((x) => x.values).flat(), 1);
+};
+
+export const getTotal = (values) => {
+    return values.map((x) => x.values).flat().reduce((total, num) => total + num, 0);
 };
 
 export const getRetentionBuckets = () => {
@@ -253,7 +266,7 @@ export const getRetentionValues = (data, filterOptions) => {
 };
 
 export const getConversionStages = (data) => {
-    return range(1, Math.max(...data.map((x) => +x.stage)) + 1);
+    return range(1, Math.max(...data.map((x) => +x.stage), 5) + 1);
 };
 
 export const getConversionValues = (data, filterOptions) => {
@@ -303,7 +316,7 @@ export const CHART_COLORS = [
     'rgb(124, 179, 66)' // light green
 ];
 
-export const tomap = (aa) => {
+export const toset = (aa) => {
     const m = {};
     aa.forEach((x) => m[x] = x);
     return m;
@@ -318,3 +331,9 @@ export const itermap = (obj, f) => {
 };
 
 export const id = (x) => x;
+
+export const tomap = (aa, kfunc, vfunc) => {
+    const m = {};
+    aa.forEach((x) => m[kfunc(x)] = vfunc(x));
+    return m;
+};

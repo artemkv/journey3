@@ -29,14 +29,14 @@ exports.processMessage = async (session, dynamoConnector) => {
   const ids = session.ids;
 
   // Save session
-  if (session.t === "stail" || !session.t) {
+  if (session.t === "stail") {
     const sessionToSave = getSessionForSaving(session);
     await dynamoConnector.saveSession(session.aid, build, version, hourDt, ids, sessionToSave);
   }
 
   // Update stats
   if (!session.t) {
-    await dynamoConnector.updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt);
+    // Ignore, deprecated
   } else if (session.t === "shead") {
     await dynamoConnector.updateStatsFromSessionHead(session, build, version, hourDt, dayDt, monthDt, yearDt);
   } else if (session.t === "stail") {

@@ -53,31 +53,37 @@ export default (props) => {
     // TODO: apply filter options
     function calculateDatasets(data, filterOptions) {
         const dataset = {};
-        const bucketLabels = getRetentionBucketLabels();
+        const bucketLabels = getRetentionBucketLabels().slice(1);
         const buckets = getRetentionBuckets();
 
-        bucketLabels.forEach((dayBucket) => {
-            buckets.forEach((bucket) => {
+        // TODO: black magic, clean it up
+
+        bucketLabels
+            .forEach((dayBucket) => {
+                buckets.forEach((bucket) => {
+                    if (!dataset[dayBucket]) {
+                        dataset[dayBucket] = {};
+                    }
+                    if (!dataset[dayBucket][bucket]) {
+                        dataset[dayBucket][bucket] = 0;
+                    }
+                });
+            });
+
+        data.forEach((x) => {
+            const bucketIdx = getBucketIdx(x.dt);
+            if (bucketIdx > 0) {
+                const dayBucket = bucketLabels[bucketIdx - 1];
+                const bucket = x.bucket;
+
                 if (!dataset[dayBucket]) {
                     dataset[dayBucket] = {};
                 }
                 if (!dataset[dayBucket][bucket]) {
                     dataset[dayBucket][bucket] = 0;
                 }
-            });
-        });
-
-        data.forEach((x) => {
-            const dayBucket = bucketLabels[getBucketIdx(x.dt)];
-            const bucket = x.bucket;
-
-            if (!dataset[dayBucket]) {
-                dataset[dayBucket] = {};
+                dataset[dayBucket][bucket] += x.count;
             }
-            if (!dataset[dayBucket][bucket]) {
-                dataset[dayBucket][bucket] = 0;
-            }
-            dataset[dayBucket][bucket] += x.count;
         });
         setDataset(dataset);
     }

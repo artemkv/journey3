@@ -22,6 +22,7 @@ export default (props) => {
     const labels = props.labels;
     const max = props.max;
     const type = props.type ?? 'line';
+    const stacked = props.stacked;
 
     const [chart, setChart] = useState(undefined);
 
@@ -40,12 +41,12 @@ export default (props) => {
                 responsive: true,
                 scales: {
                     x: {
-                        stacked: false // TODO: for retention and conversions, yes
+                        stacked
                     },
                     y: {
                         suggestedMin: 0,
                         suggestedMax: max,
-                        stacked: false // TODO: for retention and conversions, yes
+                        stacked
                     }
                 },
                 legend: {

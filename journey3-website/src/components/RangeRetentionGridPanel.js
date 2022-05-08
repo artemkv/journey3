@@ -9,13 +9,27 @@ export default (props) => {
     const onFilterUpdate = props.onFilterUpdate;
     const dataset = props.dataset;
 
-    const row = (dayBucket, data) => <div className="row gridrow" key={`day-${dayBucket}`}>
-        <div className="col s1 cell bl br bb">{dayBucket}</div>
-        {Object.keys(data).map((k) => column(k, data[k]))}
-    </div>;
+    const percentFormat = (val, total) => {
+        let num = 0;
+        if (total) {
+            num = val / total * 100;
+        }
+        const formatted = (Math.round(num * 100) / 100).toFixed(2);
+        return formatted;
+    };
+
+    const row = (segmentBucket, data) => {
+        const zeroDayCount = data[0];
+        return <div className="row gridrow" key={`segment-${segmentBucket}`}>
+            <div className="col s2 cell bl br bb">{segmentBucket}</div>
+            {Object.keys(data)
+                .filter((k) => k > 0)
+                .map((k) => column(k, percentFormat(data[k], zeroDayCount)))}
+        </div>;
+    };
 
     const column = (bucket, count) => <div className="col s1 cell br bb" key={bucket}>
-        {count > 0 ? bold(count) : count}
+        {count > 0 ? bold(count) : count}%
     </div>;
 
     const hcolumn = (bucket) => <div className="col s1 cell bt br bb" key={`h-${bucket}`}>
@@ -24,6 +38,7 @@ export default (props) => {
 
     const bold = (count) => <b>{count}</b>;
 
+    const labels = getRetentionBucketLabels().slice(1);
     return (
         <div className="panel">
             <div className="row flex">
@@ -39,10 +54,11 @@ export default (props) => {
                 </div>
             </div>
             <div className="row gridrow">
-                <div className="col s1 cell bl bt br bb">Segment</div>
-                {getRetentionBucketLabels().map((hcolumn))}
+                <div className="col s2 cell bl bt br bb">Segment</div>
+                {labels.map((hcolumn))}
             </div>
-            {Object.keys(dataset).map((k) => row(k, dataset[k]))}
+            {Object.keys(dataset)
+                .map((k) => row(k, dataset[k]))}
             <div>
             </div>
         </div >

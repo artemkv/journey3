@@ -33,7 +33,7 @@ export default () => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-05-06T00:00:00'); // TODO:
+    const now = new Date('2022-05-08T00:00:00'); // TODO:
     const dt = now; // TODO: should come from date picker
     const build = 'Release'; // TODO: should come UI
 
@@ -131,7 +131,7 @@ export default () => {
                         loadDataCallback={api.getEventsPerPeriod}
                     />
                     <EventStatsChartContainer
-                        title="Sessions with event"
+                        title="Sessions by event"
                         chartId="eventSessionsPerPeriod"
                         appId={appId}
                         build={build}

@@ -83,7 +83,8 @@ export default (props) => {
             onFilterUpdate={onFilterUpdate}
             datasets={datasets}
             max={max}
-            type="bar" />;
+            type="bar"
+            stacked={true} />;
     case DATA_LOADING_FAILED:
         // TODO: show error in a user-friendly way
         return <div>ERROR LOADING DATA</div>;

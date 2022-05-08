@@ -30,9 +30,6 @@ exports.getConnector = () => {
     saveSession: async (aid, build, version, dts, ids, session) => {
       return await saveSession(aid, build, version, dts, ids, session, client);
     },
-    updateStats: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
-      return await updateStats(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
-    },
     updateStatsFromSessionHead: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
       return await updateStatsFromSessionHead(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
     },
@@ -93,47 +90,9 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
     await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
   }
 
-  // TODO: does not work, we need fst_launch_day, fst_launch_month, fst_launch_year
-  await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
+  await updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client);
   await updateStageMetadata(session, appId, build, client);
 }
-
-// TODO: deprecate
-const updateStats = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
-  const appId = session.aid;
-
-  if (session.fst_launch) {
-    await updateUniqueUsers(appId, build, version, client);
-    await updateNewUsersByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
-  }
-
-  if (session.fst_launch_hour) {
-    await updateUniqueUsersByHour(appId, build, version, hourDt, client);
-  }
-  if (session.fst_launch_day) {
-    await updateUniqueUsersByDay(appId, build, version, dayDt, client);
-    await updateRetention(session, appId, build, version, dayDt, client);
-  }
-  if (session.fst_launch_month) {
-    await updateUniqueUsersByMonth(appId, build, version, monthDt, client);
-  }
-  if (session.fst_launch_year) {
-    await updateUniqueUsersByYear(appId, build, version, yearDt, client);
-  }
-  if (session.fst_launch_version) {
-    await updateUniqueUsersByVersion(appId, build, version, client);
-  }
-
-  await updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
-  await updateEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
-  await updateEventSessionsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
-
-  if (session.has_error) {
-    await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
-  }
-
-  await updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client);
-};
 
 async function updateRetention(session, appId, build, version, dayDt, client) {
   const sinceDt = statsfunc.getDayDt(session.since);
@@ -235,7 +194,7 @@ async function updateUniqueUsersByVersion(appId, build, version, client) {
   await incrementCounter(client, JOURNEY3_STATS_TABLE, uniqueUsersByVersionKey, `${version}`);
 }
 
-async function updateConversions(session, appId, build, version, dayDt, monthDt, yearDt, client) {
+async function updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client) {
   const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
   const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
 

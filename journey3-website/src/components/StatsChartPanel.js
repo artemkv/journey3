@@ -12,6 +12,7 @@ export default (props) => {
     const max = props.max;
     const type = props.type;
     const total = props.total;
+    const stacked = props.stacked;
 
     const totalCount = (total) => <div className="row flex">
         <div className="col s12 valign-wrapper">
@@ -41,6 +42,7 @@ export default (props) => {
                     labels={labels}
                     max={max}
                     type={type}
+                    stacked={stacked}
                 />
             </div>
         </div >

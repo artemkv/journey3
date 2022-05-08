@@ -107,6 +107,31 @@ func getErrorSessionsPerPeriod(appId string, build string, period string, dt str
 	return stats, nil
 }
 
+func getCrashSessionsPerPeriod(appId string, build string, period string, dt string) ([]statsData, error) {
+	// define keys
+	keyPrefix, err := getCrashSessionsByPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	// run query
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	stats, err := repackResultsByDtVersionIntoStatsData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return stats, nil
+}
+
 func getUniqueUsersPerPeriod(appId string, build string, period string, dt string) ([]statsData, error) {
 	// define keys
 	keyPrefix, err := getUniqueUsersByPeriodKeyPrefix(period)
@@ -327,6 +352,21 @@ func getErrorSessionsByPeriodKeyPrefix(period string) (string, error) {
 	}
 	if period == "day" {
 		return "ERROR_SESSIONS_BY_HOUR", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
+func getCrashSessionsByPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "CRASH_SESSIONS_BY_MONTH", nil
+	}
+	if period == "month" {
+		return "CRASH_SESSIONS_BY_DAY", nil
+	}
+	if period == "day" {
+		return "CRASH_SESSIONS_BY_HOUR", nil
 	}
 
 	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)

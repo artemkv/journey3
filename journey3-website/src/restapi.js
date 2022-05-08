@@ -107,6 +107,10 @@ export const getErrorSessionsPerPeriod = (appId, build, period, dt, session) => 
     return getJson(`/error_sessions_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };
 
+export const getCrashSessionsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/crash_sessions_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
 export const getEventsPerPeriod = (appId, build, period, dt, session) => {
     return getJson(`/events_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };

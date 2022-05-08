@@ -139,7 +139,12 @@ export default () => {
                         date={dt}
                         loadDataCallback={api.getEventSessionsPerPeriod}
                     />
-                    <EventStatsChartContainer
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col s6">
+                    <StatsChartContainer
                         title="Sessions with errors"
                         chartId="errorSessionsPerPeriod"
                         appId={appId}
@@ -147,6 +152,17 @@ export default () => {
                         period={period}
                         date={dt}
                         loadDataCallback={api.getErrorSessionsPerPeriod}
+                    />
+                </div>
+                <div className="col s6">
+                    <StatsChartContainer
+                        title="Sessions with crashes"
+                        chartId="crashSessionsPerPeriod"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getCrashSessionsPerPeriod}
                     />
                 </div>
             </div>

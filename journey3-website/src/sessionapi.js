@@ -88,6 +88,12 @@ export const getErrorSessionsPerPeriod = (appId, build, period, dt) => {
     });
 };
 
+export const getCrashSessionsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getCrashSessionsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
 export const getEventsPerPeriod = (appId, build, period, dt) => {
     return callApi(() => {
         return api.getEventsPerPeriod(appId, build, period, dt, getSession());

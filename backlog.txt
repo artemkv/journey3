@@ -1,11 +1,12 @@
 !! Session version
 
-- Send old stage with head, and new with tail
+- --Send old stage with head, and both new and old with tail--
 
 
 !! Flutter Prototype
 
-- send firstLaunchThisXXX etc. with Session tail
+- Do not send firstLaunchThisXXX etc. with Session tail
+- Send old stage with head, and both new and old with tail
 - Report crashes
 - Refactor the code and make Journey non-static
 
@@ -58,6 +59,7 @@
 - --Retention in %--
 - Bucket user segments by week
 - Session list, with filter by error/crash and version, showing events
+- Show unique users by version histograms with unique users total
 - (F) Show unique users dashed on new users chart
 - (F) Save current filters
 - (F) Events histograms

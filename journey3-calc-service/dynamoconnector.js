@@ -92,6 +92,9 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
   if (session.has_error) {
     await updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
   }
+  if (session.has_crash) {
+    await updateCrashSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
+  }
 
   await updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client);
   await updateStageMetadataFromTail(session, appId, build, client);
@@ -170,6 +173,16 @@ async function updateErrorSessionsByPeriod(appId, build, version, hourDt, dayDt,
   await incrementCounter(client, JOURNEY3_STATS_TABLE, errorSessionsByHourKey, `${hourDt}#${version}`);
   await incrementCounter(client, JOURNEY3_STATS_TABLE, errorSessionsByDayKey, `${dayDt}#${version}`);
   await incrementCounter(client, JOURNEY3_STATS_TABLE, errorSessionsByMonthKey, `${monthDt}#${version}`);
+}
+
+async function updateCrashSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {
+  const crashSessionsByHourKey = `CRASH_SESSIONS_BY_HOUR#${appId}#${build}`;
+  const crashSessionsByDayKey = `CRASH_SESSIONS_BY_DAY#${appId}#${build}`;
+  const crashSessionsByMonthKey = `CRASH_SESSIONS_BY_MONTH#${appId}#${build}`;
+
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, crashSessionsByHourKey, `${hourDt}#${version}`);
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, crashSessionsByDayKey, `${dayDt}#${version}`);
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, crashSessionsByMonthKey, `${monthDt}#${version}`);
 }
 
 async function updateUniqueUsersByHour(appId, build, version, hourDt, client) {

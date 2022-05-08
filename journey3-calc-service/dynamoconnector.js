@@ -78,6 +78,9 @@ const updateStatsFromSessionHead = async (session, build, version, hourDt, dayDt
   }
 
   await updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client);
+
+  await updateConversionsFromHead(session, appId, build, version, dayDt, monthDt, yearDt, client);
+  await updateStageMetadataFromHead(session, appId, build, client);
 }
 
 const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
@@ -91,7 +94,7 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
   }
 
   await updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client);
-  await updateStageMetadata(session, appId, build, client);
+  await updateStageMetadataFromTail(session, appId, build, client);
 }
 
 async function updateRetention(session, appId, build, version, dayDt, client) {
@@ -194,6 +197,30 @@ async function updateUniqueUsersByVersion(appId, build, version, client) {
   await incrementCounter(client, JOURNEY3_STATS_TABLE, uniqueUsersByVersionKey, `${version}`);
 }
 
+async function updateConversionsFromHead(session, appId, build, version, dayDt, monthDt, yearDt, client) {
+  const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
+
+  const conversionsDayKey = `CONVERSIONS_BY_DAY#${appId}#${build}`;
+  const conversionsMonthKey = `CONVERSIONS_BY_MONTH#${appId}#${build}`;
+  const conversionsYearKey = `CONVERSIONS_BY_YEAR#${appId}#${build}`;
+
+  if (session.fst_launch_day) {
+    for (let s = 1; s <= prevStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsDayKey, `${dayDt}#${s}#${version}`);
+    }
+  }
+  if (session.fst_launch_month) {
+    for (let s = 1; s <= prevStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
+    }
+  }
+  if (session.fst_launch_year) {
+    for (let s = 1; s <= prevStage; s++) {
+      await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsYearKey, `${yearDt}#${s}#${version}`);
+    }
+  }
+}
+
 async function updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client) {
   const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
   const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
@@ -202,49 +229,40 @@ async function updateConversionsFromTail(session, appId, build, version, dayDt, 
   const conversionsMonthKey = `CONVERSIONS_BY_MONTH#${appId}#${build}`;
   const conversionsYearKey = `CONVERSIONS_BY_YEAR#${appId}#${build}`;
 
-  if (session.fst_launch_day) {
-    for (let s = 1; s <= newStage; s++) {
+  if (newStage > prevStage) {
+    for (let s = prevStage + 1; s <= newStage; s++) {
       await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsDayKey, `${dayDt}#${s}#${version}`);
     }
-  } else {
-    if (newStage > prevStage) {
-      for (let s = prevStage + 1; s <= newStage; s++) {
-        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsDayKey, `${dayDt}#${s}#${version}`);
-      }
-    }
   }
 
-  if (session.fst_launch_month) {
-    for (let s = 1; s <= newStage; s++) {
+  if (newStage > prevStage) {
+    for (let s = prevStage + 1; s <= newStage; s++) {
       await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
     }
-  } else {
-    if (newStage > prevStage) {
-      for (let s = prevStage + 1; s <= newStage; s++) {
-        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsMonthKey, `${monthDt}#${s}#${version}`);
-      }
-    }
   }
 
-  if (session.fst_launch_year) {
-    for (let s = 1; s <= newStage; s++) {
+  if (newStage > prevStage) {
+    for (let s = prevStage + 1; s <= newStage; s++) {
       await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsYearKey, `${yearDt}#${s}#${version}`);
-    }
-  } else {
-    if (newStage > prevStage) {
-      for (let s = prevStage + 1; s <= newStage; s++) {
-        await incrementCounter(client, JOURNEY3_STATS_TABLE, conversionsYearKey, `${yearDt}#${s}#${version}`);
-      }
     }
   }
 }
 
-async function updateStageMetadata(session, appId, build, client) {
+async function updateStageMetadataFromHead(session, appId, build, client) {
+  const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
+
+  const prevStageName = R.pathOr('new_user', ['prev_stage', 'name'], session);
+
+  const stagesKey = `STAGES#${appId}#${build}`;
+  saveString(client, JOURNEY3_META_TABLE, stagesKey, `${prevStage}`, prevStageName);
+}
+
+async function updateStageMetadataFromTail(session, appId, build, client) {
   const prevStage = R.pathOr(1, ['prev_stage', 'stage'], session);
   const newStage = R.pathOr(1, ['new_stage', 'stage'], session);
 
-  const prevStageName = R.pathOr(1, ['prev_stage', 'name'], session);
-  const newStageName = R.pathOr(1, ['new_stage', 'name'], session);
+  const prevStageName = R.pathOr('new_user', ['prev_stage', 'name'], session);
+  const newStageName = R.pathOr('new_user', ['new_stage', 'name'], session);
 
   const stagesKey = `STAGES#${appId}#${build}`;
   saveString(client, JOURNEY3_META_TABLE, stagesKey, `${prevStage}`, prevStageName);

@@ -2,6 +2,9 @@ import {range} from 'ramda';
 import * as dateTimeUtil from '../../datetimeutil';
 import {charRange} from '../../util';
 import {from, id, konst} from 'datashaper-js';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+dayjs.extend(isoWeek);
 
 const sum = (x) => x.reduce((total, num) => total + num, 0);
 
@@ -377,3 +380,18 @@ export const CHART_COLORS = [
     'rgb(103, 58, 183)', // deep purple
     'rgb(124, 179, 66)' // light green
 ];
+
+export const getWeekLabel = (dt) => {
+    const start = dayjs(dt).startOf('isoWeek').format('MMM DD');
+    const end = dayjs(dt).endOf('isoWeek').format('MMM DD');
+    return `${start} - ${end}`;
+};
+
+export const getRetentionSegments = (dt) => {
+    const day = dayjs(dt).subtract(7 * 9, 'day');
+    return from(range(0, 10))
+        .map((x) => day.add(7 * x, 'day'))
+        .map((x) => getWeekLabel(x))
+        .return()
+        .reverse();
+};

@@ -9,8 +9,8 @@ import RangeRetentionGridPanel from './RangeRetentionGridPanel';
 import {
     getFilterOptions,
     getRetentionBuckets,
-    getRetentionBucketLabels,
-    getBucketIdx
+    getWeekLabel,
+    getRetentionSegments
 } from './chartutils';
 
 const DATA_NOT_LOADED = 0;
@@ -57,40 +57,37 @@ export default (props) => {
             });
     }
 
-    // TODO: apply filter options
+    // TODO: apply filter options?
     function calculateDatasets(stats, filterOptions) {
         const dataset = {};
-        const bucketLabels = getRetentionBucketLabels().slice(1);
         const buckets = getRetentionBuckets();
 
-        // TODO: black magic, clean it up
-
-        bucketLabels
-            .forEach((dayBucket) => {
+        // prepare table by initializing with zero value
+        getRetentionSegments(dt)
+            .forEach((segment) => {
                 buckets.forEach((bucket) => {
-                    if (!dataset[dayBucket]) {
-                        dataset[dayBucket] = {};
+                    if (!dataset[segment]) {
+                        dataset[segment] = {};
                     }
-                    if (!dataset[dayBucket][bucket]) {
-                        dataset[dayBucket][bucket] = 0;
+                    if (!dataset[segment][bucket]) {
+                        dataset[segment][bucket] = 0;
                     }
                 });
             });
 
+        // project data
+        // TODO: before we ignored day 0 segment
         stats.forEach((x) => {
-            const bucketIdx = getBucketIdx(x.dt);
-            if (bucketIdx > 0) {
-                const dayBucket = bucketLabels[bucketIdx - 1];
-                const bucket = x.bucket;
+            const segment = getWeekLabel(x.dt);
+            const bucket = x.bucket;
 
-                if (!dataset[dayBucket]) {
-                    dataset[dayBucket] = {};
-                }
-                if (!dataset[dayBucket][bucket]) {
-                    dataset[dayBucket][bucket] = 0;
-                }
-                dataset[dayBucket][bucket] += x.count;
+            if (!dataset[segment]) {
+                dataset[segment] = {};
             }
+            if (!dataset[segment][bucket]) {
+                dataset[segment][bucket] = 0;
+            }
+            dataset[segment][bucket] += x.count;
         });
         setDataset(dataset);
     }

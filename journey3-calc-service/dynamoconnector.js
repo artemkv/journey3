@@ -100,6 +100,8 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
 
   await updateConversionsFromTail(session, appId, build, version, dayDt, monthDt, yearDt, client);
   await updateStageMetadataFromTail(session, appId, build, client);
+
+  await updateSessionDurationDistribution(session, appId, build, version, dayDt, monthDt, yearDt, client);
 }
 
 async function updateRetention(session, appId, build, version, dayDt, client) {
@@ -116,6 +118,19 @@ async function updateRetention(session, appId, build, version, dayDt, client) {
   // TODO: currently days are counted as 24 hour intervals, not calendar days
   const retentionSinceKey = `RETENTION_SINCE#${appId}#${build}`;
   await incrementCounter(client, JOURNEY3_STATS_TABLE, retentionSinceKey, `${sinceDt}#${bucket}#${version}`);
+}
+
+async function updateSessionDurationDistribution(session, appId, build, version, dayDt, monthDt, yearDt, client) {
+  const minutes = statsfunc.getMinutesBetween(session.start, session.end);
+  const bucket = statsfunc.getDurationBucket(minutes);
+
+  const sessionDurationByDayKey = `SESSION_DURATION_BY_DAY#${appId}#${build}`;
+  const sessionDurationByMonthKey = `SESSION_DURATION_BY_MONTH#${appId}#${build}`;
+  const sessionDurationByYearKey = `SESSION_DURATION_BY_YEAR#${appId}#${build}`;
+
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, sessionDurationByDayKey, `${dayDt}#${bucket}#${version}`);
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, sessionDurationByMonthKey, `${monthDt}#${bucket}#${version}`);
+  await incrementCounter(client, JOURNEY3_STATS_TABLE, sessionDurationByYearKey, `${yearDt}#${bucket}#${version}`);
 }
 
 async function updateSessionsByPeriod(appId, build, version, hourDt, dayDt, monthDt, client) {

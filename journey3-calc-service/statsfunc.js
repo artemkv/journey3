@@ -74,6 +74,16 @@ const getDaysSince = (since, start) => {
   return to.diff(from, 'day');
 }
 
+const getMinutesBetween = (start, end) => {
+  const from = dayjs(start);
+  const to = dayjs(end);
+
+  console.log(from)
+  console.log(to)
+
+  return to.diff(from, 'minute');
+}
+
 const getRetentionBucket = (daysSince) => {
   if (daysSince <= 0) {
     return 0;
@@ -82,6 +92,19 @@ const getRetentionBucket = (daysSince) => {
   const buckets = [1, 2, 5, 8, 12, 18, 27, 40, 60, 1000000];
   let idx = 0;
   while (daysSince > buckets[idx]) {
+    idx++;
+  }
+  return buckets[idx];
+}
+
+const getDurationBucket = (minutes) => {
+  if (minutes <= 0) {
+    return 0;
+  }
+
+  const buckets = [1, 2, 5, 8, 12, 18, 27, 40, 60, 90, 1000000];
+  let idx = 0;
+  while (minutes > buckets[idx]) {
     idx++;
   }
   return buckets[idx];
@@ -104,3 +127,5 @@ exports.getYearDt = getYearDt;
 exports.getDaysSince = getDaysSince;
 exports.getRetentionBucket = getRetentionBucket;
 exports.getErrorLevel = getErrorLevel;
+exports.getMinutesBetween = getMinutesBetween;
+exports.getDurationBucket = getDurationBucket;

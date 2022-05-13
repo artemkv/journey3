@@ -18,6 +18,12 @@ test('getDaysSince', () => {
   expect(statsfunc.getDaysSince('2022-03-23T17:30:50.888718Z', '2022-03-24T17:30:51.888718Z')).toBe(1);
 });
 
+test('getMinutesBetween', () => {
+  expect(statsfunc.getMinutesBetween('2022-03-23T17:30:50.888718Z', '2022-03-23T17:42:28.924017Z')).toBe(11);
+  expect(statsfunc.getMinutesBetween('2022-03-23T17:30:50.888718Z', '2022-03-23T17:42:50.924017Z')).toBe(12);
+  expect(statsfunc.getMinutesBetween('2022-03-23T17:30:50.888718Z', '2022-03-23T17:42:51.924017Z')).toBe(12);
+});
+
 test('getRetentionBucket', () => {
   expect(statsfunc.getRetentionBucket(-1)).toBe(0);
   expect(statsfunc.getRetentionBucket(0)).toBe(0);
@@ -28,4 +34,17 @@ test('getRetentionBucket', () => {
   expect(statsfunc.getRetentionBucket(25)).toBe(27);
   expect(statsfunc.getRetentionBucket(60)).toBe(60);
   expect(statsfunc.getRetentionBucket(61)).toBe(1000000);
+});
+
+test('getDurationBucket', () => {
+  expect(statsfunc.getDurationBucket(-1)).toBe(0);
+  expect(statsfunc.getDurationBucket(0)).toBe(0);
+  expect(statsfunc.getDurationBucket(1)).toBe(1);
+  expect(statsfunc.getDurationBucket(2)).toBe(2);
+  expect(statsfunc.getDurationBucket(3)).toBe(5);
+  expect(statsfunc.getDurationBucket(5)).toBe(5);
+  expect(statsfunc.getDurationBucket(25)).toBe(27);
+  expect(statsfunc.getDurationBucket(60)).toBe(60);
+  expect(statsfunc.getDurationBucket(61)).toBe(90);
+  expect(statsfunc.getDurationBucket(91)).toBe(1000000);
 });

@@ -57,10 +57,11 @@
 - Date/time selector
 - Filter by build
 - Quick way to split by version
+- Remember filters
 - --Supply filter options for todays segments--
 - --Retention in %--
 - Bucket user segments by week
-- Session list, with filter by error/crash and version, showing events
+- --Session list, with filter by error/crash and version, showing events--
 - Do I want Release/Debug to be case-sensitive in query string?
 - --Sort events by name on filter form--
 - (F) Show unique users by version histograms with unique users total

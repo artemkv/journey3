@@ -3,11 +3,13 @@ import {getLast10Years, getYear} from '../datetimeutil';
 
 import AppSelectorContainer from './AppSelectorContainer';
 import M from 'materialize-css/dist/js/materialize.min.js';
-import StatsChartContainer from './StatsChartContainer';
-import EventStatsChartContainer from './EventStatsChartContainer';
-import RetentionStatsChartContainer from './RetentionStatsChartContainer';
-import RangeRetentionStatsGridContainer from './RangeRetentionStatsGridContainer';
-import ConversionStatsChartContainer from './ConversionStatsChartContainer';
+import StatsChartContainer from './charts/StatsChartContainer';
+import EventStatsChartContainer from './charts/EventStatsChartContainer';
+import RetentionStatsChartContainer from './charts/RetentionStatsChartContainer';
+import RangeRetentionStatsGridContainer from './charts/RangeRetentionStatsGridContainer';
+import ConversionStatsChartContainer from './charts/ConversionStatsChartContainer';
+import TopEventsStatsChartContainer from './charts/TopEventsStatsChartContainer';
+import SessionsListContainer from './charts/SessionsListContainer';
 import * as api from '../sessionapi';
 
 const PERIOD_DAY = 'day';
@@ -33,9 +35,11 @@ export default () => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-05-08T00:00:00'); // TODO:
+    const now = new Date('2022-05-13T00:00:00'); // TODO:
     const dt = now; // TODO: should come from date picker
     const build = 'Release'; // TODO: should come UI
+
+    const Ignore = () => <div></div>;
 
     return (
         <div>
@@ -85,6 +89,17 @@ export default () => {
                         period={period}
                         date={dt}
                         loadDataCallback={api.getConversions}
+                    />
+                </div>
+                <div className="col s6">
+                    <TopEventsStatsChartContainer
+                        title="Top events"
+                        chartId="top_events"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getEventsPerPeriod}
                     />
                 </div>
             </div>
@@ -185,6 +200,16 @@ export default () => {
                     period="day"
                     date={new Date()}
                     loadDataCallback={api.getRetentionSinceDay}
+                />
+            </div>
+
+            <div className="row">
+                <SessionsListContainer
+                    title="User sessions (last 50)"
+                    id="session_list"
+                    appId={appId}
+                    build={build}
+                    loadDataCallback={api.getUserSessions}
                 />
             </div>
         </div>

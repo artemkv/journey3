@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import ModalFilterDimension from './ModalFilterDimension';
-import {mapmap} from './chartutils';
+import {from} from 'datashaper-js';
 
 export default (props) => {
     const chartId = props.chartId;
@@ -30,7 +30,12 @@ export default (props) => {
             <div id={id} className='modal modal-fixed-footer'>
                 <div className='modal-content'>
                     <h4>Filter by</h4>
-                    {mapmap(filterOptions.dimensions, (dim) => dimension(dim, onFilterUpdate))}
+                    {
+                        from(filterOptions.dimensions)
+                            .listValues()
+                            .map((dim) => dimension(dim, onFilterUpdate))
+                            .return()
+                    }
                 </div>
                 <div className='modal-footer'>
                     <a href='#!' className='modal-close btn-flat'>Cancel</a>

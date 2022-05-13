@@ -136,6 +136,12 @@ export const getConversions = (appId, build, period, dt) => {
     });
 };
 
+export const getUserSessions = (appId, build, errLevel, version) => {
+    return callApi(() => {
+        return api.getUserSessions(appId, build, errLevel, version, getSession());
+    });
+};
+
 export const getAcc = () => {
     return callApi(() => {
         return api.getAcc(getSession());

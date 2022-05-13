@@ -57,3 +57,20 @@ func isBuildValid(build string) bool {
 	}
 	return false
 }
+
+func isErrorLevelValid(errorLevel string) bool {
+	if errorLevel == "n" {
+		return true
+	}
+	if errorLevel == "e" {
+		return true
+	}
+	if errorLevel == "c" {
+		return true
+	}
+	return false
+}
+
+func isVersionValid(version string) bool {
+	return version != ""
+}

@@ -139,6 +139,10 @@ export const getConversions = (appId, build, period, dt, session) => {
     return getJson(`/conversions?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };
 
+export const getUserSessions = (appId, build, errLevel, version, session) => {
+    return getJson(`/user_sessions?aid=${appId}&build=${build}&err_level=${errLevel}&version=${version}`, session);
+};
+
 export const getAcc = (session) => {
     return getJson(`/acc`, session);
 };

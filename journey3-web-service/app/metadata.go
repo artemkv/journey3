@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -31,8 +30,6 @@ type stageData struct {
 func getStages(appId string, build string) ([]stageData, error) {
 	hashKey := getHashKey("STAGES", appId, build)
 
-	fmt.Printf("HASH: %s\n", hashKey)
-
 	// run query
 	results, err := executeMetaQuery(hashKey)
 	if err != nil {
@@ -47,6 +44,31 @@ func getStages(appId string, build string) ([]stageData, error) {
 
 	// done
 	return stages, nil
+}
+
+func getVersions(appId string, build string) ([]string, error) {
+	hashKey := getHashKey("VERSIONS", appId, build)
+
+	// run query
+	results, err := executeMetaQuery(hashKey)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	versions := make([]string, 0, len(results.Items)+1)
+	versions = append(versions, "all")
+	for _, v := range results.Items {
+		item := metaItem{}
+
+		err := attributevalue.UnmarshalMap(v, &item)
+		if err != nil {
+			return nil, err
+		}
+
+		versions = append(versions, item.SortKey)
+	}
+	return versions, nil
 }
 
 func repackResultsByStageIntoStageData(results *dynamodb.QueryOutput) ([]stageData, error) {

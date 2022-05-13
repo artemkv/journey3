@@ -13,12 +13,21 @@ type statsRequestData struct {
 	Build  string `form:"build" binding:"required"`
 }
 
+type sessionRequestData struct {
+	AppId      string `form:"aid" binding:"required"`
+	Build      string `form:"build" binding:"required"`
+	ErrorLevel string `form:"err_level" binding:"required"`
+	Version    string `form:"version" binding:"required"`
+}
+
 const (
 	INVALID_APPID_ERROR_MESSAGE            = "invalid value '%s' for 'aid', expected valid app id"
 	INVALID_PERIOD_ERROR_MESSAGE           = "invalid value '%s' for 'period', expected 'year', 'month' or 'day'"
 	INVALID_RETENTION_PERIOD_ERROR_MESSAGE = "invalid value '%s' for 'period', expected 'day'"
 	INVALID_DT_ERROR_MESSAGE               = "invalid value '%s' for 'dt', expected format 'yyyy[MM[dd]]' depending on the period"
 	INVALID_BUILD_ERROR_MESSAGE            = "invalid value '%s' for 'build', expected 'Debug', 'Release'"
+	INVALID_ERROR_LEVEL_ERROR_MESSAGE      = "invalid value '%s' for 'err_level', expected 'n', 'e' or 'c'"
+	INVALID_VERSION_ERROR_MESSAGE          = "invalid value '%s' for 'version', expected non-empty string"
 )
 
 type sessionsResponseStatsData struct {
@@ -53,6 +62,11 @@ type newUsersResponseStatsData struct {
 type conversionStagesAndStatsData struct {
 	Stages []stageData           `json:"stages"`
 	Stats  []conversionStatsData `json:"stats"`
+}
+
+type journeyVersionsAndSessionsData struct {
+	Versions []string             `json:"versions"`
+	Sessions []journeySessionData `json:"sessions"`
 }
 
 func handleSessionsPerPeriod(c *gin.Context, userId string, email string, _ string) {
@@ -606,6 +620,69 @@ func handleConversionsPerStage(c *gin.Context, userId string, email string, _ st
 	result := conversionStagesAndStatsData{
 		Stages: stages,
 		Stats:  stats,
+	}
+
+	toSuccess(c, result)
+}
+
+func handleGetUserSessions(c *gin.Context, userId string, email string, _ string) {
+	// get params from query string
+	var sessionRequest sessionRequestData
+	if err := c.ShouldBind(&sessionRequest); err != nil {
+		toBadRequest(c, err)
+		return
+	}
+
+	// sanitize
+	appId := sessionRequest.AppId
+	if !isAppIdValid(appId) {
+		err := fmt.Errorf(INVALID_APPID_ERROR_MESSAGE, appId)
+		toBadRequest(c, err)
+		return
+	}
+	build := sessionRequest.Build
+	if !isBuildValid(build) {
+		err := fmt.Errorf(INVALID_BUILD_ERROR_MESSAGE, build)
+		toBadRequest(c, err)
+		return
+	}
+	errorLevel := sessionRequest.ErrorLevel
+	if !isErrorLevelValid(errorLevel) {
+		err := fmt.Errorf(INVALID_ERROR_LEVEL_ERROR_MESSAGE, errorLevel)
+		toBadRequest(c, err)
+		return
+	}
+	version := sessionRequest.Version
+	if !isVersionValid(version) {
+		err := fmt.Errorf(INVALID_VERSION_ERROR_MESSAGE, version)
+		toBadRequest(c, err)
+		return
+	}
+
+	// check access rights
+	canRead, err := canRead(userId, appId)
+	if !canRead || err != nil {
+		toUnauthorized(c)
+		return
+	}
+
+	// retrieve data
+	sessions, err := getSessions(appId, build, errorLevel, version)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
+	// retrieve metadata
+	versions, err := getVersions(appId, build)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
+	result := journeyVersionsAndSessionsData{
+		Versions: versions,
+		Sessions: sessions,
 	}
 
 	toSuccess(c, result)

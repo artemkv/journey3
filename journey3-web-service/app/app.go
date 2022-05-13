@@ -64,6 +64,9 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 	router.GET("/conversions", reststats.HandleEndpointWithStats(
 		withAuthentication(handleConversionsPerStage)))
 
+	router.GET("/user_sessions", reststats.HandleEndpointWithStats(
+		withAuthentication(handleGetUserSessions)))
+
 	// account
 	router.GET("/acc", reststats.HandleEndpointWithStats(
 		withAuthentication(handleGetAcc)))

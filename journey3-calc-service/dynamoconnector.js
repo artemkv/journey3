@@ -81,6 +81,8 @@ const updateStatsFromSessionHead = async (session, build, version, hourDt, dayDt
 
   await updateConversionsFromHead(session, appId, build, version, dayDt, monthDt, yearDt, client);
   await updateStageMetadataFromHead(session, appId, build, client);
+
+  await updateVersionMetadata(session, appId, build, client);
 }
 
 const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
@@ -280,6 +282,11 @@ async function updateStageMetadataFromTail(session, appId, build, client) {
   const stagesKey = `STAGES#${appId}#${build}`;
   saveString(client, JOURNEY3_META_TABLE, stagesKey, `${prevStage}`, prevStageName);
   saveString(client, JOURNEY3_META_TABLE, stagesKey, `${newStage}`, newStageName);
+}
+
+async function updateVersionMetadata(session, appId, build, client) {
+  const versionsKey = `VERSIONS#${appId}#${build}`;
+  saveString(client, JOURNEY3_META_TABLE, versionsKey, `${session.version}`, '');
 }
 
 // Atomically increments the value of the attribute "Cnt"

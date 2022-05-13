@@ -1,5 +1,5 @@
 import React from 'react';
-import {mapmap} from './chartutils';
+import {from} from 'datashaper-js';
 
 export default (props) => {
     const dim = props.dim;
@@ -31,7 +31,7 @@ export default (props) => {
         ]);
     };
 
-    const dimValue = (dimId, dimValue) => <span key={dimValue.id} className="double-distance-right">
+    const dimValueSelector = (dimId, dimValue) => <span key={dimValue.id} className="double-distance-right">
         <label>
             <input
                 type="checkbox"
@@ -67,7 +67,13 @@ export default (props) => {
             </div>
             <div className="row">
                 <div className="col s12">
-                    {mapmap(dim.selected, (x) => dimValue(dim.id, x))}
+                    {
+                        from(dim.selected)
+                            .listValues()
+                            .sorted((a, b) => a.label.localeCompare(b.label))
+                            .map((dimValue) => dimValueSelector(dim.id, dimValue))
+                            .return()
+                    }
                 </div>
             </div>
         </div>

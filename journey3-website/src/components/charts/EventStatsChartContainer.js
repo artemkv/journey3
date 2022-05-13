@@ -1,9 +1,9 @@
-import * as dateTimeUtil from '../datetimeutil';
+import * as dateTimeUtil from '../../datetimeutil';
 const R = require('ramda');
 
 import React, {useEffect, useState} from 'react';
 
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import StatsChartPanel from './StatsChartPanel';
 
 import {
@@ -12,8 +12,7 @@ import {
     getFilterOptions,
     getDatasets,
     getMaxValue,
-    getTotal,
-    getHigherPeriodTotal
+    getTotal
 } from './chartutils';
 
 const DATA_NOT_LOADED = 0;
@@ -27,15 +26,14 @@ export default (props) => {
     const build = props.build;
     const period = props.period;
     const date = props.date;
-    const dt = dateTimeUtil.getDt(period, date);
     const loadDataCallback = props.loadDataCallback;
+
+    const dt = dateTimeUtil.getDt(period, date);
     const labels = getLabels(period, date);
-    const useHigherPeriodTotal = props.useHigherPeriodTotal;
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
     const [stats, setStats] = useState([]);
-    const [higherPeriodStats, setHigherPeriodStats] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
 
     const [datasets, setDatasets] = useState([]);
@@ -51,14 +49,12 @@ export default (props) => {
         loadDataCallback(appId, build, period, dt)
             .then((data) => {
                 const stats = data.stats;
-                const higherPeriodStats = data.higher_period_stats;
 
                 setStats(stats);
-                setHigherPeriodStats(higherPeriodStats);
 
-                const fo = getFilterOptions(stats); // TODO: merge with saved values
+                const fo = getFilterOptions(stats, true); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, fo, period, date);
+                calculateDatasets(stats, fo, period, date);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -67,15 +63,11 @@ export default (props) => {
             });
     }
 
-    function calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, filterOptions, period, date) {
+    function calculateDatasets(stats, filterOptions, period, date) {
         const values = getValues(stats, filterOptions, period, date);
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
         setTotal(getTotal(values));
-
-        if (useHigherPeriodTotal) {
-            setTotal(getHigherPeriodTotal(higherPeriodStats, filterOptions, period, date));
-        }
     }
 
     useEffect(() => {
@@ -88,7 +80,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, newFo, period, date);
+        calculateDatasets(stats, newFo, period, date);
     };
 
     // TODO: maybe indicate somehow the loading/error status

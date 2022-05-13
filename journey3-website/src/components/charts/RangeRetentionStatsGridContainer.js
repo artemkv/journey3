@@ -1,13 +1,17 @@
-import * as dateTimeUtil from '../datetimeutil';
+import * as dateTimeUtil from '../../datetimeutil';
 const R = require('ramda');
 
 import React, {useEffect, useState} from 'react';
 
-import Spinner from './Spinner';
-
-import {getFilterOptions, getRetentionBuckets, getRetentionBucketLabels, getBucketIdx} from './chartutils';
-
+import Spinner from '../Spinner';
 import RangeRetentionGridPanel from './RangeRetentionGridPanel';
+
+import {
+    getFilterOptions,
+    getRetentionBuckets,
+    getRetentionBucketLabels,
+    getBucketIdx
+} from './chartutils';
 
 const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
@@ -20,12 +24,13 @@ export default (props) => {
     const build = props.build;
     const period = props.period;
     const date = props.date;
-    const dt = dateTimeUtil.getDt(period, date);
     const loadDataCallback = props.loadDataCallback;
+
+    const dt = dateTimeUtil.getDt(period, date);
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
-    const [data, setData] = useState([]);
+    const [stats, setStats] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
 
     const [dataset, setDataset] = useState([]);
@@ -38,10 +43,12 @@ export default (props) => {
 
         loadDataCallback(appId, build, period, dt)
             .then((data) => {
-                setData(data);
-                const fo = getFilterOptions(data); // TODO: merge with saved values
+                const stats = data;
+
+                setStats(stats);
+                const fo = getFilterOptions(stats); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(data, fo);
+                calculateDatasets(stats, fo);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -51,7 +58,7 @@ export default (props) => {
     }
 
     // TODO: apply filter options
-    function calculateDatasets(data, filterOptions) {
+    function calculateDatasets(stats, filterOptions) {
         const dataset = {};
         const bucketLabels = getRetentionBucketLabels().slice(1);
         const buckets = getRetentionBuckets();
@@ -70,7 +77,7 @@ export default (props) => {
                 });
             });
 
-        data.forEach((x) => {
+        stats.forEach((x) => {
             const bucketIdx = getBucketIdx(x.dt);
             if (bucketIdx > 0) {
                 const dayBucket = bucketLabels[bucketIdx - 1];
@@ -98,7 +105,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(data, newFo);
+        calculateDatasets(stats, newFo);
     };
 
     // TODO: maybe indicate somehow the loading/error status

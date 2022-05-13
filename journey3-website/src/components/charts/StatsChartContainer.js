@@ -1,12 +1,20 @@
-import * as dateTimeUtil from '../datetimeutil';
+import * as dateTimeUtil from '../../datetimeutil';
 const R = require('ramda');
 
 import React, {useEffect, useState} from 'react';
 
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import StatsChartPanel from './StatsChartPanel';
 
-import {getRetentionBucketLabels, getRetentionValues, getFilterOptions, getDatasets, getMaxValue} from './chartutils';
+import {
+    getLabels,
+    getValues,
+    getFilterOptions,
+    getDatasets,
+    getMaxValue,
+    getTotal,
+    getHigherPeriodTotal
+} from './chartutils';
 
 const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
@@ -19,17 +27,21 @@ export default (props) => {
     const build = props.build;
     const period = props.period;
     const date = props.date;
-    const dt = dateTimeUtil.getDt(period, date);
     const loadDataCallback = props.loadDataCallback;
-    const labels = getRetentionBucketLabels(period, date);
+    const useHigherPeriodTotal = props.useHigherPeriodTotal;
+
+    const dt = dateTimeUtil.getDt(period, date);
+    const labels = getLabels(period, date);
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
-    const [data, setData] = useState([]);
+    const [stats, setStats] = useState([]);
+    const [higherPeriodStats, setHigherPeriodStats] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
 
     const [datasets, setDatasets] = useState([]);
     const [max, setMax] = useState(1.0);
+    const [total, setTotal] = useState(-1);
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
@@ -39,10 +51,15 @@ export default (props) => {
 
         loadDataCallback(appId, build, period, dt)
             .then((data) => {
-                setData(data);
-                const fo = getFilterOptions(data); // TODO: merge with saved values
+                const stats = data.stats;
+                const higherPeriodStats = data.higher_period_stats;
+
+                setStats(stats);
+                setHigherPeriodStats(higherPeriodStats);
+
+                const fo = getFilterOptions(stats); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(data, fo);
+                calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, fo, period, date);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -51,10 +68,15 @@ export default (props) => {
             });
     }
 
-    function calculateDatasets(data, filterOptions) {
-        const values = getRetentionValues(data, filterOptions);
+    function calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, filterOptions, period, date) {
+        const values = getValues(stats, filterOptions, period, date);
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
+        setTotal(getTotal(values));
+
+        if (useHigherPeriodTotal) {
+            setTotal(getHigherPeriodTotal(higherPeriodStats, filterOptions, period, date));
+        }
     }
 
     useEffect(() => {
@@ -67,7 +89,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(data, newFo);
+        calculateDatasets(stats, useHigherPeriodTotal, higherPeriodStats, newFo, period, date);
     };
 
     // TODO: maybe indicate somehow the loading/error status
@@ -83,8 +105,7 @@ export default (props) => {
             onFilterUpdate={onFilterUpdate}
             datasets={datasets}
             max={max}
-            type="bar"
-            stacked={true} />;
+            total={total} />;
     case DATA_LOADING_FAILED:
         // TODO: show error in a user-friendly way
         return <div>ERROR LOADING DATA</div>;

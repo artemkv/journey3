@@ -1,6 +1,9 @@
 import {range} from 'ramda';
-import * as dateTimeUtil from '../datetimeutil';
-import {charRange} from '../util';
+import * as dateTimeUtil from '../../datetimeutil';
+import {charRange} from '../../util';
+import {from, id, konst} from 'datashaper-js';
+
+const sum = (x) => x.reduce((total, num) => total + num, 0);
 
 export const getLabels = (period, dateTime) => {
     switch (period) {
@@ -15,49 +18,51 @@ export const getLabels = (period, dateTime) => {
     }
 };
 
-export const getHigherPeriodTotal = (data, filterOptions, period, dateTime) => {
+export const getHigherPeriodTotal = (stats, filterOptions, period, dateTime) => {
     const dt = dateTimeUtil.getDt(period, dateTime);
     const filterFunc = getDimFilterFunc(filterOptions);
     const dateFilterFunc = (rec) => filterFunc(rec) && rec.dt === dt;
 
-    const visibleData = data.filter(dateFilterFunc);
+    const visibleData = stats.filter(dateFilterFunc);
     return visibleData.map((x) => x.count).reduce((total, num) => total + num, 0);
 };
 
-export const getValues = (data, filterOptions, period, dateTime) => {
-    const values = {};
-
+export const getValues = (stats, filterOptions, period, dateTime) => {
     const keyFunc = getDimKeyFunc(filterOptions);
     const filterFunc = getDimFilterFunc(filterOptions);
 
-    const visibleData = data.filter(filterFunc);
+    const visibleData = stats.filter(filterFunc);
 
-    const keys = extractDimKeys(visibleData, keyFunc);
+    const dimKeys = extractDimKeys(visibleData, keyFunc);
     const dts = dateTimeUtil.getPeriodDts(period, dateTime);
 
     // prepare dimensions
-    keys.forEach((k) => values[k] = {label: k, values: {}});
-    // fills dimensions with zero values
-    dts.forEach((dt) => {
-        itermap(values, (v) => {
-            v.values[dt] = 0;
-        });
-    });
-    // project data
+    const values = from(dimKeys)
+        .toMap(id, (dim) => ({
+            label: dim,
+            values: from(dts)
+                .toMap(id, konst(0))
+                .return()
+        }))
+        .return();
+
+    // project stats
     visibleData
         .forEach((x) => {
             values[keyFunc(x)].values[x.dt] += x.count;
         });
+
     // convert to final format
-    return mapmap(values, (v) => {
-        return {
-            label: v.label,
-            values: dts.map((dt) => v.values[dt])
-        };
-    });
+    return from(values)
+        .listValues()
+        .map((x) => ({
+            label: x.label,
+            values: dts.map((dt) => x.values[dt])
+        }))
+        .return();
 };
 
-export const getFilterOptions = (data, useEvents) => {
+export const getFilterOptions = (stats, useEvents) => {
     const filterOptions = {
         dimensions: {
             version: {
@@ -71,7 +76,7 @@ export const getFilterOptions = (data, useEvents) => {
             }
         }
     };
-    const versions = extractDimKeys(data, (x) => x.version);
+    const versions = extractDimKeys(stats, (x) => x.version);
     versions.forEach((x) => filterOptions.dimensions.version.selected[x] = ({
         id: x,
         label: x,
@@ -89,7 +94,7 @@ export const getFilterOptions = (data, useEvents) => {
             selected: {}
         };
 
-        const events = extractDimKeys(data, (x) => x.evt);
+        const events = extractDimKeys(stats, (x) => x.evt);
         events.forEach((x) => filterOptions.dimensions.event.selected[x] = ({
             id: x,
             label: x,
@@ -100,13 +105,11 @@ export const getFilterOptions = (data, useEvents) => {
     return filterOptions;
 };
 
-const extractDimKeys = (data, keyFunc) => {
-    const keys = {};
-    data.forEach((x) => {
-        const key = keyFunc(x);
-        keys[key] = key;
-    });
-    return mapmap(keys, id);
+const extractDimKeys = (stats, keyFunc) => {
+    return from(stats)
+        .map((x) => keyFunc(x))
+        .distinct()
+        .return();
 };
 
 const getDimKeyFunc = (filterOptions) => {
@@ -115,13 +118,23 @@ const getDimKeyFunc = (filterOptions) => {
         !filterOptions.dimensions.event.all.checked;
 
     if (splitByVersion && !splitByEvent) {
-        return (rec) => rec.version;
+        return (rec) => `Version ${rec.version}`;
     } else if (!splitByVersion && splitByEvent) {
-        return (rec) => rec.evt;
+        return (rec) => `Event '${rec.evt}'`;
     } else if (splitByVersion && splitByEvent) {
-        return (rec) => `${rec.version}, ${rec.evt}`; // TODO: format
+        return (rec) => `Version ${rec.version}, event '${rec.evt}'`;
     } else {
-        return (_) => 1; // TODO: good label
+        return (_) => 'All versions';
+    }
+};
+
+const getDimKeyFuncOnlySplitByVersion = (filterOptions) => {
+    const splitByVersion = !filterOptions.dimensions.version.all.checked;
+
+    if (splitByVersion) {
+        return (rec) => rec.version;
+    } else {
+        return (_) => 'All versions';
     }
 };
 
@@ -132,14 +145,16 @@ const getDimFilterFunc = (filterOptions) => {
 
     let versionsToInclude = {};
     if (splitByVersion) {
-        versionsToInclude = toset(Object.keys(filterOptions.dimensions.version.selected)
-            .filter((key, _) => filterOptions.dimensions.version.selected[key].checked));
+        versionsToInclude = from(filterOptions.dimensions.version.selected)
+            .filter((x) => x.checked)
+            .return();
     }
 
     let eventsToInclude = {};
     if (splitByEvent) {
-        eventsToInclude = toset(Object.keys(filterOptions.dimensions.event.selected)
-            .filter((key, _) => filterOptions.dimensions.event.selected[key].checked));
+        eventsToInclude = from(filterOptions.dimensions.event.selected)
+            .filter((x) => x.checked)
+            .return();
     }
 
     if (splitByVersion && !splitByEvent) {
@@ -152,7 +167,6 @@ const getDimFilterFunc = (filterOptions) => {
         return (_) => true;
     }
 };
-
 
 export const getDatasets = (values) => {
     if (values.length == 0) {
@@ -232,76 +246,124 @@ export const getBucketIdx = (since, start) => {
     return -1;
 };
 
-export const getRetentionValues = (data, filterOptions) => {
-    const values = {};
-
+export const getRetentionValues = (stats, filterOptions) => {
     const keyFunc = getDimKeyFunc(filterOptions);
     const filterFunc = getDimFilterFunc(filterOptions);
 
-    const visibleData = data.filter(filterFunc);
+    const visibleData = stats.filter(filterFunc);
 
-    const keys = extractDimKeys(visibleData, keyFunc);
+    const dimKeys = extractDimKeys(visibleData, keyFunc);
     const buckets = getRetentionBuckets();
 
     // prepare dimensions
-    keys.forEach((k) => values[k] = {label: k, values: {}});
-    // fills dimensions with zero values
-    buckets.forEach((bkt) => {
-        itermap(values, (v) => {
-            v.values[bkt] = 0;
-        });
-    });
-    // project data
+    const values = from(dimKeys)
+        .toMap(id, (dim) => ({
+            label: dim,
+            values: from(buckets)
+                .toMap(id, konst(0))
+                .return()
+        }))
+        .return();
+
+    // project stats
     visibleData
         .forEach((x) => {
             values[keyFunc(x)].values[x.bucket] += x.count;
         });
+
     // convert to final format
-    return mapmap(values, (v) => {
-        return {
-            label: v.label,
-            values: buckets.map((dt) => v.values[dt])
-        };
-    });
+    return from(values)
+        .listValues()
+        .map((x) => ({
+            label: x.label,
+            values: buckets.map((b) => x.values[b])
+        }))
+        .return();
 };
 
-export const getConversionStages = (data) => {
-    return range(1, Math.max(...data.map((x) => +x.stage), 5) + 1);
+export const getConversionStages = (stats) => {
+    return range(1, Math.max(...stats.map((x) => +x.stage), 5) + 1);
 };
 
-export const getConversionValues = (data, filterOptions) => {
-    const values = {};
-
+export const getConversionValues = (stats, filterOptions) => {
     const keyFunc = getDimKeyFunc(filterOptions);
     const filterFunc = getDimFilterFunc(filterOptions);
 
-    const visibleData = data.filter(filterFunc);
+    const visibleData = stats.filter(filterFunc);
 
-    const keys = extractDimKeys(visibleData, keyFunc);
-    const stages = getConversionStages(data);
+    const dimKeys = extractDimKeys(visibleData, keyFunc);
+    const stages = getConversionStages(stats);
 
     // prepare dimensions
-    keys.forEach((k) => values[k] = {label: k, values: {}});
-    // fills dimensions with zero values
-    stages.forEach((s) => {
-        itermap(values, (v) => {
-            v.values[s] = 0;
-        });
-    });
-    // project data
+    const values = from(dimKeys)
+        .toMap(id, (dim) => ({
+            label: dim,
+            values: from(stages)
+                .toMap(id, konst(0))
+                .return()
+        }))
+        .return();
+
+    // project stats
     visibleData
         .forEach((x) => {
             values[keyFunc(x)].values[x.stage] += x.count;
         });
+
     // convert to final format
-    return mapmap(values, (v) => {
-        return {
-            label: v.label,
-            values: stages.map((s) => v.values[s])
-        };
-    });
+    return from(values)
+        .listValues()
+        .map((x) => ({
+            label: x.label,
+            values: stages.map((s) => x.values[s])
+        }))
+        .return();
 };
 
+export const getTopEventsValuesAndEvents = (stats, filterOptions) => {
+    const keyFunc = getDimKeyFuncOnlySplitByVersion(filterOptions);
+    const filterFunc = getDimFilterFunc(filterOptions);
+
+    const visibleData = stats.filter(filterFunc);
+
+    const dimKeys = extractDimKeys(visibleData, keyFunc);
+
+    const events = from(visibleData)
+        .toLookup((x) => x.evt, (x) => x.count)
+        .map(sum)
+        .toList()
+        .sorted((a, b) => b.v - a.v)
+        .take(5)
+        .map((x) => x.k)
+        .return();
+
+    // prepare dimensions
+    const values = from(dimKeys)
+        .toMap(id, (dim) => ({
+            label: dim,
+            values: from(events)
+                .toMap(id, konst(0))
+                .return()
+        }))
+        .return();
+
+    // project stats
+    visibleData
+        .forEach((x) => {
+            values[keyFunc(x)].values[x.evt] += x.count;
+        });
+
+    // convert to final format
+    const finalValues = from(values)
+        .listValues()
+        .map((x) => ({
+            label: x.label,
+            values: events.map((e) => x.values[e])
+        }))
+        .return();
+
+    return [finalValues, events];
+};
 
 export const CHART_COLORS = [
     'rgb(45, 137, 239)', // blue
@@ -315,25 +377,3 @@ export const CHART_COLORS = [
     'rgb(103, 58, 183)', // deep purple
     'rgb(124, 179, 66)' // light green
 ];
-
-export const toset = (aa) => {
-    const m = {};
-    aa.forEach((x) => m[x] = x);
-    return m;
-};
-
-export const mapmap = (obj, f) => {
-    return Object.keys(obj).map((key, _) => f(obj[key]));
-};
-
-export const itermap = (obj, f) => {
-    Object.keys(obj).forEach((x) => f(obj[x]));
-};
-
-export const id = (x) => x;
-
-export const tomap = (aa, kfunc, vfunc) => {
-    const m = {};
-    aa.forEach((x) => m[kfunc(x)] = vfunc(x));
-    return m;
-};

@@ -1,18 +1,16 @@
-import * as dateTimeUtil from '../datetimeutil';
+import * as dateTimeUtil from '../../datetimeutil';
 const R = require('ramda');
 
 import React, {useEffect, useState} from 'react';
 
-import Spinner from './Spinner';
+import Spinner from '../Spinner';
 import StatsChartPanel from './StatsChartPanel';
 
 import {
-    getConversionStages,
-    getConversionValues,
     getFilterOptions,
     getDatasets,
     getMaxValue,
-    tomap
+    getTopEventsValuesAndEvents
 } from './chartutils';
 
 const DATA_NOT_LOADED = 0;
@@ -26,13 +24,13 @@ export default (props) => {
     const build = props.build;
     const period = props.period;
     const date = props.date;
-    const dt = dateTimeUtil.getDt(period, date);
     const loadDataCallback = props.loadDataCallback;
+
+    const dt = dateTimeUtil.getDt(period, date);
 
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
-    const [stages, setStages] = useState([]);
-    const [data, setData] = useState([]);
+    const [stats, setStats] = useState([]);
     const [labels, setLabels] = useState([]);
     const [filterOptions, setFilterOptions] = useState({});
 
@@ -47,15 +45,13 @@ export default (props) => {
 
         loadDataCallback(appId, build, period, dt)
             .then((stagesAndStats) => {
-                const data = stagesAndStats.stats;
-                const stages = stagesAndStats.stages;
+                const stats = stagesAndStats.stats;
 
-                setData(data);
-                setStages(stages);
+                setStats(stats);
 
-                const fo = getFilterOptions(data); // TODO: merge with saved values
+                const fo = getFilterOptions(stats, true); // TODO: merge with saved values
                 setFilterOptions(fo);
-                calculateDatasets(data, stages, fo);
+                calculateDatasets(stats, fo);
                 setDataLoadingStatus(DATA_LOADED);
             })
             .catch((err) => {
@@ -64,16 +60,12 @@ export default (props) => {
             });
     }
 
-    function calculateDatasets(data, stages, filterOptions) {
-        setLabels(convertToLabels(getConversionStages(data), stages));
-        const values = getConversionValues(data, filterOptions);
+    function calculateDatasets(stats, filterOptions) {
+        const [values, events] = getTopEventsValuesAndEvents(stats, filterOptions);
+        setLabels(events);
+
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
-    }
-
-    function convertToLabels(numericVals, stages) {
-        const stageMap = tomap(stages, (x) => x.stage, (x) => x.name);
-        return numericVals.map((x) => x in stageMap ? stageMap[x] : `stage ${x}`);
     }
 
     useEffect(() => {
@@ -86,7 +78,7 @@ export default (props) => {
             newFo = R.set(R.lensPath(['dimensions', ...path, 'checked']), enabled, newFo);
         });
         setFilterOptions(newFo);
-        calculateDatasets(data, stages, newFo);
+        calculateDatasets(stats, newFo);
     };
 
     // TODO: maybe indicate somehow the loading/error status

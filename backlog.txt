@@ -40,30 +40,32 @@
 
 !! Calc Service
 
-- --Update the sort key for sessions--
-- --Conversions only counted on tail, I need to count new users on head--
 - Set TTL when storing sessions
 - Prevent 1 metric failed from failing the whole session
 - (!) Implement limit of 100 sessions per account
+- (!) Implement limits for number of unique events
+- --Update the sort key for sessions--
+- --Conversions only counted on tail, I need to count new users on head--
 - (F) Session duration distribution
 
 
 !! Web UI
 
+- Do I want Release/Debug to be case-sensitive in query string?
 - Start loading data only after apps are pre-filled
+- --Date/time selector--
+- --Prev/next day/month/year--
+- --Filter by build--
 - --Show totals for all charts--
 - --Cumulative or not, depending on the chart--
 - --Good labels for tooltips--
-- Date/time selector
-- Filter by build
-- Quick way to split by version
-- Remember filters
+- --Quick way to split by version--
 - --Supply filter options for todays segments--
 - --Retention in %--
-- Bucket user segments by week
+- --Bucket user segments by week--
 - --Session list, with filter by error/crash and version, showing events--
-- Do I want Release/Debug to be case-sensitive in query string?
 - --Sort events by name on filter form--
+- (F) Remember filters
 - (F) Show unique users by version histograms with unique users total
 - (F) Show unique users dashed on new users chart
 - (F) Save current filters

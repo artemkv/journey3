@@ -1,12 +1,9 @@
 import React from 'react';
-import ModalFilter from './ModalFilter';
 import {getRetentionBucketLabels} from './chartutils';
 
 export default (props) => {
     const title = props.title;
     const chartId = props.chartId;
-    const filterOptions = props.filterOptions;
-    const onFilterUpdate = props.onFilterUpdate;
     const dataset = props.dataset;
 
     const percentFormat = (val, total) => {
@@ -21,7 +18,7 @@ export default (props) => {
     const row = (segment, data) => {
         const zeroDayCount = data[0];
         return <div className="row gridrow" key={`segment-${segment}`}>
-            <div className="col s2 cell bl br bb">{segment}</div>
+            <div className="col s1 cell bl br bb">{segment}</div>
             {Object.keys(data)
                 .filter((k) => k > 0)
                 .map((k) => column(k, percentFormat(data[k], zeroDayCount)))}
@@ -40,7 +37,7 @@ export default (props) => {
 
     const labels = getRetentionBucketLabels().slice(1);
     return (
-        <div className="panel">
+        <div id={chartId} className="panel">
             <div className="row flex">
                 <div className="col s12 valign-wrapper">
                     <h5><b>{title}</b></h5>
@@ -48,7 +45,7 @@ export default (props) => {
             </div>
             <div className='small'>
                 <div className="row gridrow">
-                    <div className="col s2 cell bl bt br bb">Segment</div>
+                    <div className="col s1 cell bl bt br bb">Segment</div>
                     {labels.map((hcolumn))}
                 </div>
                 {Object.keys(dataset)

@@ -44,7 +44,7 @@ export default (props) => {
 
     useEffect(() => {
         loadData();
-    }, [appId, errLevel, version]);
+    }, [appId, build, errLevel, version]);
 
     function onErrLevelChanged(event) {
         setErrLevel(event.target.value);

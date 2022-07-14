@@ -70,7 +70,7 @@ export default (props) => {
 
     useEffect(() => {
         loadData();
-    }, [appId, period, dt]);
+    }, [appId, build, period, dt]);
 
     const onFilterUpdate = (updates) => {
         let newFo = filterOptions;

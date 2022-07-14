@@ -1,5 +1,20 @@
 import React, {useEffect, useState} from 'react';
-import {getLast10Years, getYear} from '../datetimeutil';
+import {from} from 'datashaper-js';
+import {
+    getLast10Years,
+    getYear,
+    getYearMonthInputFormat,
+    getYearMonthDayInputFormat,
+    fromYearInputFormat,
+    fromYearMonthInputFormat,
+    fromYearMonthDayInputFormat,
+    prevDay,
+    nextDay,
+    prevMonth,
+    nextMonth,
+    prevYear,
+    nextYear
+} from '../datetimeutil';
 
 import AppSelectorContainer from './AppSelectorContainer';
 import M from 'materialize-css/dist/js/materialize.min.js';
@@ -16,50 +31,142 @@ const PERIOD_DAY = 'day';
 const PERIOD_MONTH = 'month';
 const PERIOD_YEAR = 'year';
 
+const BUILD_DEBUG = 'Debug';
+const BUILD_RELEASE = 'Release';
+
 export default () => {
     const [period, setPeriod] = useState(PERIOD_DAY);
+    const [dt, setDt] = useState(new Date());
     const [appId, setAppId] = useState('');
+    const [build, setBuild] = useState(BUILD_RELEASE);
 
     useEffect(() => {
-    // eslint-disable-next-line new-cap
+        // eslint-disable-next-line new-cap
         M.AutoInit();
     }, []);
 
-    function onYearChanged(event) {}
-
-    function onPeriodChanged(event) {
-        setPeriod(event.target.value);
+    function onYearChanged(event) {
+        setDt(fromYearInputFormat(event.target.value));
     }
+
+    function onMonthChanged(event) {
+        setDt(fromYearMonthInputFormat(event.target.value));
+    }
+
+    function onDayChanged(event) {
+        setDt(fromYearMonthDayInputFormat(event.target.value));
+    }
+
+    const onPeriodChanged = (event) => {
+        setPeriod(event.target.value);
+    };
 
     const onAppChanged = (appId) => {
         setAppId(appId);
     };
 
-    const now = new Date('2022-05-13T00:00:00'); // TODO:
-    const dt = now; // TODO: should come from date picker
-    const build = 'Release'; // TODO: should come UI
+    const onBuildChanged = (event) => {
+        setBuild(event.target.value);
+    };
+
+    const onPrevDayClicked = (event) => {
+        setDt(prevDay(dt));
+    };
+
+    const onNextDayClicked = (event) => {
+        setDt(nextDay(dt));
+    };
+
+    const onPrevMonthClicked = (event) => {
+        setDt(prevMonth(dt));
+    };
+
+    const onNextMonthClicked = (event) => {
+        setDt(nextMonth(dt));
+    };
+
+    const onPrevYearClicked = (event) => {
+        setDt(prevYear(dt));
+    };
+
+    const onNextYearClicked = (event) => {
+        setDt(nextYear(dt));
+    };
 
     const Ignore = () => <div></div>;
+
+    const dateSelector = () => <div>
+        {period === PERIOD_DAY ?
+            <div>
+                <div className="valign-wrapper">
+                    <i className="small material-icons clickable"
+                        onClick={onPrevDayClicked}>navigate_before</i>
+                    <input
+                        className="browser-default input-date-picker"
+                        type="date"
+                        value={getYearMonthDayInputFormat(dt)}
+                        onChange={onDayChanged} />
+                    <i className="small material-icons clickable"
+                        onClick={onNextDayClicked}>navigate_next</i>
+                </div>
+            </div> : ''}
+        {period === PERIOD_MONTH ?
+            <div className="valign-wrapper">
+                <i className="small material-icons clickable"
+                    onClick={onPrevMonthClicked}>navigate_before</i>
+                <input
+                    className="browser-default input-date-picker"
+                    type="month"
+                    value={getYearMonthInputFormat(dt)}
+                    onChange={onMonthChanged} />
+                <i className="small material-icons clickable"
+                    onClick={onNextMonthClicked}>navigate_next</i>
+            </div> : ''}
+        {period === PERIOD_YEAR ?
+            <div className="valign-wrapper">
+                <i className="small material-icons clickable"
+                    onClick={onPrevYearClicked}>navigate_before</i>
+                <select
+                    className="browser-default"
+                    value={getYear(dt)}
+                    onChange={onYearChanged}
+                >
+                    {
+                        from([...getLast10Years(new Date()), getYear(dt)])
+                            .distinct()
+                            .sorted((a, b) => b - a)
+                            .return()
+                            .map((year) => (
+                                <option key={year} value={year}>
+                                    {year}
+                                </option>
+                            ))}
+                </select>
+                <i className="small material-icons clickable"
+                    onClick={onNextYearClicked}>navigate_next</i>
+            </div> : ''}
+    </div>;
 
     return (
         <div>
             <div className="row">
-                <select className="browser-default">
-                    <option value="202010">October, 2020</option>
-                </select>
-                <input type="text" className="datepicker" />
-                <select
-                    className="browser-default"
-                    value={getYear(now)}
-                    onChange={onYearChanged}
-                >
-                    {getLast10Years(now).map((year) => (
-                        <option key={year} value={year}>
-                            {year}
-                        </option>
-                    ))}
-                </select>
+                <div className="col s8">
+                    <AppSelectorContainer
+                        selectedApp={appId}
+                        onAppChanged={onAppChanged}
+                    />
+                </div>
+                <div className="col s4">
+                    <select
+                        className="browser-default"
+                        value={build}
+                        onChange={onBuildChanged} >
+                        <option value={BUILD_RELEASE}>Release</option>
+                        <option value={BUILD_DEBUG}>Debug</option>
+                    </select>
+                </div>
             </div>
+
             <div className="row">
                 <div className="col s4">
                     <select
@@ -71,12 +178,12 @@ export default () => {
                         <option value={PERIOD_DAY}>Day</option>
                     </select>
                 </div>
-                <div className="col s8">
-                    <AppSelectorContainer
-                        selectedApp={appId}
-                        onAppChanged={onAppChanged}
-                    />
+                <div className="col s4">
+                    {dateSelector()}
                 </div>
+            </div>
+
+            <div className="row">
             </div>
 
             <div className="row">

@@ -82,7 +82,7 @@ export default (props) => {
             const bucket = x.bucket;
 
             if (!dataset[segment]) {
-                dataset[segment] = {};
+                return;
             }
             if (!dataset[segment][bucket]) {
                 dataset[segment][bucket] = 0;
@@ -94,7 +94,7 @@ export default (props) => {
 
     useEffect(() => {
         loadData();
-    }, [appId, period, dt]);
+    }, [appId, build, period, dt]);
 
     const onFilterUpdate = (updates) => {
         let newFo = filterOptions;

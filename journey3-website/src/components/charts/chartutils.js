@@ -202,12 +202,12 @@ export const getTotal = (values) => {
 };
 
 export const getRetentionBuckets = () => {
-    return ['0', '1', '2', '5', '8', '12', '18', '27', '40', '60', '90'];
+    return ['0', '1', '2', '5', '8', '12', '18', '27', '40', '60', '90', '1000000'];
 };
 
 export const getRetentionBucketLabels = () => {
     return ['0 days', '1 day', '2 days', '3-5 days', '6-8 days',
-        '9-12 days', '13-18 days', '19-27 days', '28-40 days', '41-60 days', '>60 days'];
+        '9-12 days', '13-18 days', '19-27 days', '28-40 days', '41-60 days', '60-90 days', '>90 days'];
 };
 
 export const getBucketIdx = (since, start) => {
@@ -246,7 +246,7 @@ export const getBucketIdx = (since, start) => {
     if (days <= 90) {
         return 10;
     }
-    return -1;
+    return 11;
 };
 
 export const getRetentionValues = (stats, filterOptions) => {

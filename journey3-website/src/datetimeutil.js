@@ -86,3 +86,62 @@ export const getDaysSince = (since, start) => {
 
     return to.diff(from, 'day');
 };
+
+export const getYearMonthInputFormat = (date) => {
+    return `${getYear(date)}-${getMonth(date)}`;
+};
+
+export const getYearMonthDayInputFormat = (date) => {
+    return `${getYear(date)}-${getMonth(date)}-${getDay(date)}`;
+};
+
+export const fromYearInputFormat = (text) => {
+    const d = dayjs(text, 'YYYY');
+    return new Date(d.year(), 1, 1);
+};
+
+export const fromYearMonthInputFormat = (text) => {
+    const d = dayjs(text, 'YYYY-MM');
+    return new Date(d.year(), d.month(), 1);
+};
+
+export const fromYearMonthDayInputFormat = (text) => {
+    const d = dayjs(text, 'YYYY-MM-DD');
+    return new Date(d.year(), d.month(), d.date());
+};
+
+export const prevDay = (date) => {
+    const d = dayjs(date);
+    const d1 = d.subtract(1, 'day');
+    return new Date(d1.year(), d1.month(), d1.date());
+};
+
+export const nextDay = (date) => {
+    const d = dayjs(date);
+    const d1 = d.add(1, 'day');
+    return new Date(d1.year(), d1.month(), d1.date());
+};
+
+export const prevMonth = (date) => {
+    const d = dayjs(date);
+    const d1 = d.subtract(1, 'month');
+    return new Date(d1.year(), d1.month(), 1);
+};
+
+export const nextMonth = (date) => {
+    const d = dayjs(date);
+    const d1 = d.add(1, 'month');
+    return new Date(d1.year(), d1.month(), 1);
+};
+
+export const prevYear = (date) => {
+    const d = dayjs(date);
+    const d1 = d.subtract(1, 'year');
+    return new Date(d1.year(), d1.month(), 1);
+};
+
+export const nextYear = (date) => {
+    const d = dayjs(date);
+    const d1 = d.add(1, 'year');
+    return new Date(d1.year(), d1.month(), 1);
+};

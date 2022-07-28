@@ -25,6 +25,7 @@ import RangeRetentionStatsGridContainer from './charts/RangeRetentionStatsGridCo
 import ConversionStatsChartContainer from './charts/ConversionStatsChartContainer';
 import TopEventsStatsChartContainer from './charts/TopEventsStatsChartContainer';
 import SessionsListContainer from './charts/SessionsListContainer';
+import DurationStatsChartContainer from './charts/DurationStatsChartContainer';
 import * as api from '../sessionapi';
 
 const PERIOD_DAY = 'day';
@@ -262,6 +263,18 @@ export default () => {
                         loadDataCallback={api.getEventSessionsPerPeriod}
                     />
                 </div>
+            </div>
+
+            <div className="row">
+                <DurationStatsChartContainer
+                    title="Session duration"
+                    chartId="session_duration"
+                    appId={appId}
+                    build={build}
+                    period={period}
+                    date={dt}
+                    loadDataCallback={api.getSessionDurationPerPeriod}
+                />
             </div>
 
             <div className="row">

@@ -205,6 +205,7 @@ export const getRetentionBuckets = () => {
     return ['0', '1', '2', '5', '8', '12', '18', '27', '40', '60', '90', '1000000'];
 };
 
+// TODO: check exact bucket boundaries
 export const getRetentionBucketLabels = () => {
     return ['0 days', '1 day', '2 days', '3-5 days', '6-8 days',
         '9-12 days', '13-18 days', '19-27 days', '28-40 days', '41-60 days', '60-90 days', '>90 days'];
@@ -257,6 +258,50 @@ export const getRetentionValues = (stats, filterOptions) => {
 
     const dimKeys = extractDimKeys(visibleData, keyFunc);
     const buckets = getRetentionBuckets();
+
+    // prepare dimensions
+    const values = from(dimKeys)
+        .toMap(id, (dim) => ({
+            label: dim,
+            values: from(buckets)
+                .toMap(id, konst(0))
+                .return()
+        }))
+        .return();
+
+    // project stats
+    visibleData
+        .forEach((x) => {
+            values[keyFunc(x)].values[x.bucket] += x.count;
+        });
+
+    // convert to final format
+    return from(values)
+        .listValues()
+        .map((x) => ({
+            label: x.label,
+            values: buckets.map((b) => x.values[b])
+        }))
+        .return();
+};
+
+export const getDurationBuckets = () => {
+    return ['0', '1', '2', '5', '8', '12', '18', '27', '40', '60', '90', '1000000'];
+};
+
+export const getDurationBucketLabels = () => {
+    return ['<1 min', '1-2 min', '2-3 min', '3-5 min', '5-8 min',
+        '8-12 min', '12-18 min', '18-27 min', '27-40 min', '40-60 min', '60-90 min', '>90 min'];
+};
+
+export const getDurationValues = (stats, filterOptions) => {
+    const keyFunc = getDimKeyFunc(filterOptions);
+    const filterFunc = getDimFilterFunc(filterOptions);
+
+    const visibleData = stats.filter(filterFunc);
+
+    const dimKeys = extractDimKeys(visibleData, keyFunc);
+    const buckets = getDurationBuckets();
 
     // prepare dimensions
     const values = from(dimKeys)

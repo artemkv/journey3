@@ -56,6 +56,9 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 	router.GET("/event_sessions_per_period", reststats.HandleEndpointWithStats(
 		withAuthentication(handleEventSessionsPerPeriod)))
 
+	router.GET("/event_sessions_duration", reststats.HandleEndpointWithStats(
+		withAuthentication(handleSessionsDuration)))
+
 	router.GET("/retention_on_day", reststats.HandleEndpointWithStats(
 		withAuthentication(handleRetentionOnDayPerBucket)))
 	router.GET("/retention_since_day", reststats.HandleEndpointWithStats(

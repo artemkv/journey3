@@ -38,6 +38,12 @@ type eventStatsData struct {
 	Count   int    `json:"count"`
 }
 
+type durationStatsData struct {
+	Bucket  string `json:"bucket"`
+	Version string `json:"version"`
+	Count   int    `json:"count"`
+}
+
 type retentionOnDayStatsData struct {
 	Bucket  string `json:"bucket"`
 	Version string `json:"version"`
@@ -257,6 +263,33 @@ func getEventSessionsPerPeriod(appId string, build string, period string, dt str
 	return events, nil
 }
 
+func getSessionDurationPerPeriodPerBucket(appId string, build string, period string, dt string) ([]durationStatsData, error) {
+	// define keys
+	keyPrefix, err := getSessionDurationByPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	fmt.Printf("%s", hashKey)
+
+	// run query
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	stats, err := repackResultsByBucketVersionIntoDurationStatsData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return stats, nil
+}
+
 func getRetentionOnDayPerBucket(appId string, build string, dt string) ([]retentionOnDayStatsData, error) {
 	hashKey := getHashKey("RETENTION_ON", appId, build)
 	sortKeyPrefix := dt
@@ -448,6 +481,21 @@ func getEventSessionsByPeriodKeyPrefix(period string) (string, error) {
 	return "", err
 }
 
+func getSessionDurationByPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "SESSION_DURATION_BY_YEAR", nil
+	}
+	if period == "month" {
+		return "SESSION_DURATION_BY_MONTH", nil
+	}
+	if period == "day" {
+		return "SESSION_DURATION_BY_DAY", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
 func getConversionsKeyPrefix(period string) (string, error) {
 	if period == "year" {
 		return "CONVERSIONS_BY_YEAR", nil
@@ -630,6 +678,28 @@ func repackResultsByDtEventVersionIntoEventData(results *dynamodb.QueryOutput) (
 			Dt:      dt,
 			Version: version,
 			Event:   event,
+			Count:   item.Cnt,
+		}
+		stats = append(stats, statsItem)
+	}
+	return stats, nil
+}
+
+func repackResultsByBucketVersionIntoDurationStatsData(results *dynamodb.QueryOutput) ([]durationStatsData, error) {
+	stats := make([]durationStatsData, 0, len(results.Items))
+	for _, v := range results.Items {
+		item := statsItem{}
+
+		err := attributevalue.UnmarshalMap(v, &item)
+		if err != nil {
+			return nil, err
+		}
+
+		_, bucket, version := splitIntoDtBucketVersion(item.SortKey)
+
+		statsItem := durationStatsData{
+			Bucket:  bucket,
+			Version: version,
 			Count:   item.Cnt,
 		}
 		stats = append(stats, statsItem)

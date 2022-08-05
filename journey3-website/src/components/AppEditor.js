@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Link} from '@reach/router';
+import {Link} from 'react-router-dom';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import {appsPath} from '../routing';
 

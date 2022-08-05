@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {cleanIdToken, setIdToken} from '../sessionapi';
+import {statsPath} from '../routing';
 
 import Auth from '@aws-amplify/auth';
 import CognitoSignIn from './CognitoSignIn';
@@ -17,6 +19,8 @@ const APP_USER_INITIATED_SIGN_OUT = 4;
 
 export default () => {
     const [signInStatus, setSignInStatus] = useState(APP_LOADED_SIGN_IN_STATUS_UNKNOWN);
+
+    const navigate = useNavigate();
 
     // determine signin status
     const cognitoSession = Auth.currentSession();
@@ -48,6 +52,7 @@ export default () => {
         cognitoSession.then((x) => {
             setIdToken(x.idToken.jwtToken);
             setSignInStatus(APP_SIGNED_IN);
+            navigate(statsPath);
         }).catch((err) => {
             cleanIdToken();
             console.error(err); // TODO: show error in a user-friendly way
@@ -64,11 +69,7 @@ export default () => {
             <div className="row">
                 <Header onSignOutRequested={onSignOutRequested} />
             </div>
-            <div className="row">
-                <div className="container">
-                    <SignedInArea />
-                </div>
-            </div>
+            <SignedInArea />
         </div>;
     case APP_SIGNED_OUT:
         return <PublicArea onSignInRequested={onSignInRequested} />;

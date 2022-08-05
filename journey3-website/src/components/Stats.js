@@ -149,188 +149,192 @@ export default () => {
     </div>;
 
     return (
-        <div>
-            <div className="row">
-                <div className="col s8">
-                    <AppSelectorContainer
-                        selectedApp={appId}
-                        onAppChanged={onAppChanged}
-                    />
-                </div>
-                <div className="col s4">
-                    <select
-                        className="browser-default"
-                        value={build}
-                        onChange={onBuildChanged} >
-                        <option value={BUILD_RELEASE}>Release</option>
-                        <option value={BUILD_DEBUG}>Debug</option>
-                    </select>
-                </div>
-            </div>
+        <div className="row">
+            <div className="container">
+                <div>
+                    <div className="row">
+                        <div className="col s8">
+                            <AppSelectorContainer
+                                selectedApp={appId}
+                                onAppChanged={onAppChanged}
+                            />
+                        </div>
+                        <div className="col s4">
+                            <select
+                                className="browser-default"
+                                value={build}
+                                onChange={onBuildChanged} >
+                                <option value={BUILD_RELEASE}>Release</option>
+                                <option value={BUILD_DEBUG}>Debug</option>
+                            </select>
+                        </div>
+                    </div>
 
-            <div className="row">
-                <div className="col s4">
-                    <select
-                        className="browser-default"
-                        value={period}
-                        onChange={onPeriodChanged} >
-                        <option value={PERIOD_YEAR}>Year</option>
-                        <option value={PERIOD_MONTH}>Month</option>
-                        <option value={PERIOD_DAY}>Day</option>
-                    </select>
-                </div>
-                <div className="col s4">
-                    {dateSelector()}
-                </div>
-            </div>
+                    <div className="row">
+                        <div className="col s4">
+                            <select
+                                className="browser-default"
+                                value={period}
+                                onChange={onPeriodChanged} >
+                                <option value={PERIOD_YEAR}>Year</option>
+                                <option value={PERIOD_MONTH}>Month</option>
+                                <option value={PERIOD_DAY}>Day</option>
+                            </select>
+                        </div>
+                        <div className="col s4">
+                            {dateSelector()}
+                        </div>
+                    </div>
 
-            <div className="row">
-            </div>
+                    <div className="row">
+                    </div>
 
-            <div className="row">
-                <div className="col s6">
-                    <ConversionStatsChartContainer
-                        title="Stage conversions"
-                        chartId="conversions"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getConversions}
-                    />
-                </div>
-                <div className="col s6">
-                    <TopEventsStatsChartContainer
-                        title="Top events"
-                        chartId="top_events"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventsPerPeriod}
-                    />
-                </div>
-            </div>
+                    <div className="row">
+                        <div className="col s6">
+                            <ConversionStatsChartContainer
+                                title="Stage conversions"
+                                chartId="conversions"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getConversions}
+                            />
+                        </div>
+                        <div className="col s6">
+                            <TopEventsStatsChartContainer
+                                title="Top events"
+                                chartId="top_events"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getEventsPerPeriod}
+                            />
+                        </div>
+                    </div>
 
-            <div className="row">
-                <div className="col s6">
-                    <StatsChartContainer
-                        title="Sessions"
-                        chartId="sessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getSessionsPerPeriod}
-                    />
-                    <StatsChartContainer
-                        title="Unique users"
-                        chartId="uniqieUsersPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getUniqueUsersPerPeriod}
-                        useHigherPeriodTotal={true}
-                    />
-                    <StatsChartContainer
-                        title="New users"
-                        chartId="newUsersPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getNewUsersPerPeriod}
-                    />
-                </div>
-                <div className="col s6">
-                    <EventStatsChartContainer
-                        title="Events"
-                        chartId="eventsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventsPerPeriod}
-                    />
-                    <EventStatsChartContainer
-                        title="Sessions by event"
-                        chartId="eventSessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventSessionsPerPeriod}
-                    />
-                </div>
-            </div>
+                    <div className="row">
+                        <div className="col s6">
+                            <StatsChartContainer
+                                title="Sessions"
+                                chartId="sessionsPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getSessionsPerPeriod}
+                            />
+                            <StatsChartContainer
+                                title="Unique users"
+                                chartId="uniqieUsersPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getUniqueUsersPerPeriod}
+                                useHigherPeriodTotal={true}
+                            />
+                            <StatsChartContainer
+                                title="New users"
+                                chartId="newUsersPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getNewUsersPerPeriod}
+                            />
+                        </div>
+                        <div className="col s6">
+                            <EventStatsChartContainer
+                                title="Events"
+                                chartId="eventsPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getEventsPerPeriod}
+                            />
+                            <EventStatsChartContainer
+                                title="Sessions by event"
+                                chartId="eventSessionsPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getEventSessionsPerPeriod}
+                            />
+                        </div>
+                    </div>
 
-            <div className="row">
-                <DurationStatsChartContainer
-                    title="Session duration"
-                    chartId="session_duration"
-                    appId={appId}
-                    build={build}
-                    period={period}
-                    date={dt}
-                    loadDataCallback={api.getSessionDurationPerPeriod}
-                />
-            </div>
+                    <div className="row">
+                        <DurationStatsChartContainer
+                            title="Session duration"
+                            chartId="session_duration"
+                            appId={appId}
+                            build={build}
+                            period={period}
+                            date={dt}
+                            loadDataCallback={api.getSessionDurationPerPeriod}
+                        />
+                    </div>
 
-            <div className="row">
-                <div className="col s6">
-                    <StatsChartContainer
-                        title="Sessions with errors"
-                        chartId="errorSessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getErrorSessionsPerPeriod}
-                    />
+                    <div className="row">
+                        <div className="col s6">
+                            <StatsChartContainer
+                                title="Sessions with errors"
+                                chartId="errorSessionsPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getErrorSessionsPerPeriod}
+                            />
+                        </div>
+                        <div className="col s6">
+                            <StatsChartContainer
+                                title="Sessions with crashes"
+                                chartId="crashSessionsPerPeriod"
+                                appId={appId}
+                                build={build}
+                                period={period}
+                                date={dt}
+                                loadDataCallback={api.getCrashSessionsPerPeriod}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <RetentionStatsChartContainer
+                            title="Today's user segments"
+                            chartId="retention_on_day"
+                            appId={appId}
+                            build={build}
+                            period="day"
+                            date={dt}
+                            loadDataCallback={api.getRetentionOnDay}
+                        />
+                        <RangeRetentionStatsGridContainer
+                            title="Retention"
+                            chartId="retention_since_day"
+                            appId={appId}
+                            build={build}
+                            period="day"
+                            date={new Date()}
+                            loadDataCallback={api.getRetentionSinceDay}
+                        />
+                    </div>
+
+                    <div className="row">
+                        <SessionsListContainer
+                            title="User sessions (last 50)"
+                            id="session_list"
+                            appId={appId}
+                            build={build}
+                            loadDataCallback={api.getUserSessions}
+                        />
+                    </div>
                 </div>
-                <div className="col s6">
-                    <StatsChartContainer
-                        title="Sessions with crashes"
-                        chartId="crashSessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getCrashSessionsPerPeriod}
-                    />
-                </div>
-            </div>
-
-            <div className="row">
-                <RetentionStatsChartContainer
-                    title="Today's user segments"
-                    chartId="retention_on_day"
-                    appId={appId}
-                    build={build}
-                    period="day"
-                    date={dt}
-                    loadDataCallback={api.getRetentionOnDay}
-                />
-                <RangeRetentionStatsGridContainer
-                    title="Retention"
-                    chartId="retention_since_day"
-                    appId={appId}
-                    build={build}
-                    period="day"
-                    date={new Date()}
-                    loadDataCallback={api.getRetentionSinceDay}
-                />
-            </div>
-
-            <div className="row">
-                <SessionsListContainer
-                    title="User sessions (last 50)"
-                    id="session_list"
-                    appId={appId}
-                    build={build}
-                    loadDataCallback={api.getUserSessions}
-                />
             </div>
         </div>
     );

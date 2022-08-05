@@ -4,7 +4,7 @@ import {getApp, putApp} from '../sessionapi';
 import AppEditor from './AppEditor';
 import Spinner from './Spinner';
 import {appsPath} from '../routing';
-import {useNavigate} from '@reach/router';
+import {useNavigate, useParams} from 'react-router-dom';
 
 export default (props) => {
     const DATA_NOT_LOADED = 0;
@@ -12,6 +12,8 @@ export default (props) => {
     const DATA_LOADING_FAILED = 2;
     const UPDATE_IN_PROGRESS = 3;
     const UPDATE_FAILED = 4;
+
+    const {appId} = useParams();
 
     const [data, setData] = useState({});
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
@@ -22,7 +24,7 @@ export default (props) => {
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
-        getApp(props.appId)
+        getApp(appId)
             .then((data) => {
                 setData(data);
                 setDataLoadingStatus(DATA_LOADED);
@@ -35,7 +37,7 @@ export default (props) => {
 
     useEffect(() => {
         loadData();
-    }, [props.appId]);
+    }, [appId]);
 
     function saveData(app) {
         setDataLoadingStatus(UPDATE_IN_PROGRESS);

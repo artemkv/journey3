@@ -63,3 +63,23 @@
 .clickable {
   cursor: pointer;
 }
+
+.doc-page * {
+  all: revert !important;
+}
+
+.doc-page {
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.doc-toc-link {
+  text-decoration: none;
+  color: black;
+  margin: 32px;
+  font-size: larger;
+}
+
+.doc-toc-link-container {
+  margin: 16px;
+}

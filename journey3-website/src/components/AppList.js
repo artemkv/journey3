@@ -1,6 +1,6 @@
 import {createAppPath, getAppPath, statsPath} from '../routing';
 
-import {Link} from '@reach/router';
+import {Link} from 'react-router-dom';
 import React from 'react';
 
 export default (props) => {
@@ -22,7 +22,7 @@ export default (props) => {
                     <li className="collection-item" key={app.aid}>
                         <p>
                             <span className="application-list-app-name">{app.name}</span>
-                            &nbsp;
+                            <span> </span>
                             <span>({app.aid})</span>
                             <Link to={getAppPath(app.aid)} className="secondary-content">
                                 <i className="material-icons">edit</i>

@@ -4,7 +4,7 @@ import AppEditor from './AppEditor';
 import Spinner from './Spinner';
 import {appsPath} from '../routing';
 import {postApp} from '../sessionapi';
-import {useNavigate} from '@reach/router';
+import {useNavigate} from 'react-router-dom';
 
 export default () => {
     const INITIALIZED = 0;

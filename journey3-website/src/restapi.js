@@ -1,4 +1,6 @@
-const baseUrl = 'http://127.0.0.1:8070'; // TODO: where to configure it?
+// TODO: where to configure it?
+// const baseUrl = 'https://journey3-web.artemkv.net:8070';
+const baseUrl = 'http://127.0.0.1:8070';
 
 class ApiError extends Error {
     constructor(statusCode, statusMessage, ...params) {

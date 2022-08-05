@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import AppSelector from './AppSelector';
-import {Link} from '@reach/router';
+import {Link} from 'react-router-dom';
 import {appsPath} from '../routing';
 import {getApps} from '../sessionapi';
 

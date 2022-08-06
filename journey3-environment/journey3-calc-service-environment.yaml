@@ -200,6 +200,23 @@ Resources:
           KeyType: 'RANGE'
       BillingMode: PAY_PER_REQUEST
 
+  # DynamoDB table - accounts
+  AccountsDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'journey3accounts'
+      AttributeDefinitions:
+        - AttributeName: 'Key'
+          AttributeType: 'S'
+        - AttributeName: 'SortKey'
+          AttributeType: 'S'
+      KeySchema:
+        - AttributeName: 'Key'
+          KeyType: 'HASH'
+        - AttributeName: 'SortKey'
+          KeyType: 'RANGE'
+      BillingMode: PAY_PER_REQUEST
+
   # Allow the role to access DynamoDB
   AccessDynamoDBStatsTablePolicy:
     Type: AWS::IAM::Policy
@@ -285,6 +302,29 @@ Resources:
             Resource:
               - !GetAtt
                 - MetaDBTable
+                - Arn
+      Roles:
+        - !Ref CalcServiceRole
+
+  # Allow the role to access DynamoDB
+  AccessDynamoDBAccountsTablePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AccessDynamoDBAccountsTable
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'dynamodb:GetItem'
+              - 'dynamodb:BatchGetItem'
+              - 'dynamodb:Query'
+              - 'dynamodb:BatchWriteItem'
+              - 'dynamodb:PutItem'
+              - 'dynamodb:UpdateItem'
+            Resource:
+              - !GetAtt
+                - AccountsDBTable
                 - Arn
       Roles:
         - !Ref CalcServiceRole

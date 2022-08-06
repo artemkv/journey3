@@ -103,10 +103,8 @@ func handlePostSessionHead(c *gin.Context) {
 		return
 	}
 
-	// TODO: this is temporary solution to avoid high billing
-	// TODO: sanitize the app id and apply rate limiter
-	if !IsWhitelisted(sessionHeadIn.AppId) {
-		toBadRequest(c, fmt.Errorf("not allowed for aid: %s", sessionHeadIn.AppId))
+	if !IsValidAccount(sessionHeadIn.AccId) {
+		toBadRequest(c, fmt.Errorf("Account '%s' does not exist or not active", sessionHeadIn.AccId))
 		return
 	}
 
@@ -127,10 +125,8 @@ func handlePostSessionTail(c *gin.Context) {
 		return
 	}
 
-	// TODO: this is temporary solution to avoid high billing
-	// TODO: sanitize the app id and apply rate limiter
-	if !IsWhitelisted(sessionTailIn.AppId) {
-		toBadRequest(c, fmt.Errorf("not allowed for aid: %s", sessionTailIn.AppId))
+	if !IsValidAccount(sessionTailIn.AccId) {
+		toBadRequest(c, fmt.Errorf("Account '%s' does not exist or not active", sessionTailIn.AccId))
 		return
 	}
 

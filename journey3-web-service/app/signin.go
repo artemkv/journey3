@@ -79,6 +79,13 @@ func handleSignIn(c *gin.Context) {
 		}
 	}
 
+	// create record in accounts table
+	ensureAccountRecordExists(accId)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
 	// generate session
 	session, err := generateSession(userId, userEmail, accId)
 	if err != nil {

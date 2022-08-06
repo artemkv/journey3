@@ -164,6 +164,9 @@ Resources:
           KeyType: 'HASH'
         - AttributeName: 'SortKey'
           KeyType: 'RANGE'
+      TimeToLiveSpecification:
+        AttributeName: 'ttl'
+        Enabled: true
       BillingMode: PAY_PER_REQUEST
 
   # DynamoDB table - app

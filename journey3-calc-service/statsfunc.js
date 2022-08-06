@@ -120,6 +120,12 @@ const getErrorLevel = (session) => {
   return errLevel;
 }
 
+const getExpirationTs = (days) => {
+  let date = new Date();
+  date.setDate(date.getDate() + days);
+  return Math.floor(date.getTime() / 1000);
+}
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
@@ -129,3 +135,4 @@ exports.getRetentionBucket = getRetentionBucket;
 exports.getErrorLevel = getErrorLevel;
 exports.getMinutesBetween = getMinutesBetween;
 exports.getDurationBucket = getDurationBucket;
+exports.getExpirationTs = getExpirationTs;

@@ -49,7 +49,7 @@ const saveSession = async (aid, build, version, dts, ids, session, client) => {
   const key = `SESSION#${aid}#${build}`;
   const sortKey = `${errLevel}#${version}#${dts}#${ids}`;
 
-  return await saveObject(client, JOURNEY3_SESSIONS_TABLE, key, sortKey, session);
+  return await saveObject(client, JOURNEY3_SESSIONS_TABLE, key, sortKey, session, statsfunc.getExpirationTs(15));
 }
 
 const updateStatsFromSessionHead = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
@@ -360,13 +360,14 @@ async function saveString(client, tableName, key, sortKey, s) {
   return await client.send(new PutItemCommand(params));
 }
 
-async function saveObject(client, tableName, key, sortKey, obj) {
+async function saveObject(client, tableName, key, sortKey, obj, ttl) {
   var params = {
     TableName: tableName,
     Item: {
       Key: { S: key },
       SortKey: { S: sortKey },
-      Val: { S: JSON.stringify(obj) }
+      Val: { S: JSON.stringify(obj) },
+      ttl: { N: `${ttl}` },
     },
   };
 

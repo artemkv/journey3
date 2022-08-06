@@ -5,14 +5,12 @@
 
 !! Flutter Prototype
 
-- Do not send firstLaunchThisXXX etc. with Session tail
-- Send old stage with head, and both new and old with tail
-- Report crashes
-- Refactor the code and make Journey non-static
-
+- --Do not send firstLaunchThisXXX etc. with Session tail--
+- --Send old stage with head, and both new and old with tail--
+- --Report crashes--
+- --Refactor the code and make Journey non-static--
 
 !! Android Native Prototype
-
 
 !! Web Node Prototype
 
@@ -22,31 +20,31 @@
 
 !! Flutter Library
 
-- Cover with unit-tests
-- Publish to public repo
+- --Cover with unit-tests--
+- --Publish to public repo--
 
 
 !! Android Native Prototype
 
 - Cover with unit-tests
-- Publish to Maven
+- --Publish to Maven--
 
 
 !! Ingest Service
 
-- --Remove deprecates session endpoint--
-- (!) Review validation
+- --Remove deprecated session endpoint--
+- --Validation accounts--
 
 
 !! Calc Service
 
-- Set TTL when storing sessions
+- --Set TTL when storing sessions--
 - Prevent 1 metric failed from failing the whole session
 - (!) Implement limit of 100 sessions per account
 - (!) Implement limits for number of unique events
 - --Update the sort key for sessions--
 - --Conversions only counted on tail, I need to count new users on head--
-- (F) Session duration distribution
+- --Session duration distribution--
 
 
 !! Web UI

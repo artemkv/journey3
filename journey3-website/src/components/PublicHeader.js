@@ -9,7 +9,7 @@ export default (props) => {
                 <div className="nav-wrapper">
                     <ul className="left">
                         <Link to={homePath}>
-                            JOURNEY3
+                            HOME
                         </Link>
                     </ul>
                     <ul className="right">

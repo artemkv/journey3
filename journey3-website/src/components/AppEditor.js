@@ -41,34 +41,39 @@ export default (props) => {
 
     return <div>
         <div className="row">
-            <Link to={appsPath}>
+            <div className="container">
+
+                <div className="row">
+                    <Link to={appsPath}>
             &lt; Back
-            </Link>
-        </div>
-        <div className="row">
-            <h4 className="header">{app.aid}</h4>
-        </div>
-        <div className="row">
-            <div className="input-field">
-                <input
-                    value={name}
-                    id="app_editor_app_name"
-                    type="text"
-                    className={nameValidationResult ? 'invalid' : 'valid'}
-                    onChange={onNameChange} />
-                <label htmlFor="app_editor_app_name">Name</label>
-                <span className="helper-text" data-error={nameValidationResult} />
-            </div>
-        </div>
-        <div className="row">
-            <div className="right-align">
-                <div>
-                    <button
-                        className={'btn waves-effect waves-light' + (isValid ? '' : ' disabled')}
-                        onClick={submit}>
+                    </Link>
+                </div>
+                <div className="row">
+                    <h4 className="header">{app.aid}</h4>
+                </div>
+                <div className="row">
+                    <div className="input-field">
+                        <input
+                            value={name}
+                            id="app_editor_app_name"
+                            type="text"
+                            className={nameValidationResult ? 'invalid' : 'valid'}
+                            onChange={onNameChange} />
+                        <label htmlFor="app_editor_app_name">Name</label>
+                        <span className="helper-text" data-error={nameValidationResult} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="right-align">
+                        <div>
+                            <button
+                                className={'btn waves-effect waves-light' + (isValid ? '' : ' disabled')}
+                                onClick={submit}>
                         Save
-                        <i className="material-icons right">check_circle</i>
-                    </button>
+                                <i className="material-icons right">check_circle</i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

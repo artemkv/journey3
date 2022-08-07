@@ -1,3 +1,5 @@
+_This is our recommendation for the minimial policy. Please make your own judgement when writing the privacy policy for your app._
+
 # Example of the Ablsolute Minimum Privacy Policy
 
 ## Privacy Policy

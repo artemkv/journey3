@@ -64,8 +64,15 @@
   cursor: pointer;
 }
 
-.doc-page * {
-  all: revert !important;
+.doc-page h1,
+.doc-page h2,
+.doc-page h3 {
+  font: revert;
+}
+
+.doc-page ul>li {
+  list-style-type: disc;
+  margin-left: 32px;
 }
 
 .doc-page {
@@ -82,4 +89,9 @@
 
 .doc-toc-link-container {
   margin: 16px;
+}
+
+.doc-page pre {
+  background-color: #f5f5f5;
+  padding: 8px;
 }

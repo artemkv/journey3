@@ -11,7 +11,7 @@ export default (props) => {
         <div className="nav-wrapper">
             <ul className="left">
                 <Link to={statsPath}>
-                            JOURNEY3
+                    HOME
                 </Link>
             </ul>
             <ul className="right">

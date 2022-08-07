@@ -10,6 +10,8 @@ export const docPagePath = '/doc/:page';
 
 export const docGdprExplainedPath = '/doc/gdpr_explained';
 export const docGdprExamplePath = '/doc/gdpr_example';
+export const docAndroidPath = '/doc/android_native';
+export const docFlutterPath = '/doc/flutter';
 
 export const getAppPath = (appId) => {
     return `/apps/${appId}`;

@@ -4,13 +4,16 @@ import {useParams} from 'react-router-dom';
 
 import DocumentationToc from './DocumentationToc';
 
+import index from '../doc/index.md';
 import gdprExplained from '../doc/gdpr_explained.md';
 import gdprExample from '../doc/gdpr_example.md';
+import androidNative from '../doc/android_native.md';
+import flutter from '../doc/flutter.md';
 
 export default function App() {
     const {page} = useParams();
 
-    const [markdown, setMarkdown] = useState('');
+    const [markdown, setMarkdown] = useState(index);
 
     useEffect(() => {
         switch (page) {
@@ -20,6 +23,14 @@ export default function App() {
         case 'gdpr_example':
             setMarkdown(gdprExample);
             break;
+        case 'android_native':
+            setMarkdown(androidNative);
+            break;
+        case 'flutter':
+            setMarkdown(flutter);
+            break;
+        default:
+            setMarkdown(index);
         }
     }, [page]);
 

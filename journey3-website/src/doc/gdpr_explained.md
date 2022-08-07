@@ -1,3 +1,5 @@
+_This is a simplified version of the GDPR regulation. For the official version please refer to [https://gdpr-info.eu/](https://gdpr-info.eu/)_
+
 # The absolute minimum that every website/app developer needs to know about GDPR/CCPA
 
 ## Who should care about GDPR?
@@ -19,7 +21,7 @@ As a simple rule of thumb, you need to comply with GDPR if the following 2 condi
 
 ### And what about CCPA?
 
-Since CCPA is less restrictive than GDPR, in general, if you comply with GDPR, you also comply with CCPA. So forget about CCPA.
+Since CCPA is less restrictive than GDPR, in general, if you comply with GDPR, you also comply with CCPA. So forget about CCPA and focus on GDPR.
 
 
 ## So what should you do?
@@ -94,6 +96,6 @@ Yes, there are couple of situations when you can ignore it:
 - Your website/app is read-only and you don't track anything about visitors (no logging, no cookies, no analytics etc.);
 - The information you collect is fully anonymised.
 
-Example of read-only app could be a weather app, if all you do is to show the weather predictions. However, usually, you would want to customize what users see based on their location, track how often they use your app or even show customized ads. All of this will most probably require storing user personal data.
+Example of read-only app could be a weather app, if all it does is showing the weather predictions. However, in practice, you would probably want to customize what users see based on their location, track how often they use your app or even show personalized ads. All of this will most probably require storing user personal data.
 
-TODO: anonymous
+It is not enough to simply remove the identifiers to render the stored data anonymous. Such data can be de-anonymized by combining it with an additional information, so GDPR still applied to such data. Anonymization is not a single technique, but rather a collection of approaches, tools, and algorithms that can be applied to different kinds of data with differing levels of effectiveness.

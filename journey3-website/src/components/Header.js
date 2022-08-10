@@ -21,7 +21,7 @@ export default (props) => {
             </ul>
             <ul className="right">
                 <Link to={docPath}>
-                    DOC
+                    DOCS
                 </Link>
             </ul>
         </div>

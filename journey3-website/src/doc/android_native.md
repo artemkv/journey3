@@ -1,4 +1,4 @@
-## Using Android Native SDK
+## Using Android Native Java SDK
 
 ### Getting started
 

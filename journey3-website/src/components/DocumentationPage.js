@@ -9,6 +9,7 @@ import gdprExplained from '../doc/gdpr_explained.md';
 import gdprExample from '../doc/gdpr_example.md';
 import androidNative from '../doc/android_native.md';
 import flutter from '../doc/flutter.md';
+import reactNative from '../doc/react_native.md';
 
 export default function App() {
     const {page} = useParams();
@@ -28,6 +29,9 @@ export default function App() {
             break;
         case 'flutter':
             setMarkdown(flutter);
+            break;
+        case 'react_native':
+            setMarkdown(reactNative);
             break;
         default:
             setMarkdown(index);

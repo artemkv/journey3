@@ -24,13 +24,18 @@ export default (props) => {
             </div>
             <div className="row"></div>
             <div className="row">
-                <Link to={routing.docAndroidPath} className="doc-toc-link">
-                        Andoroid Native
+                <Link to={routing.docFlutterPath} className="doc-toc-link">
+                        Flutter
                 </Link>
             </div>
             <div className="row">
-                <Link to={routing.docFlutterPath} className="doc-toc-link">
-                        Flutter
+                <Link to={routing.docReactPath} className="doc-toc-link">
+                        React Native
+                </Link>
+            </div>
+            <div className="row">
+                <Link to={routing.docAndroidPath} className="doc-toc-link">
+                        Andoroid Native
                 </Link>
             </div>
         </div>

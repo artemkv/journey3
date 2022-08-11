@@ -76,16 +76,16 @@ So don't worry about the language, and aim for clear, simple and short document.
 
 This is what you need to include:
 
-- What data is collected
-- The mechanisms by which data is collected
-- How the collected data is used
-- Who has access to the data
-- How the data is protected
-- With whom the data may be shared or disclosed
-- How long the data is kept
-- What control the user has over the collection, usage and persistence of the data
-- How users can access and export their data as appropriate
-- How users can contact the organization with questions or concerns about their privacy
+- What data is collected;
+- The mechanisms by which data is collected;
+- How the collected data is used;
+- Who has access to the data;
+- How the data is protected;
+- With whom the data may be shared or disclosed;
+- How long the data is kept;
+- What control the user has over the collection, usage and persistence of the data;
+- How users can access and export their data as appropriate;
+- How users can contact the organization with questions or concerns about their privacy.
 
 
 ## Is there any situation when you don't need GDPR?
@@ -96,6 +96,6 @@ Yes, there are couple of situations when you can ignore it:
 - Your website/app is read-only and you don't track anything about visitors (no logging, no cookies, no analytics etc.);
 - The information you collect is fully anonymised.
 
-Example of read-only app could be a weather app, if all it does is showing the weather predictions. However, in practice, you would probably want to customize what users see based on their location, track how often they use your app or even show personalized ads. All of this will most probably require storing user personal data.
+Example of read-only app could be a weather app, assuming all it does is showing the weather predictions. However, in practice, you would probably want to customize what users see based on their location, track how often they use your app or even show personalized ads. All of this will most probably involve storing or processing of personal data.
 
-It is not enough to simply remove the identifiers to render the stored data anonymous. Such data can be de-anonymized by combining it with an additional information, so GDPR still applied to such data. Anonymization is not a single technique, but rather a collection of approaches, tools, and algorithms that can be applied to different kinds of data with differing levels of effectiveness.
+It is not enough to simply remove the identifiers to render the stored data anonymous. Such data can be de-anonymized by combining it with an additional information, so GDPR still applies to such data. Anonymization is not a single technique, but rather a collection of approaches, tools, and algorithms that can be applied to different kinds of data with differing levels of effectiveness.

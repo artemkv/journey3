@@ -11,15 +11,20 @@ export default (props) => {
                         Journey3
                 </Link>
             </div>
+            <div className="row doc-toc-link-container">
+                <Link to={routing.docAnalyticsPath} className="doc-toc-link">
+                        Analytics
+                </Link>
+            </div>
             <div className="row"></div>
             <div className="row doc-toc-link-container">
                 <Link to={routing.docGdprExplainedPath} className="doc-toc-link">
-                        GDPR Explaned
+                        GDPR explaned
                 </Link>
             </div>
             <div className="row">
                 <Link to={routing.docGdprExamplePath} className="doc-toc-link">
-                        GDPR Example
+                        GDPR example
                 </Link>
             </div>
             <div className="row"></div>

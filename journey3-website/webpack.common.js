@@ -62,7 +62,23 @@ module.exports = {
         }),
         new CopyPlugin({
             patterns: [
-                {from: './public/favicon.ico'}
+                {from: './public/favicon.ico'},
+                {from: './public/images/conversions.png'},
+                {from: './public/images/conversions_by_version.png'},
+                {from: './public/images/crashes.png'},
+                {from: './public/images/duration.png'},
+                {from: './public/images/errors.png'},
+                {from: './public/images/events.png'},
+                {from: './public/images/evt_sessions.png'},
+                {from: './public/images/new_users.png'},
+                {from: './public/images/new_users_0.png'},
+                {from: './public/images/retention.png'},
+                {from: './public/images/segments.png'},
+                {from: './public/images/sessions_with_crashes.png'},
+                {from: './public/images/sessions.png'},
+                {from: './public/images/top_events.png'},
+                {from: './public/images/top_events_by_version.png'},
+                {from: './public/images/unique_users.png'}
             ]
         })
     ],

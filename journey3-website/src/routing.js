@@ -8,6 +8,7 @@ export const editAppPath = '/apps/:appId';
 export const docPath = '/doc';
 export const docPagePath = '/doc/:page';
 
+export const docAnalyticsPath = '/doc/analytics';
 export const docGdprExplainedPath = '/doc/gdpr_explained';
 export const docGdprExamplePath = '/doc/gdpr_example';
 export const docAndroidPath = '/doc/android_native';

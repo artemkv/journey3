@@ -8,39 +8,54 @@ export default (props) => {
         <div>
             <div className="row doc-toc-link-container">
                 <Link to={routing.docPath} className="doc-toc-link">
-                        Journey3
+                    Journey3
                 </Link>
             </div>
             <div className="row doc-toc-link-container">
                 <Link to={routing.docAnalyticsPath} className="doc-toc-link">
-                        Analytics
+                    Our analytics
+                </Link>
+            </div>
+            <div className="row doc-toc-link-container">
+                <Link to={routing.docPerformance} className="doc-toc-link">
+                    Performance
                 </Link>
             </div>
             <div className="row"></div>
             <div className="row doc-toc-link-container">
                 <Link to={routing.docGdprExplainedPath} className="doc-toc-link">
-                        GDPR explaned
+                    GDPR explaned
                 </Link>
             </div>
             <div className="row">
                 <Link to={routing.docGdprExamplePath} className="doc-toc-link">
-                        GDPR example
+                    GDPR example
+                </Link>
+            </div>
+            <div className="row doc-toc-link-container">
+                <Link to={routing.docAnonymization} className="doc-toc-link">
+                    Anonymization
                 </Link>
             </div>
             <div className="row"></div>
             <div className="row">
                 <Link to={routing.docFlutterPath} className="doc-toc-link">
-                        Flutter
+                    Flutter
                 </Link>
             </div>
             <div className="row">
                 <Link to={routing.docReactPath} className="doc-toc-link">
-                        React Native
+                    React Native
+                </Link>
+            </div>
+            <div className="row">
+                <Link to={routing.docXamarinPath} className="doc-toc-link">
+                    Xamarin
                 </Link>
             </div>
             <div className="row">
                 <Link to={routing.docAndroidPath} className="doc-toc-link">
-                        Andoroid Native
+                    Andoroid Native
                 </Link>
             </div>
         </div>

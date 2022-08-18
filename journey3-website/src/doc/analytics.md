@@ -1,4 +1,4 @@
-## Available analytics: what we track
+## Available analytics: what we offer
 
 ### Stage conversions
 

@@ -1,4 +1,4 @@
-# Journey3
+## Journey3
 
 Journey3 is a __mobile analytics platform__ that is designed to be __anonymous by default__.
 

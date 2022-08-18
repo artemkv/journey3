@@ -6,11 +6,14 @@ import DocumentationToc from './DocumentationToc';
 
 import index from '../doc/index.md';
 import analytics from '../doc/analytics.md';
+import anonymization from '../doc/anonymization.md';
+import performance from '../doc/performance.md';
 import gdprExplained from '../doc/gdpr_explained.md';
 import gdprExample from '../doc/gdpr_example.md';
 import androidNative from '../doc/android_native.md';
 import flutter from '../doc/flutter.md';
 import reactNative from '../doc/react_native.md';
+import xamarin from '../doc/xamarin.md';
 
 export default function App() {
     const {page} = useParams();
@@ -34,8 +37,17 @@ export default function App() {
         case 'react_native':
             setMarkdown(reactNative);
             break;
+        case 'xamarin':
+            setMarkdown(xamarin);
+            break;
         case 'analytics':
             setMarkdown(analytics);
+            break;
+        case 'anonymization':
+            setMarkdown(anonymization);
+            break;
+        case 'performance':
+            setMarkdown(performance);
             break;
         default:
             setMarkdown(index);
@@ -45,10 +57,10 @@ export default function App() {
     return (
         <div>
             <div className="row">
-                <div className="col s2">
+                <div className="col s3">
                     <DocumentationToc />
                 </div>
-                <div className="col s10">
+                <div className="col s9">
                     <MarkdownView className='doc-page'
                         markdown={markdown}
                         options={{tables: true, emoji: true}}

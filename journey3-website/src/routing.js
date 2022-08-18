@@ -9,11 +9,14 @@ export const docPath = '/doc';
 export const docPagePath = '/doc/:page';
 
 export const docAnalyticsPath = '/doc/analytics';
+export const docAnonymization = '/doc/anonymization';
+export const docPerformance = '/doc/performance';
 export const docGdprExplainedPath = '/doc/gdpr_explained';
 export const docGdprExamplePath = '/doc/gdpr_example';
 export const docAndroidPath = '/doc/android_native';
 export const docFlutterPath = '/doc/flutter';
 export const docReactPath = '/doc/react_native';
+export const docXamarinPath = '/doc/xamarin';
 
 export const getAppPath = (appId) => {
     return `/apps/${appId}`;

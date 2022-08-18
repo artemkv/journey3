@@ -6,7 +6,7 @@
 - Add the dependency to the SDK to your ```build.gradle```:
 
 ```
-implementation group: 'net.artemkv', name: 'journey3', version: '1.0'
+implementation group: 'net.artemkv', name: 'journey3', version: '1.2.0'
 ```
 
 - Add INTERNET permission to your ```AndroidManifest.xml```:

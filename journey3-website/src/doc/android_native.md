@@ -96,6 +96,46 @@ Crashes are yet another types of events:
 journey.reportCrash("crash", context);
 ```
 
+To report a crash, you need to be able to handle the crash. Here is how you do it:
+
+First, create ```MyApplication``` class extending ```Application```:
+```
+public class MyApplication extends Application {
+    private Thread.UncaughtExceptionHandler defaultUncaughtExceptionHandler;
+
+    public void onCreate() {
+        super.onCreate();
+
+        defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler(this::handleUncaughtException);
+    }
+
+    private void handleUncaughtException(Thread thread, Throwable e) {
+        try {
+            try {
+                Journey journey = JourneyConnectorProvider.getInstance();
+                if (journey != null) {
+                    journey.reportCrash("crash", context);
+                }
+            } catch (Exception e1) {
+                Log.e("MyApplication", "Exception while reporting crash", e1);
+            }
+        } finally {
+            // Re-throw original exception
+            defaultUncaughtExceptionHandler.uncaughtException(thread, e);
+        }
+    }
+}
+```
+
+Register ```MyApplication``` class in the ```AndroidManifest.xml```:
+```
+<application
+    ...
+    android:name=".MyApplication">
+```
+
+
 ### Report a stage transition
 
 Stage transitions are used to build user conversion funnels:

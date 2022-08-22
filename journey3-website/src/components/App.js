@@ -11,6 +11,8 @@ import PublicArea from './PublicArea';
 import SignedInArea from './SignedInArea';
 import Spinner from './Spinner';
 
+import {reportInitSignIn, reportCompletedSignIn, reportSignOut} from '../journeyconnector';
+
 const APP_LOADED_SIGN_IN_STATUS_UNKNOWN = 0;
 const APP_USER_INITIATED_SIGN_IN = 1;
 const APP_SIGNED_IN = 2;
@@ -35,10 +37,12 @@ export default () => {
     });
 
     function onSignInRequested() {
+        reportInitSignIn();
         setSignInStatus(APP_USER_INITIATED_SIGN_IN);
     }
 
     function onSignOutRequested() {
+        reportSignOut();
         cleanIdToken();
         setSignInStatus(APP_USER_INITIATED_SIGN_OUT);
         Auth.signOut().then((_) => {
@@ -51,6 +55,7 @@ export default () => {
     function onSignedIn(cognitoSession) {
         cognitoSession.then((x) => {
             setIdToken(x.idToken.jwtToken);
+            reportCompletedSignIn();
             setSignInStatus(APP_SIGNED_IN);
             navigate(statsPath);
         }).catch((err) => {

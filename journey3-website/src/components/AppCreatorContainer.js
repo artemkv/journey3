@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 import {appsPath} from '../routing';
 import {postApp} from '../sessionapi';
 import {useNavigate} from 'react-router-dom';
+import {reportCreateApp} from '../journeyconnector';
 
 export default () => {
     const INITIALIZED = 0;
@@ -25,6 +26,7 @@ export default () => {
         setComponentStatus(UPDATE_IN_PROGRESS);
         postApp(app)
             .then(() => {
+                reportCreateApp();
                 navigate(appsPath);
             })
             .catch((err) => {

@@ -4,6 +4,8 @@ import AppList from './AppList';
 import Spinner from './Spinner';
 import {getAcc} from '../sessionapi';
 
+import {reportNavToApps} from '../journeyconnector';
+
 export default () => {
     const DATA_NOT_LOADED = 0;
     const DATA_LOADED = 1;
@@ -13,6 +15,7 @@ export default () => {
     const [dataLoadingStatus, setDataLoadingStatus] = useState(DATA_NOT_LOADED);
 
     function loadData() {
+        reportNavToApps();
         setDataLoadingStatus(DATA_NOT_LOADED);
         getAcc()
             .then((data) => {

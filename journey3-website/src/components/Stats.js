@@ -27,6 +27,7 @@ import TopEventsStatsChartContainer from './charts/TopEventsStatsChartContainer'
 import SessionsListContainer from './charts/SessionsListContainer';
 import DurationStatsChartContainer from './charts/DurationStatsChartContainer';
 import * as api from '../sessionapi';
+import {reportNavToStats} from '../journeyconnector';
 
 const PERIOD_DAY = 'day';
 const PERIOD_MONTH = 'month';
@@ -42,6 +43,8 @@ export default () => {
     const [build, setBuild] = useState(BUILD_RELEASE);
 
     useEffect(() => {
+        reportNavToStats();
+
         // eslint-disable-next-line new-cap
         M.AutoInit();
     }, []);

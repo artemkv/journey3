@@ -16,6 +16,7 @@ import flutter from '../doc/flutter.md';
 import reactNative from '../doc/react_native.md';
 import xamarin from '../doc/xamarin.md';
 import ionic from '../doc/ionic.md';
+import {reportNavigateToDocPage} from '../journeyconnector';
 
 export default function App() {
     const {page} = useParams();
@@ -25,39 +26,51 @@ export default function App() {
     useEffect(() => {
         switch (page) {
         case 'gdpr_explained':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(gdprExplained);
             break;
         case 'gdpr_example':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(gdprExample);
             break;
         case 'android_native':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(androidNative);
             break;
         case 'flutter':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(flutter);
             break;
         case 'react_native':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(reactNative);
             break;
         case 'xamarin':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(xamarin);
             break;
         case 'ionic':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(ionic);
             break;
         case 'analytics':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(analytics);
             break;
         case 'anonymization':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(anonymization);
             break;
         case 'performance':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(performance);
             break;
         case 'pricing':
+            reportNavigateToDocPage(`navto_doc_${page}`);
             setMarkdown(pricing);
             break;
         default:
+            reportNavigateToDocPage('navto_doc_index');
             setMarkdown(index);
         }
     }, [page]);

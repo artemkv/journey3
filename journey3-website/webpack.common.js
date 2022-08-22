@@ -3,10 +3,6 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: {
-        // Main page
-        app: './src/index.js'
-    },
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, 'dist'),

@@ -8,12 +8,14 @@ import index from '../doc/index.md';
 import analytics from '../doc/analytics.md';
 import anonymization from '../doc/anonymization.md';
 import performance from '../doc/performance.md';
+import pricing from '../doc/pricing.md';
 import gdprExplained from '../doc/gdpr_explained.md';
 import gdprExample from '../doc/gdpr_example.md';
 import androidNative from '../doc/android_native.md';
 import flutter from '../doc/flutter.md';
 import reactNative from '../doc/react_native.md';
 import xamarin from '../doc/xamarin.md';
+import ionic from '../doc/ionic.md';
 
 export default function App() {
     const {page} = useParams();
@@ -40,6 +42,9 @@ export default function App() {
         case 'xamarin':
             setMarkdown(xamarin);
             break;
+        case 'ionic':
+            setMarkdown(ionic);
+            break;
         case 'analytics':
             setMarkdown(analytics);
             break;
@@ -48,6 +53,9 @@ export default function App() {
             break;
         case 'performance':
             setMarkdown(performance);
+            break;
+        case 'pricing':
+            setMarkdown(pricing);
             break;
         default:
             setMarkdown(index);

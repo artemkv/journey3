@@ -21,6 +21,11 @@ export default (props) => {
                     Performance
                 </Link>
             </div>
+            <div className="row doc-toc-link-container">
+                <Link to={routing.docPricing} className="doc-toc-link">
+                    Pricing
+                </Link>
+            </div>
             <div className="row"></div>
             <div className="row doc-toc-link-container">
                 <Link to={routing.docGdprExplainedPath} className="doc-toc-link">
@@ -51,6 +56,11 @@ export default (props) => {
             <div className="row">
                 <Link to={routing.docXamarinPath} className="doc-toc-link">
                     Xamarin
+                </Link>
+            </div>
+            <div className="row">
+                <Link to={routing.docIonicPath} className="doc-toc-link">
+                    Ionic
                 </Link>
             </div>
             <div className="row">

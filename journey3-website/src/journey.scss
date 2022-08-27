@@ -81,10 +81,6 @@
   margin-left: 32px;
 }
 
-.doc-page {
-  margin-right: 100px;
-}
-
 .doc-toc-link {
   text-decoration: none;
   color: black;
@@ -99,4 +95,53 @@
 .doc-page pre {
   background-color: #f5f5f5;
   padding: 8px;
+}
+
+/* Desktop Styles */
+@media only screen and (min-width: 961px) {
+  .doc-page {
+    margin-right: 100px;
+  }
+
+  .desktop {
+    display: block;
+  }
+
+  .mobile {
+    display: none;
+  }
+}
+
+/* Tablet Styles */
+@media only screen and (min-width: 401px) and (max-width: 960px) {
+  .doc-page {
+    margin-right: 100px;
+  }
+
+  .desktop {
+    display: block;
+  }
+
+  .mobile {
+    display: none;
+  }
+}
+
+/* Mobile Styles */
+@media only screen and (max-width: 400px) {
+  .hero {
+    display: none;
+  }
+
+  .footer {
+    height: 10px;
+  }
+
+  .desktop {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
 }

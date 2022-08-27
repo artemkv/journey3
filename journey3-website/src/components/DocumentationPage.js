@@ -77,15 +77,32 @@ export default function App() {
 
     return (
         <div>
-            <div className="row">
-                <div className="col s3">
-                    <DocumentationToc />
+            <div className="desktop">
+                <div className="row">
+                    <div className="col s3">
+                        <DocumentationToc />
+                    </div>
+                    <div className="col s9">
+                        <MarkdownView className='doc-page'
+                            markdown={markdown}
+                            options={{tables: true, emoji: true}}
+                        />
+                    </div>
                 </div>
-                <div className="col s9">
-                    <MarkdownView className='doc-page'
-                        markdown={markdown}
-                        options={{tables: true, emoji: true}}
-                    />
+            </div>
+            <div className="mobile">
+                <div className="row">
+                    <div className="col s12">
+                        <DocumentationToc />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col s12">
+                        <MarkdownView className='doc-page flow-text'
+                            markdown={markdown}
+                            options={{tables: true, emoji: true}}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

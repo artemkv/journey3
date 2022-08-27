@@ -74,7 +74,16 @@ module.exports = {
                 {from: './public/images/sessions.png'},
                 {from: './public/images/top_events.png'},
                 {from: './public/images/top_events_by_version.png'},
-                {from: './public/images/unique_users.png'}
+                {from: './public/images/unique_users.png'},
+                {from: './public/thumbs/th_conversions.png'},
+                {from: './public/thumbs/th_duration.png'},
+                {from: './public/thumbs/th_events.png'},
+                {from: './public/thumbs/th_new_users.png'},
+                {from: './public/thumbs/th_retention.png'},
+                {from: './public/thumbs/th_segments.png'},
+                {from: './public/thumbs/th_sessions.png'},
+                {from: './public/thumbs/th_top_events.png'},
+                {from: './public/thumbs/th_unique_users.png'}
             ]
         })
     ],

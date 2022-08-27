@@ -1,6 +1,6 @@
-_This is our recommendation for the minimial policy. Please make your own judgement when writing the privacy policy for your app._
+_This is our recommendation for the minimal policy. Please make your own judgement when writing the privacy policy for your app._
 
-# Example of the Ablsolute Minimum Privacy Policy
+# Example of the Absolute Minimum Privacy Policy
 
 ## Privacy Policy
 
@@ -37,7 +37,7 @@ We use your Personal Data for the following purposes:
 - To provide and maintain our service, including to monitor the usage of our service;
 - To manage your registration as a user of the Service;
 - To contact you regarding updates to this Privacy Policy or the Terms of Use;
-- To attend and manage uour requests;
+- To attend and manage your requests;
 
 We may share your Personal Data in the following situations:
 

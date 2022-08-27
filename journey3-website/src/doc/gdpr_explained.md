@@ -46,7 +46,7 @@ The steps are actually quite simple and straightforward:
 
 - __Only use the customer data for legitimate reasons;__
 
-*It's OK to ask users for email and name upon site registration. It's not OK to use that email to send promotional letters, unless user explicitly agreed to that! It is definitely not OK to sell that data to thrird parties!*
+*It's OK to ask users for email and name upon site registration. It's not OK to use that email to send promotional letters, unless user explicitly agreed to that! It is definitely not OK to sell that data to third parties!*
 
 - __Do not store longer than needed;__
 
@@ -71,7 +71,7 @@ The steps are actually quite simple and straightforward:
 
 ## So how do I write my privacy policy?
 
-First of all, remember that the policy is not for the lawers! It is for the user.
+First of all, remember that the policy is not for the lawyers! It is for the user.
 So don't worry about the language, and aim for clear, simple and short document.
 
 This is what you need to include:
@@ -88,13 +88,13 @@ This is what you need to include:
 - How users can contact the organization with questions or concerns about their privacy.
 
 
-## Is there any situation when you don't need GDPR?
+## Is there any situation when GDPR does not apply?
 
 Yes, there are couple of situations when you can ignore it:
 
 - You are organizing the private event (e.g. wedding) and collecting guest data;
 - Your website/app is read-only and you don't track anything about visitors (no logging, no cookies, no analytics etc.);
-- The information you collect is fully anonymised.
+- The information you collect is fully anonymized.
 
 Example of read-only app could be a weather app, assuming all it does is showing the weather predictions. However, in practice, you would probably want to customize what users see based on their location, track how often they use your app or even show personalized ads. All of this will most probably involve storing or processing of personal data.
 

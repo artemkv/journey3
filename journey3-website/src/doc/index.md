@@ -4,7 +4,7 @@ Journey3 is a __mobile analytics platform__ that is designed to be __anonymous b
 
 We apply our best knowledge to ensure that __no personally identifiable information is collected or stored__.
 
-We also apply __the data minimisation principle__, by collecting the least amount of data necessary.
+We also apply __the data minimization principle__, by collecting the least amount of data necessary.
 
 We do that by applying the following practices:
 

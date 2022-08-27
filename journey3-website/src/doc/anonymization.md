@@ -30,7 +30,7 @@ Successful anonymization always takes context into account and tries to find the
 - We collect and process the least amount of data possible;
 - We don't collect or store any direct or indirect identifiers (aka quasi-identifiers);
 - We don't collect or store any information about device (such as screen resolution, device model or similar);
-- We generalise the values of the attributes (such as session duration) using value ranges (intervals), instead of saving a concrete field value;
+- We generalize the values of the attributes (such as session duration) using value ranges (intervals), instead of saving a concrete field value;
 - We aggregate data with granularity of 1 hour at max;
 - We don't store any fields that would allow linking multiple sessions from the same user together;
 - We define time limits for retention of certain types of data (sessions);

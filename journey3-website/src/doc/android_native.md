@@ -1,6 +1,6 @@
-## Using Android Native Java SDK
+# Using Android Native Java SDK
 
-### Getting started
+## Getting started
 
 - Sign in to get the account and the application key;
 - Add the dependency to the SDK to your ```build.gradle```:
@@ -15,7 +15,7 @@ implementation group: 'net.artemkv', name: 'journey3', version: '1.2.0'
 <uses-permission android:name="android.permission.INTERNET" />
 ```
 
-### Initializing and using the plugin
+## Initializing and using the plugin
 
 ```
 public final class JourneyConnectorProvider {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 ```
 
-### Report an event
+## Report an event
 
 Events are used to track feature usage:
 
@@ -80,7 +80,7 @@ journey.reportEvent("click_play", context);
 journey.reportEvent("click_pause", context);
 ```
 
-### Report an error
+## Report an error
 
 Errors are special types of events:
 
@@ -88,7 +88,7 @@ Errors are special types of events:
 journey.reportError("err_loading_catalog", context);
 ```
 
-### Report a crash
+## Report a crash
 
 Crashes are yet another types of events:
 
@@ -136,7 +136,7 @@ Register ```MyApplication``` class in the ```AndroidManifest.xml```:
 ```
 
 
-### Report a stage transition
+## Report a stage transition
 
 Stage transitions are used to build user conversion funnels:
 

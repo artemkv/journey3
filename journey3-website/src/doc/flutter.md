@@ -1,6 +1,6 @@
-## Using Flutter plugin
+# Using Flutter plugin
 
-### Getting started
+## Getting started
 
 - Sign in to get the account and the application key;
 - Install the plugin:
@@ -9,7 +9,7 @@
 flutter pub add journey3_connector
 ```
 
-### Initializing the plugin
+## Initializing the plugin
 
 ```dart
 PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
@@ -21,7 +21,7 @@ PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
 });
 ```
 
-### Report an event
+## Report an event
 
 Events are used to track feature usage:
 
@@ -30,7 +30,7 @@ await Journey.instance().reportEvent('click_play');
 await Journey.instance().reportEvent('click_pause');
 ```
 
-### Report an error
+## Report an error
 
 Errors are special types of events:
 
@@ -39,7 +39,7 @@ await Journey.instance()
     .reportEvent('err_loading_catalog', isError: true);
 ```
 
-### Report a crash
+## Report a crash
 
 Errors are yet another types of events:
 
@@ -52,7 +52,7 @@ FlutterError.onError = (FlutterErrorDetails details) async {
 };
 ```
 
-### Report a stage transition
+## Report a stage transition
 
 Stage transitions are used to build user conversion funnels:
 

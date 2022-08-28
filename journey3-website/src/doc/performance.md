@@ -1,4 +1,4 @@
-## Performance considerations
+# Performance considerations
 
 We designed the connector libraries in the way that has __minimal impact__ on your app performance and the data consumed.
 

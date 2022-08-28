@@ -1,4 +1,4 @@
-## Pricing
+# Pricing
 
 Journey3 is currently a free service with the following limitations:
 

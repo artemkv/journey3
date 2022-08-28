@@ -1,4 +1,4 @@
-## Xamarin connector
+# Xamarin connector
 
 ## Getting started
 
@@ -9,7 +9,7 @@
 Install-Package Artemkv.Journey3.Connector -Version <version>
 ```
 
-### Initializing the connector
+## Initializing the connector
 
 ```csharp
 using Artemkv.Journey3.Connector;
@@ -38,7 +38,7 @@ public static bool IsDebug()
 }
 ```
 
-### Report an event
+## Report an event
 
 Events are used to track feature usage:
 
@@ -46,7 +46,7 @@ Events are used to track feature usage:
 Journey.GetInstance().ReportEvent("click_play");
 ```
 
-### Report an error
+## Report an error
 
 Errors are special types of events:
 
@@ -54,7 +54,7 @@ Errors are special types of events:
 Journey.GetInstance().ReportError("err_loading_catalog");
 ```
 
-### Report a crash
+## Report a crash
 
 Crashes are yet another types of events.
 
@@ -108,7 +108,7 @@ private void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEve
 }
 ```
 
-### Report a stage transition
+## Report a stage transition
 
 Stage transitions are used to build user conversion funnels:
 

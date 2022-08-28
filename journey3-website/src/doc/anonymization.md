@@ -1,4 +1,4 @@
-## Data anonymization
+# Data anonymization
 
 Data is considered personal if it relates to an identified or identifiable person. This includes sensitive data, a special category of data that requires enhanced protection (sexual orientation, religious views etc.)
 
@@ -25,7 +25,7 @@ Another thing to remember is that __anonymization is not forever__: there is alw
 
 Successful anonymization always takes context into account and tries to find the right balance between reducing the re-identification risk and keeping the utility of a dataset.
 
-### What we do:
+## What we do:
 
 - We collect and process the least amount of data possible;
 - We don't collect or store any direct or indirect identifiers (aka quasi-identifiers);

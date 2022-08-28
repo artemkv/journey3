@@ -1,4 +1,4 @@
-## Using React Native connector
+# Using React Native connector
 
 ## Getting started
 
@@ -15,7 +15,7 @@ Additionally, you need to install ```@react-native-async-storage/async-storage``
 yarn add @react-native-async-storage/async-storage
 ```
 
-### Initializing the connector
+## Initializing the connector
 
 ```js
 import {useEffect} from 'react';
@@ -33,7 +33,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Report an event
+## Report an event
 
 Events are used to track feature usage:
 
@@ -45,7 +45,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Report an error
+## Report an error
 
 Errors are special types of events:
 
@@ -57,7 +57,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Report a stage transition
+## Report a stage transition
 
 Stage transitions are used to build user conversion funnels:
 

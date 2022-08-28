@@ -1,4 +1,4 @@
-## Ionic connector
+# Ionic connector
 
 ## Getting started
 
@@ -9,7 +9,7 @@
 npm i journey3-nodejs-sdk
 ```
 
-### Initializing the connector
+## Initializing the connector
 
 ```js
 import {initializeMobile} from 'journey3-nodejs-sdk';
@@ -24,7 +24,7 @@ initializeMobile(
 );
 ```
 
-### Report an event
+## Report an event
 
 Events are used to track feature usage:
 
@@ -34,7 +34,7 @@ import {reportEvent} from 'journey3-nodejs-sdk';
 reportEvent('click_play');
 ```
 
-### Report an error
+## Report an error
 
 Errors are special types of events:
 
@@ -44,7 +44,7 @@ import {reportError} from 'journey3-nodejs-sdk';
 reportError('err_loading_catalog');
 ```
 
-### Report a stage transition
+## Report a stage transition
 
 Stage transitions are used to build user conversion funnels:
 

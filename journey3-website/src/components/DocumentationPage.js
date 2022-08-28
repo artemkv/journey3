@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import MarkdownView from 'react-showdown';
 import {useParams} from 'react-router-dom';
+import M from 'materialize-css/dist/js/materialize.min.js';
 
 import DocumentationToc from './DocumentationToc';
 
@@ -22,6 +23,15 @@ export default function App() {
     const {page} = useParams();
 
     const [markdown, setMarkdown] = useState(index);
+
+    useEffect(() => {
+        const sideNav = document.querySelector('#slide-out');
+        M.Sidenav.init(sideNav, {});
+        const instance = M.Sidenav.getInstance(sideNav);
+        return () => {
+            instance.destroy();
+        };
+    }, []);
 
     useEffect(() => {
         switch (page) {
@@ -91,11 +101,19 @@ export default function App() {
                 </div>
             </div>
             <div className="mobile">
-                <div className="row">
-                    <div className="col s12">
-                        <DocumentationToc />
+                <nav className="nav teal">
+                    <a href="#" data-target="slide-out" className="sidenav-trigger">
+                        <i className="material-icons">menu</i>
+                    </a>
+                    <ul>Documentation</ul>
+                </nav>
+                <ul id="slide-out" className="sidenav">
+                    <div className="row sidenav-close">
+                        <div className="col s12">
+                            <DocumentationToc />
+                        </div>
                     </div>
-                </div>
+                </ul>
                 <div className="row">
                     <div className="col s12">
                         <MarkdownView className='doc-page flow-text'

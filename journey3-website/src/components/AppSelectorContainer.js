@@ -4,6 +4,7 @@ import AppSelector from './AppSelector';
 import {Link} from 'react-router-dom';
 import {appsPath} from '../routing';
 import {getApps} from '../sessionapi';
+import {getAppId} from '../preferences';
 
 const DATA_NOT_LOADED = 0;
 const DATA_LOADED = 1;
@@ -22,7 +23,15 @@ export default (props) => {
                 setData(data);
                 // TODO: use ramda to access inner property in a safe way?
                 if (data.length > 0) {
-                    props.onAppChanged(data[0].aid); // TODO: hard-coded to app 1
+                    const savedAppId = getAppId();
+                    let isFound = false;
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].aid === savedAppId) {
+                            isFound = true;
+                            break;
+                        }
+                    }
+                    props.onAppChanged(isFound ? savedAppId : data[0].aid);
                 }
                 setDataLoadingStatus(DATA_LOADED);
             })

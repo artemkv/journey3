@@ -1,17 +1,4 @@
-https://materializecss.com/
-
-- show the acc id
-
-- allow to choose period
-- based on the period, allow to choose date
-- copy paste link for app
-
-
-- stats page should be routable (period/appid)
-- when not logged in, show intro page
-- format Y-axis values nicely (should be int)
-
-
-- order returned events by name, so that the color is (mostly) the same
-
-- cumulative charts on for daily retention and conversions
+- save the current selection for main filters
+- save the current selection for individual filters
+- refresh button for the stats to avoid re-loading the whole page
+- copy paste link for account id and app id

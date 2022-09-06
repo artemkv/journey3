@@ -15,6 +15,15 @@ import {
     prevYear,
     nextYear
 } from '../datetimeutil';
+import {
+    savePeriod,
+    getPeriod,
+    saveDt,
+    getDt,
+    saveAppId,
+    saveBuild,
+    getBuild
+} from '../preferences';
 
 import AppSelectorContainer from './AppSelectorContainer';
 import M from 'materialize-css/dist/js/materialize.min.js';
@@ -48,6 +57,30 @@ export default () => {
         // eslint-disable-next-line new-cap
         M.AutoInit();
     }, []);
+
+    useEffect(() => {
+        setPeriod(getPeriod());
+        setDt(getDt());
+        setBuild(getBuild());
+    }, []);
+
+    useEffect(() => {
+        savePeriod(period);
+    }, [period]);
+
+    useEffect(() => {
+        saveDt(dt);
+    }, [dt]);
+
+    useEffect(() => {
+        if (appId) {
+            saveAppId(appId);
+        }
+    }, [appId]);
+
+    useEffect(() => {
+        saveBuild(build);
+    }, [build]);
 
     function onYearChanged(event) {
         setDt(fromYearInputFormat(event.target.value));
@@ -186,6 +219,8 @@ export default () => {
                         </div>
                         <div className="col s4">
                             {dateSelector()}
+                        </div>
+                        <div className="col s4">
                         </div>
                     </div>
 

@@ -145,3 +145,9 @@ export const nextYear = (date) => {
     const d1 = d.add(1, 'year');
     return new Date(d1.year(), d1.month(), 1);
 };
+
+export const isSameDayNonUtc = (a, b) => {
+    return a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
+};

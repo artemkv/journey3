@@ -48,3 +48,27 @@ test('getDurationBucket', () => {
   expect(statsfunc.getDurationBucket(61)).toBe(90);
   expect(statsfunc.getDurationBucket(91)).toBe(1000000);
 });
+
+test('getEventNormalized', () => {
+  expect(statsfunc.getEventNormalized('abc')).toBe('abc');
+  expect(statsfunc.getEventNormalized('(abc)')).toBe('abc');
+  expect(statsfunc.getEventNormalized('(abc')).toBe('abc');
+  expect(statsfunc.getEventNormalized('abc)')).toBe('abc');
+});
+
+test('countFirstNEvents', () => {
+  expect(statsfunc.countFirstNEvents(['aa'], 3)).toStrictEqual({ 'aa': 1 });
+  expect(statsfunc.countFirstNEvents(['aa', 'bb'], 3)).toStrictEqual({ 'aa': 1, 'bb': 1 });
+  expect(statsfunc.countFirstNEvents(['aa', 'bb', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
+  expect(statsfunc.countFirstNEvents(['aa', 'bb', 'aa', 'bb'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
+  expect(statsfunc.countFirstNEvents(['aa', '(bb)', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
+});
+
+test('countLastNEvents', () => {
+  expect(statsfunc.countLastNEvents(['aa'], 3)).toStrictEqual({ 'aa': 1 });
+  expect(statsfunc.countLastNEvents(['aa', 'bb'], 3)).toStrictEqual({ 'aa': 1, 'bb': 1 });
+  expect(statsfunc.countLastNEvents(['aa', 'bb', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
+  expect(statsfunc.countLastNEvents(['aa', 'bb', 'aa', 'bb'], 3)).toStrictEqual({ 'aa': 1, 'bb': 2 });
+  expect(statsfunc.countLastNEvents(['aa', 'bb', 'cc', 'dd', 'ee'], 3)).toStrictEqual({ 'cc': 1, 'dd': 1, 'ee': 1 });
+  expect(statsfunc.countLastNEvents(['aa', '(bb)', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
+});

@@ -89,6 +89,8 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
   const appId = session.aid;
 
   await updateEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
+  await updateEntryEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
+  await updateExitEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
   await updateEventSessionsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
 
   if (session.has_error) {
@@ -167,6 +169,32 @@ async function updateEventsByPeriod(session, appId, build, version, hourDt, dayD
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, session.evts[evt]);
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, session.evts[evt]);
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByMonthKey, `${monthDt}#${evt}#${version}`, session.evts[evt]);
+  }
+}
+
+async function updateEntryEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client) {
+  const eventsByHourKey = `ENTRY_EVENTS_BY_HOUR#${appId}#${build}`;
+  const eventsByDayKey = `ENTRY_EVENTS_BY_DAY#${appId}#${build}`;
+  const eventsByMonthKey = `ENTRY_EVENTS_BY_MONTH#${appId}#${build}`;
+
+  const evts = statsfunc.countFirstNEvents(session.evt_seq, 3);
+  for (const evt in evts) {
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, evts[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, evts[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByMonthKey, `${monthDt}#${evt}#${version}`, evts[evt]);
+  }
+}
+
+async function updateExitEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client) {
+  const eventsByHourKey = `EXIT_EVENTS_BY_HOUR#${appId}#${build}`;
+  const eventsByDayKey = `EXIT_EVENTS_BY_DAY#${appId}#${build}`;
+  const eventsByMonthKey = `EXIT_EVENTS_BY_MONTH#${appId}#${build}`;
+
+  const evts = statsfunc.countLastNEvents(session.evt_seq, 3);
+  for (const evt in evts) {
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, evts[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, evts[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByMonthKey, `${monthDt}#${evt}#${version}`, evts[evt]);
   }
 }
 

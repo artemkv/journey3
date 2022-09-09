@@ -77,10 +77,6 @@ const getDaysSince = (since, start) => {
 const getMinutesBetween = (start, end) => {
   const from = dayjs(start);
   const to = dayjs(end);
-
-  console.log(from)
-  console.log(to)
-
   return to.diff(from, 'minute');
 }
 
@@ -126,6 +122,46 @@ const getExpirationTs = (days) => {
   return Math.floor(date.getTime() / 1000);
 }
 
+const getEventNormalized = event => {
+  let start = 0;
+  let end = event.length;
+
+  if (event[0] === '(') {
+    start++;
+  }
+  if (event[event.length - 1] === ')') {
+    end--;
+  }
+
+  return event.substring(start, end);
+}
+
+const countFirstNEvents = (seq, n) => {
+  const evts = {};
+  for (let i = 0; i < seq.length && i < n; i++) {
+    const evt = getEventNormalized(seq[i]);
+    if (!evts[evt]) {
+      evts[evt] = 1;
+    } else {
+      evts[evt] = evts[evt] + 1;
+    }
+  }
+  return evts;
+}
+
+const countLastNEvents = (seq, n) => {
+  const evts = {};
+  for (let i = seq.length - 1; i >= 0 && i >= seq.length - n; i--) {
+    const evt = getEventNormalized(seq[i]);
+    if (!evts[evt]) {
+      evts[evt] = 1;
+    } else {
+      evts[evt] = evts[evt] + 1;
+    }
+  }
+  return evts;
+}
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
@@ -136,3 +172,6 @@ exports.getErrorLevel = getErrorLevel;
 exports.getMinutesBetween = getMinutesBetween;
 exports.getDurationBucket = getDurationBucket;
 exports.getExpirationTs = getExpirationTs;
+exports.getEventNormalized = getEventNormalized;
+exports.countFirstNEvents = countFirstNEvents;
+exports.countLastNEvents = countLastNEvents;

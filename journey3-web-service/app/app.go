@@ -34,6 +34,9 @@ func SetupRouter(router *gin.Engine, allowedOrigin string) {
 	// stats
 	router.GET("/stats", reststats.HandleEndpointWithStats(reststats.HandleGetStats))
 
+	// feedback
+	router.POST("/feedback", reststats.HandleEndpointWithStats(handlePostFeedback))
+
 	// sign-in
 	router.POST("/signin", reststats.HandleEndpointWithStats(handleSignIn))
 

@@ -5,6 +5,7 @@ import {Routes, Route} from 'react-router-dom';
 import DocumentationPage from './DocumentationPage';
 import PublicHomePage from './PublicHomePage';
 import PublicHeader from './PublicHeader';
+import FeedbackPrompt from './FeedbackPrompt';
 
 export default (props) => {
     return <div>
@@ -14,5 +15,6 @@ export default (props) => {
             <Route path={routing.docPath} element={<DocumentationPage />} />
             <Route path={routing.docPagePath} element={<DocumentationPage />} />
         </Routes>
+        <FeedbackPrompt />
     </div>;
 };

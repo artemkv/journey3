@@ -18,6 +18,10 @@ func isAppNameValid(appName string) bool {
 	return len(appName) <= 100
 }
 
+func isFeedbackTextValid(appName string) bool {
+	return len(appName) <= 1000
+}
+
 func isPeriodValid(period string) bool {
 	if period == "year" {
 		return true

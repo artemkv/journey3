@@ -168,3 +168,22 @@ export const putApp = (session, app) => {
 export const postApp = (session, app) => {
     return postJson(`/apps`, app, session);
 };
+
+export const postFeedback = (text) => {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    return fetch(
+        baseUrl + '/feedback',
+        {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            headers,
+            body: JSON.stringify({text})
+        })
+        .then(handleErrors)
+        .then(toJson)
+        .then(toData);
+};

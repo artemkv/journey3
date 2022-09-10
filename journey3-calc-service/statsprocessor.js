@@ -44,6 +44,11 @@ exports.processMessage = async (session, dynamoConnector) => {
       session.flushed = {};
     }
     await dynamoConnector.updateStatsFromSessionTail(session, build, version, hourDt, dayDt, monthDt, yearDt);
+  } else if (session.t === "sflush") {
+    if (!session.flushed) {
+      session.flushed = {};
+    }
+    await dynamoConnector.updateStatsFromSessionFlush(session, build, version, hourDt, dayDt, monthDt, yearDt);
   }
 };
 

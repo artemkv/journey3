@@ -36,6 +36,9 @@ exports.getConnector = () => {
     updateStatsFromSessionTail: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
       return await updateStatsFromSessionTail(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
     },
+    updateStatsFromSessionFlush: async (session, build, version, hourDt, dayDt, monthDt, yearDt) => {
+      return await updateStatsFromSessionFlush(session, build, version, hourDt, dayDt, monthDt, yearDt, client);
+    },
   };
 };
 
@@ -104,6 +107,12 @@ const updateStatsFromSessionTail = async (session, build, version, hourDt, dayDt
   await updateStageMetadataFromTail(session, appId, build, client);
 
   await updateSessionDurationDistribution(session, appId, build, version, dayDt, monthDt, yearDt, client);
+}
+
+const updateStatsFromSessionFlush = async (session, build, version, hourDt, dayDt, monthDt, yearDt, client) => {
+  const appId = session.aid;
+  await updateEventsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
+  await updateEventSessionsByPeriod(session, appId, build, version, hourDt, dayDt, monthDt, client);
 }
 
 async function updateRetention(session, appId, build, version, dayDt, client) {

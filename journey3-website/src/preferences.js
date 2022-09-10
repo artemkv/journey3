@@ -34,3 +34,11 @@ export const saveBuild = (build) => {
 export const getBuild = () => {
     return window.localStorage.getItem('filter.global.build');
 };
+
+export const saveStatsSection = (section) => {
+    window.localStorage.setItem('filter.global.stats_section', section);
+};
+
+export const getStatsSection = () => {
+    return window.localStorage.getItem('filter.global.stats_section');
+};

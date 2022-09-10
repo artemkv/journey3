@@ -70,5 +70,6 @@ test('countLastNEvents', () => {
   expect(statsfunc.countLastNEvents(['aa', 'bb', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
   expect(statsfunc.countLastNEvents(['aa', 'bb', 'aa', 'bb'], 3)).toStrictEqual({ 'aa': 1, 'bb': 2 });
   expect(statsfunc.countLastNEvents(['aa', 'bb', 'cc', 'dd', 'ee'], 3)).toStrictEqual({ 'cc': 1, 'dd': 1, 'ee': 1 });
+  expect(statsfunc.countLastNEvents(['aa', 'bb', 'cc', 'dd', 'ee'], 1)).toStrictEqual({ 'ee': 1 });
   expect(statsfunc.countLastNEvents(['aa', '(bb)', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
 });

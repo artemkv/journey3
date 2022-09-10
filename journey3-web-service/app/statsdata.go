@@ -238,6 +238,56 @@ func getEventsPerPeriod(appId string, build string, period string, dt string) ([
 	return events, nil
 }
 
+func getEntryEventsPerPeriod(appId string, build string, period string, dt string) ([]eventStatsData, error) {
+	// define keys
+	keyPrefix, err := getEntryEventsByPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	// run query
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	events, err := repackResultsByDtEventVersionIntoEventData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return events, nil
+}
+
+func getExitEventsPerPeriod(appId string, build string, period string, dt string) ([]eventStatsData, error) {
+	// define keys
+	keyPrefix, err := getExitEventsByPeriodKeyPrefix(period)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+	hashKey := getHashKey(keyPrefix, appId, build)
+	sortKeyPrefix := dt
+
+	// run query
+	results, err := executeStatsQuery(hashKey, sortKeyPrefix)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// re-pack the results
+	events, err := repackResultsByDtEventVersionIntoEventData(results)
+	if err != nil {
+		return nil, logAndConvertError(err)
+	}
+
+	// done
+	return events, nil
+}
+
 func getEventSessionsPerPeriod(appId string, build string, period string, dt string) ([]eventStatsData, error) {
 	// define keys
 	keyPrefix, err := getEventSessionsByPeriodKeyPrefix(period)
@@ -460,6 +510,36 @@ func getEventsByPeriodKeyPrefix(period string) (string, error) {
 	}
 	if period == "day" {
 		return "EVENTS_BY_HOUR", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
+func getEntryEventsByPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "ENTRY_EVENTS_BY_MONTH", nil
+	}
+	if period == "month" {
+		return "ENTRY_EVENTS_BY_DAY", nil
+	}
+	if period == "day" {
+		return "ENTRY_EVENTS_BY_HOUR", nil
+	}
+
+	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)
+	return "", err
+}
+
+func getExitEventsByPeriodKeyPrefix(period string) (string, error) {
+	if period == "year" {
+		return "EXIT_EVENTS_BY_MONTH", nil
+	}
+	if period == "month" {
+		return "EXIT_EVENTS_BY_DAY", nil
+	}
+	if period == "day" {
+		return "EXIT_EVENTS_BY_HOUR", nil
 	}
 
 	err := fmt.Errorf("unknown period '%s', expected 'year', 'month' or 'day'", period)

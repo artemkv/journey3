@@ -117,6 +117,14 @@ export const getEventsPerPeriod = (appId, build, period, dt, session) => {
     return getJson(`/events_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };
 
+export const getEntryEventsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/entry_events?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
+export const getExitEventsPerPeriod = (appId, build, period, dt, session) => {
+    return getJson(`/exit_events?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
+};
+
 export const getEventSessionsPerPeriod = (appId, build, period, dt, session) => {
     return getJson(`/event_sessions_per_period?aid=${appId}&build=${build}&period=${period}&dt=${dt}`, session);
 };

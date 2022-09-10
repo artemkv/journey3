@@ -97,6 +97,10 @@
   padding: 8px;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 /* Desktop Styles */
 @media only screen and (min-width: 961px) {
   .doc-page {

@@ -10,7 +10,8 @@ import {
     getFilterOptions,
     getDatasets,
     getMaxValue,
-    getTopEventsValuesAndEvents
+    getTopEventsValuesAndEvents,
+    getTotal
 } from './chartutils';
 
 const DATA_NOT_LOADED = 0;
@@ -36,6 +37,7 @@ export default (props) => {
 
     const [datasets, setDatasets] = useState([]);
     const [max, setMax] = useState(1.0);
+    const [total, setTotal] = useState(-1);
 
     function loadData() {
         setDataLoadingStatus(DATA_NOT_LOADED);
@@ -66,6 +68,7 @@ export default (props) => {
 
         setDatasets(getDatasets(values));
         setMax(getMaxValue(values));
+        setTotal(getTotal(values));
     }
 
     useEffect(() => {
@@ -95,7 +98,8 @@ export default (props) => {
             datasets={datasets}
             max={max}
             type="bar"
-            stacked={true} />;
+            stacked={true}
+            total={total} />;
     case DATA_LOADING_FAILED:
         // TODO: show error in a user-friendly way
         return <div>ERROR LOADING DATA</div>;

@@ -4,6 +4,7 @@ import {from} from 'datashaper-js';
 export default (props) => {
     const dim = props.dim;
     const onFilterUpdate = props.onFilterUpdate;
+    const chartId = props.chartId;
 
     const onSelectedChange = (event, dimId, dimValueId) => {
         const checked = event.target.checked;
@@ -31,17 +32,19 @@ export default (props) => {
         ]);
     };
 
-    const dimValueSelector = (dimId, dimValue) => <span key={dimValue.id} className="double-distance-right">
-        <label>
-            <input
-                type="checkbox"
-                className="filled-in"
-                checked={dimValue.checked}
-                onChange={(e) => onSelectedChange(e, dimId, dimValue.id)}
-            />
-            <span>{dimValue.label}</span>
-        </label>
-    </span>;
+    const dimValueSelector = (dimId, dimValue) => (
+        <span key={`${chartId}_${dimValue.id}`} className="double-distance-right">
+            <label>
+                <input
+                    type="checkbox"
+                    className="filled-in"
+                    checked={dimValue.checked}
+                    onChange={(e) => onSelectedChange(e, dimId, dimValue.id)}
+                />
+                <span>{dimValue.label}</span>
+            </label>
+        </span>
+    );
 
     return (
         <div>

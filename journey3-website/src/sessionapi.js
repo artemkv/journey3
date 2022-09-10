@@ -100,6 +100,18 @@ export const getEventsPerPeriod = (appId, build, period, dt) => {
     });
 };
 
+export const getEntryEventsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getEntryEventsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
+export const getExitEventsPerPeriod = (appId, build, period, dt) => {
+    return callApi(() => {
+        return api.getExitEventsPerPeriod(appId, build, period, dt, getSession());
+    });
+};
+
 export const getEventSessionsPerPeriod = (appId, build, period, dt) => {
     return callApi(() => {
         return api.getEventSessionsPerPeriod(appId, build, period, dt, getSession());

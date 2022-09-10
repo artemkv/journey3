@@ -17,7 +17,8 @@ export default (props) => {
     }, []);
 
     const dimension = (dim, onFilterUpdate) => <ModalFilterDimension
-        key={dim.id}
+        chartId={chartId}
+        key={`${chartId}_${dim.id}`}
         dim={dim}
         onFilterUpdate={onFilterUpdate}
     />;
@@ -38,7 +39,6 @@ export default (props) => {
                     }
                 </div>
                 <div className='modal-footer'>
-                    <a href='#!' className='modal-close btn-flat'>Cancel</a>
                     <a href='#!' className='modal-close btn-flat'>OK</a>
                 </div>
             </div>

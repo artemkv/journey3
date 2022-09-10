@@ -409,6 +409,116 @@ func handleEventsPerPeriod(c *gin.Context, userId string, email string, _ string
 	toSuccess(c, result)
 }
 
+func handleEntryEventsPerPeriod(c *gin.Context, userId string, email string, _ string) {
+	// get params from query string
+	var statsRequest statsRequestData
+	if err := c.ShouldBind(&statsRequest); err != nil {
+		toBadRequest(c, err)
+		return
+	}
+
+	// sanitize
+	appId := statsRequest.AppId
+	if !isAppIdValid(appId) {
+		err := fmt.Errorf(INVALID_APPID_ERROR_MESSAGE, appId)
+		toBadRequest(c, err)
+		return
+	}
+	period := statsRequest.Period
+	if !isPeriodValid(period) {
+		err := fmt.Errorf(INVALID_PERIOD_ERROR_MESSAGE, period)
+		toBadRequest(c, err)
+		return
+	}
+	dt := statsRequest.Dt
+	if !isDtValid(period, dt) {
+		err := fmt.Errorf(INVALID_DT_ERROR_MESSAGE, dt)
+		toBadRequest(c, err)
+		return
+	}
+	build := statsRequest.Build
+	if !isBuildValid(build) {
+		err := fmt.Errorf(INVALID_BUILD_ERROR_MESSAGE, build)
+		toBadRequest(c, err)
+		return
+	}
+
+	// check access rights
+	canRead, err := canRead(userId, appId)
+	if !canRead || err != nil {
+		toUnauthorized(c)
+		return
+	}
+
+	// retrieve data
+	stats, err := getEntryEventsPerPeriod(appId, build, period, dt)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
+	// assemble and return result
+	result := eventsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
+}
+
+func handleExitEventsPerPeriod(c *gin.Context, userId string, email string, _ string) {
+	// get params from query string
+	var statsRequest statsRequestData
+	if err := c.ShouldBind(&statsRequest); err != nil {
+		toBadRequest(c, err)
+		return
+	}
+
+	// sanitize
+	appId := statsRequest.AppId
+	if !isAppIdValid(appId) {
+		err := fmt.Errorf(INVALID_APPID_ERROR_MESSAGE, appId)
+		toBadRequest(c, err)
+		return
+	}
+	period := statsRequest.Period
+	if !isPeriodValid(period) {
+		err := fmt.Errorf(INVALID_PERIOD_ERROR_MESSAGE, period)
+		toBadRequest(c, err)
+		return
+	}
+	dt := statsRequest.Dt
+	if !isDtValid(period, dt) {
+		err := fmt.Errorf(INVALID_DT_ERROR_MESSAGE, dt)
+		toBadRequest(c, err)
+		return
+	}
+	build := statsRequest.Build
+	if !isBuildValid(build) {
+		err := fmt.Errorf(INVALID_BUILD_ERROR_MESSAGE, build)
+		toBadRequest(c, err)
+		return
+	}
+
+	// check access rights
+	canRead, err := canRead(userId, appId)
+	if !canRead || err != nil {
+		toUnauthorized(c)
+		return
+	}
+
+	// retrieve data
+	stats, err := getExitEventsPerPeriod(appId, build, period, dt)
+	if err != nil {
+		toInternalServerError(c, err.Error())
+		return
+	}
+
+	// assemble and return result
+	result := eventsResponseStatsData{
+		Stats: stats,
+	}
+	toSuccess(c, result)
+}
+
 func handleEventSessionsPerPeriod(c *gin.Context, userId string, email string, _ string) {
 	// get params from query string
 	var statsRequest statsRequestData

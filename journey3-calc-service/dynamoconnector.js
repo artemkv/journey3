@@ -190,7 +190,7 @@ async function updateExitEventsByPeriod(session, appId, build, version, hourDt, 
   const eventsByDayKey = `EXIT_EVENTS_BY_DAY#${appId}#${build}`;
   const eventsByMonthKey = `EXIT_EVENTS_BY_MONTH#${appId}#${build}`;
 
-  const evts = statsfunc.countLastNEvents(session.evt_seq, 3);
+  const evts = statsfunc.countLastNEvents(session.evt_seq, 1);
   for (const evt in evts) {
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, evts[evt]);
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, evts[evt]);

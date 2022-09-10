@@ -217,6 +217,17 @@ export default () => {
         <div>
             <div className="row">
                 <div className="col s6">
+                    <StatsChartContainer
+                        title="Sessions"
+                        chartId="sessionsPerPeriod"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getSessionsPerPeriod}
+                    />
+                </div>
+                <div className="col s6">
                     <ConversionStatsChartContainer
                         title="Stage conversions"
                         chartId="conversions"
@@ -232,15 +243,6 @@ export default () => {
             <div className="row">
                 <div className="col s6">
                     <StatsChartContainer
-                        title="Sessions"
-                        chartId="sessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getSessionsPerPeriod}
-                    />
-                    <StatsChartContainer
                         title="Unique users"
                         chartId="uniqieUsersPerPeriod"
                         appId={appId}
@@ -250,6 +252,8 @@ export default () => {
                         loadDataCallback={api.getUniqueUsersPerPeriod}
                         useHigherPeriodTotal={true}
                     />
+                </div>
+                <div className="col s6">
                     <StatsChartContainer
                         title="New users"
                         chartId="newUsersPerPeriod"
@@ -258,35 +262,6 @@ export default () => {
                         period={period}
                         date={dt}
                         loadDataCallback={api.getNewUsersPerPeriod}
-                    />
-                </div>
-                <div className="col s6">
-                    <TopEventsStatsChartContainer
-                        title="Top events"
-                        chartId="top_events"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventsPerPeriod}
-                    />
-                    <EventStatsChartContainer
-                        title="Events"
-                        chartId="eventsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventsPerPeriod}
-                    />
-                    <EventStatsChartContainer
-                        title="Sessions by event"
-                        chartId="eventSessionsPerPeriod"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEventSessionsPerPeriod}
                     />
                 </div>
             </div>
@@ -348,31 +323,6 @@ export default () => {
 
             <div className="row">
                 <div className="col s6">
-                    <TopEventsStatsChartContainer
-                        title="Top entry events"
-                        chartId="top_entry_events"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getEntryEventsPerPeriod}
-                    />
-                </div>
-                <div className="col s6">
-                    <TopEventsStatsChartContainer
-                        title="Top exit events"
-                        chartId="top_exit_events"
-                        appId={appId}
-                        build={build}
-                        period={period}
-                        date={dt}
-                        loadDataCallback={api.getExitEventsPerPeriod}
-                    />
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="col s6">
                     <EventStatsChartContainer
                         title="Events"
                         chartId="eventsPerPeriod"
@@ -392,6 +342,31 @@ export default () => {
                         period={period}
                         date={dt}
                         loadDataCallback={api.getEventSessionsPerPeriod}
+                    />
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col s6">
+                    <TopEventsStatsChartContainer
+                        title="Top entry events"
+                        chartId="top_entry_events"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getEntryEventsPerPeriod}
+                    />
+                </div>
+                <div className="col s6">
+                    <TopEventsStatsChartContainer
+                        title="Top exit events"
+                        chartId="top_exit_events"
+                        appId={appId}
+                        build={build}
+                        period={period}
+                        date={dt}
+                        loadDataCallback={api.getExitEventsPerPeriod}
                     />
                 </div>
             </div>

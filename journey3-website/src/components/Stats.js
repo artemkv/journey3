@@ -67,10 +67,22 @@ export default () => {
     }, []);
 
     useEffect(() => {
-        setPeriod(getPeriod());
+        const lastUsedPeriod = getPeriod();
+        if (lastUsedPeriod) {
+            setPeriod(lastUsedPeriod);
+        }
+
         setDt(getDt());
-        setBuild(getBuild());
-        setStatsSection(getStatsSection());
+
+        const lastSavedBuild = getBuild();
+        if (lastSavedBuild) {
+            setBuild(lastSavedBuild);
+        }
+
+        const lastUsedSection = getStatsSection();
+        if (lastUsedSection) {
+            setStatsSection(lastUsedSection);
+        }
     }, []);
 
     useEffect(() => {

@@ -1,11 +1,11 @@
 import {isSameDayNonUtc} from './datetimeutil';
 
 export const savePeriod = (period) => {
-    window.localStorage.setItem('filter.global.period', period);
+    window.localStorage.setItem('filter.global.period', JSON.stringify(period));
 };
 
 export const getPeriod = () => {
-    return window.localStorage.getItem('filter.global.period');
+    return JSON.parse(window.localStorage.getItem('filter.global.period'));
 };
 
 export const saveDt = (dt) => {
@@ -15,30 +15,30 @@ export const saveDt = (dt) => {
 
 export const getDt = () => {
     const dateString = JSON.parse(window.localStorage.getItem('filter.global.dt'));
-    const date = dateString === 'today' ? new Date() : new Date(dateString);
+    const date = !dateString || dateString === 'today' ? new Date() : new Date(dateString);
     return date;
 };
 
 export const saveAppId = (appId) => {
-    window.localStorage.setItem('filter.global.appid', appId);
+    window.localStorage.setItem('filter.global.appid', JSON.stringify(appId));
 };
 
 export const getAppId = () => {
-    return window.localStorage.getItem('filter.global.appid');
+    return JSON.parse(window.localStorage.getItem('filter.global.appid'));
 };
 
 export const saveBuild = (build) => {
-    window.localStorage.setItem('filter.global.build', build);
+    window.localStorage.setItem('filter.global.build', JSON.stringify(build));
 };
 
 export const getBuild = () => {
-    return window.localStorage.getItem('filter.global.build');
+    return JSON.parse(window.localStorage.getItem('filter.global.build'));
 };
 
 export const saveStatsSection = (section) => {
-    window.localStorage.setItem('filter.global.stats_section', section);
+    window.localStorage.setItem('filter.global.stats_section', JSON.stringify(section));
 };
 
 export const getStatsSection = () => {
-    return window.localStorage.getItem('filter.global.stats_section');
+    return JSON.parse(window.localStorage.getItem('filter.global.stats_section'));
 };

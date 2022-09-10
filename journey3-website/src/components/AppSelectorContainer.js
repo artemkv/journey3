@@ -23,15 +23,17 @@ export default (props) => {
                 setData(data);
                 // TODO: use ramda to access inner property in a safe way?
                 if (data.length > 0) {
-                    const savedAppId = getAppId();
+                    const lastUsedAppId = getAppId();
                     let isFound = false;
-                    for (let i = 0; i < data.length; i++) {
-                        if (data[i].aid === savedAppId) {
-                            isFound = true;
-                            break;
+                    if (lastUsedAppId) {
+                        for (let i = 0; i < data.length; i++) {
+                            if (data[i].aid === lastUsedAppId) {
+                                isFound = true;
+                                break;
+                            }
                         }
                     }
-                    props.onAppChanged(isFound ? savedAppId : data[0].aid);
+                    props.onAppChanged(isFound ? lastUsedAppId : data[0].aid);
                 }
                 setDataLoadingStatus(DATA_LOADED);
             })

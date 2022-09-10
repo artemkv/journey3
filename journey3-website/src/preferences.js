@@ -5,7 +5,11 @@ export const savePeriod = (period) => {
 };
 
 export const getPeriod = () => {
-    return JSON.parse(window.localStorage.getItem('filter.global.period'));
+    try {
+        return JSON.parse(window.localStorage.getItem('filter.global.period'));
+    } catch {
+        return null;
+    }
 };
 
 export const saveDt = (dt) => {
@@ -14,9 +18,13 @@ export const saveDt = (dt) => {
 };
 
 export const getDt = () => {
-    const dateString = JSON.parse(window.localStorage.getItem('filter.global.dt'));
-    const date = !dateString || dateString === 'today' ? new Date() : new Date(dateString);
-    return date;
+    try {
+        const dateString = JSON.parse(window.localStorage.getItem('filter.global.dt'));
+        const date = !dateString || dateString === 'today' ? new Date() : new Date(dateString);
+        return date;
+    } catch {
+        return new Date();
+    }
 };
 
 export const saveAppId = (appId) => {
@@ -24,7 +32,11 @@ export const saveAppId = (appId) => {
 };
 
 export const getAppId = () => {
-    return JSON.parse(window.localStorage.getItem('filter.global.appid'));
+    try {
+        return JSON.parse(window.localStorage.getItem('filter.global.appid'));
+    } catch {
+        return null;
+    }
 };
 
 export const saveBuild = (build) => {
@@ -32,7 +44,11 @@ export const saveBuild = (build) => {
 };
 
 export const getBuild = () => {
-    return JSON.parse(window.localStorage.getItem('filter.global.build'));
+    try {
+        return JSON.parse(window.localStorage.getItem('filter.global.build'));
+    } catch {
+        return null;
+    }
 };
 
 export const saveStatsSection = (section) => {
@@ -40,5 +56,9 @@ export const saveStatsSection = (section) => {
 };
 
 export const getStatsSection = () => {
-    return JSON.parse(window.localStorage.getItem('filter.global.stats_section'));
+    try {
+        return JSON.parse(window.localStorage.getItem('filter.global.stats_section'));
+    } catch {
+        return null;
+    }
 };

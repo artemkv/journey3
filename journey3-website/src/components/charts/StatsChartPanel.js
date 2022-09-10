@@ -14,6 +14,7 @@ export default (props) => {
     const type = props.type;
     const total = props.total;
     const stacked = props.stacked;
+    const leaveSpaceForTotal = props.leaveSpaceForTotal;
 
     const splitByVersionChange = (event) => {
         const allChecked = filterOptions.dimensions.version.all.checked;
@@ -47,6 +48,12 @@ export default (props) => {
         </div>
     </div>;
 
+    const spaceForTotal = () => <div className="row flex">
+        <div className="col s12 valign-wrapper">
+            <h6></h6>
+        </div>
+    </div>;
+
     return (
         <div className="panel">
             <div className="row flex">
@@ -75,6 +82,7 @@ export default (props) => {
                 </div>
             </div>
             {total >= 0 ? totalCount(total) : ''}
+            {leaveSpaceForTotal ? spaceForTotal() : ''}
             <div>
                 <StatsChart
                     chartId={chartId}

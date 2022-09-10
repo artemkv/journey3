@@ -106,7 +106,8 @@ export default (props) => {
             datasets={datasets}
             max={max}
             type="bar"
-            stacked={true} />;
+            stacked={true}
+            leaveSpaceForTotal={true} />;
     case DATA_LOADING_FAILED:
         // TODO: show error in a user-friendly way
         return <div>ERROR LOADING DATA</div>;

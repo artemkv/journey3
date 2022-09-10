@@ -107,7 +107,7 @@ const getDurationBucket = (minutes) => {
 }
 
 const getErrorLevel = (session) => {
-  let errLevel= 'n';
+  let errLevel = 'n';
   if (session.has_crash) {
     errLevel = 'c';
   } else if (session.has_error) {
@@ -162,6 +162,28 @@ const countLastNEvents = (seq, n) => {
   return evts;
 }
 
+const getCountsDelta = (evts, flushed) => {
+  const delta = {};
+  for (let evt in evts) {
+    const flushedCount = flushed[evt] ?? 0;
+    const d = evts[evt] - flushedCount;
+    if (d) {
+      delta[evt] = d;
+    }
+  }
+  return delta;
+}
+
+const getNonFlushedEvents = (evts, flushed) => {
+  const result = [];
+  for (let evt in evts) {
+    if (!(evt in flushed)) {
+      result.push(evt);
+    }
+  }
+  return result;
+}
+
 exports.getHourDt = getHourDt;
 exports.getDayDt = getDayDt;
 exports.getMonthDt = getMonthDt;
@@ -175,3 +197,5 @@ exports.getExpirationTs = getExpirationTs;
 exports.getEventNormalized = getEventNormalized;
 exports.countFirstNEvents = countFirstNEvents;
 exports.countLastNEvents = countLastNEvents;
+exports.getCountsDelta = getCountsDelta;
+exports.getNonFlushedEvents = getNonFlushedEvents;

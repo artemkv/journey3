@@ -165,10 +165,11 @@ async function updateEventsByPeriod(session, appId, build, version, hourDt, dayD
   const eventsByDayKey = `EVENTS_BY_DAY#${appId}#${build}`;
   const eventsByMonthKey = `EVENTS_BY_MONTH#${appId}#${build}`;
 
-  for (const evt in session.evts) {
-    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, session.evts[evt]);
-    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, session.evts[evt]);
-    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByMonthKey, `${monthDt}#${evt}#${version}`, session.evts[evt]);
+  const delta = statsfunc.getCountsDelta(session.evts, session.flushed);
+  for (const evt in delta) {
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByHourKey, `${hourDt}#${evt}#${version}`, delta[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByDayKey, `${dayDt}#${evt}#${version}`, delta[evt]);
+    await incrementCounter(client, JOURNEY3_STATS_TABLE, eventsByMonthKey, `${monthDt}#${evt}#${version}`, delta[evt]);
   }
 }
 
@@ -203,7 +204,8 @@ async function updateEventSessionsByPeriod(session, appId, build, version, hourD
   const eventSessionsByDayKey = `EVENT_SESSIONS_BY_DAY#${appId}#${build}`;
   const eventSessionsByMonthKey = `EVENT_SESSIONS_BY_MONTH#${appId}#${build}`;
 
-  for (const evt in session.evts) {
+  const nonFlushedEvents = statsfunc.getNonFlushedEvents(session.evts, session.flushed);
+  for (const evt of nonFlushedEvents) {
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventSessionsByHourKey, `${hourDt}#${evt}#${version}`);
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventSessionsByDayKey, `${dayDt}#${evt}#${version}`);
     await incrementCounter(client, JOURNEY3_STATS_TABLE, eventSessionsByMonthKey, `${monthDt}#${evt}#${version}`);

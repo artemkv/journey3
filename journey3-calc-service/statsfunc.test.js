@@ -73,3 +73,35 @@ test('countLastNEvents', () => {
   expect(statsfunc.countLastNEvents(['aa', 'bb', 'cc', 'dd', 'ee'], 1)).toStrictEqual({ 'ee': 1 });
   expect(statsfunc.countLastNEvents(['aa', '(bb)', 'aa'], 3)).toStrictEqual({ 'aa': 2, 'bb': 1 });
 });
+
+test('getCountsDelta', () => {
+  // none flushed
+  expect(statsfunc.getCountsDelta({ aa: 1, }, {}))
+    .toStrictEqual({ aa: 1, });
+
+  // all flushed
+  expect(statsfunc.getCountsDelta({ aa: 1, }, { aa: 1 }))
+    .toStrictEqual({});
+
+  // general case
+  expect(statsfunc.getCountsDelta(
+    { aa: 2, bb: 4, dd: 3 },
+    { aa: 1, bb: 2, cc: 3 }))
+    .toStrictEqual({ aa: 1, bb: 2, dd: 3 });
+});
+
+test('getNonFlushedEvents', () => {
+  // none flushed
+  expect(statsfunc.getNonFlushedEvents({ aa: 1, }, {}))
+    .toStrictEqual(['aa']);
+
+  // all flushed
+  expect(statsfunc.getNonFlushedEvents({ aa: 1, }, { aa: 1 }))
+    .toStrictEqual([]);
+
+  // general case
+  expect(statsfunc.getNonFlushedEvents(
+    { aa: 2, bb: 4, dd: 3 },
+    { aa: 1, bb: 2, cc: 3 }))
+    .toStrictEqual(['dd']);
+});

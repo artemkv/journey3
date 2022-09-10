@@ -40,6 +40,9 @@ exports.processMessage = async (session, dynamoConnector) => {
   } else if (session.t === "shead") {
     await dynamoConnector.updateStatsFromSessionHead(session, build, version, hourDt, dayDt, monthDt, yearDt);
   } else if (session.t === "stail") {
+    if (!session.flushed) {
+      session.flushed = {};
+    }
     await dynamoConnector.updateStatsFromSessionTail(session, build, version, hourDt, dayDt, monthDt, yearDt);
   }
 };
